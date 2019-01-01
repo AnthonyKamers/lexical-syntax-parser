@@ -1,5 +1,5 @@
 import copy
-from typing import List, Union
+from typing import List, Union, Set
 from src.AF.Estado import Estado
 from src.utils.utils import pretty_print_matrix, remove_duplicates_lista
 
@@ -144,21 +144,34 @@ class AF:
         if not self.is_deterministico:
             # determinização por epsilon
             if "&" in self.alfabeto:
-                estados_novos = []
                 self.alfabeto.remove("&")
 
                 af_new: AF = AF()
                 af_new.alfabeto = self.alfabeto
 
                 estados_epsilon: List[List[Estado]] = self.get_epsilon_fecho()
+
+                # adiciona estados de epsilon
                 for estados in estados_epsilon:
                     estado_novo: Estado = af_new.find_estado(",".join([x.nome for x in estados]))
+                    estado_novo.estados = estados
+
                     if estados[0] == self.estado_inicial:
                         af_new.estado_inicial = estado_novo
 
+                    if any(elem in estados for elem in self.estados_finais):
+                        af_new.estados_finais.append(estado_novo)
+
+                # analisa os estados novos recursivamente
+                estados_analisados: List[Estado] = []
+                fila_estados: List[Estado] = copy.copy(af_new.estados)
+                while len(fila_estados) != 0:
+                    estado_analisado_now: Estado = fila_estados.pop(0)
+                    estados_analisados.append(estado_analisado_now)
+
                     for letra in self.alfabeto:
                         estado_transicao: List[Estado] = []
-                        for estado in estados:
+                        for estado in estado_analisado_now.estados:
                             estado_now: List[Estado] = estado.next_estado(letra)
                             estado_transicao = estado_transicao + estado_now
 
@@ -170,13 +183,21 @@ class AF:
                                 next_estado = next_estado + estado_fecho
                             except StopIteration:
                                 pass
+
                         next_estado = remove_duplicates_lista(next_estado)
                         next_estado_estado: Estado = af_new.find_estado(",".join([x.nome for x in next_estado]))
+                        next_estado_estado.estados = next_estado
 
-                        if any(elem in next_estado for elem in self.estados_finais):
+                        if next_estado_estado not in estados_analisados and next_estado_estado not in fila_estados:
+                            fila_estados.append(next_estado_estado)
+
+                        if any(elem in next_estado for elem in self.estados_finais) \
+                                and next_estado not in af_new.estados_finais:
                             af_new.estados_finais.append(next_estado_estado)
-                        estado_novo.add_transicao(letra, next_estado_estado)
+                        estado_analisado_now.add_transicao(letra, next_estado_estado)
+                af_new.remove_useless_estados()
                 print(af_new)
+                af_new.show_tabela_transicao()
 
     def get_epsilon_fecho(self) -> List[List[Estado]]:
         estados: List[List[Estado]] = []
@@ -193,3 +214,17 @@ class AF:
             estados.append(epsilon_fecho)
 
         return estados
+
+    def remove_useless_estados(self):
+        estados_novos: List[Estado] = copy.copy(self.estados)
+
+        has_transicao: bool = False
+        for estado in self.estados:
+            for estado2 in self.estados:
+                if estado != estado2 and estado.has_estado_transicao(estado2):
+                    has_transicao = True
+                    break
+            if not has_transicao:
+                print('estado não tem transicao')
+
+        print(" - ".join([x.nome for x in estados_novos]))
