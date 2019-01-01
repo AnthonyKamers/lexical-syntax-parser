@@ -36,4 +36,5 @@ if __name__ == '__main__':
 
     # ER
     er: ER = ER()
-    er.parse_file("entradas/ER/exemplo2.er")
+    er.parse_file("entradas/ER/exemplo1.er")
+    er.construct_syntactic_tree()
