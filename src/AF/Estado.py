@@ -15,4 +15,4 @@ class Estado:
         tuplas = [x for x in self.transicoes if x[0] == letra_alfabeto]
         estados_nomes = [b for a, b in tuplas]
         estados_list = tuple(map(lambda x: self.af.get_estado(x), estados_nomes))
-        print(estados_list)
+        return estados_list

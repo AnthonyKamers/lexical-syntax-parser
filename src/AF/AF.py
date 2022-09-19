@@ -83,12 +83,18 @@ class AF:
         :return: ACEITA caso aceite, REJEITA caso rejeite
         """
         for letra in entrada:
-            self.run_letra(letra)
+            retorno = self.run_letra(letra)
+            if not retorno:
+                return "REJEITA"
 
         return "ACEITOU" \
             if self.estado_now.nome in self.estados_finais \
             else "REJEITA"
 
-    def run_letra(self, letra: str):
-        teste = self.estado_now.next_estado(letra)[0]
-        print(teste)
+    def run_letra(self, letra: str) -> bool:
+        estados = self.estado_now.next_estado(letra)
+        if (len(estados) > 0):
+            self.estado_now = estados[0]
+            return True
+        else:
+            return False
