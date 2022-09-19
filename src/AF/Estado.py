@@ -14,3 +14,6 @@ class Estado:
     def next_estado(self, letra_alfabeto: str):
         tuplas = [x for x in self.transicoes if x[0] == letra_alfabeto]
         return [b for a, b in tuplas]
+
+    def change_estado_nome(self):
+        self.nome = self.nome + "'"

@@ -25,11 +25,12 @@ class AF:
 
     def __str__(self):
         return f"""
-        qtd estados: {self.qtd_estados},
-        estado inicial: {self.estado_inicial}
-        estados finais: {self.estados_finais}
-        alfabeto: {self.alfabeto}
-        deterministico: {self.is_deterministico}
+            qtd estados: {self.qtd_estados},
+            estado inicial: {self.estado_inicial.nome}
+            estados finais: { ','.join([x.nome for x in self.estados_finais]) }
+            estados: { ','.join([x.nome for x in self.estados]) }
+            alfabeto: {self.alfabeto}
+            deterministico: {self.is_deterministico}
         """
 
     def set_qtd_estados(self, qtd_estados: str):
@@ -84,6 +85,10 @@ class AF:
 
     def get_estado(self, nome: str) -> Estado:
         return next(estado for estado in self.estados if estado.nome == nome)
+
+    def change_estados_nomes(self):
+        for estado in self.estados:
+            estado.change_estado_nome()
 
     def run_entrada(self, entrada: str) -> str:
         """
