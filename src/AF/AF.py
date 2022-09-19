@@ -6,8 +6,8 @@ class AF:
     def __init__(self):
         self.qtd_estados: int = 0
         self.estados: List[Estado] = []
-        self.estados_finais: List[str] = []
-        self.estado_inicial: str = ""
+        self.estados_finais: List[Estado] = []
+        self.estado_inicial: Estado
         self.alfabeto: List[str] = []
         self.is_deterministico: bool = True
         self.estado_now: Union[Estado, None] = None
@@ -36,10 +36,14 @@ class AF:
         self.qtd_estados = int(qtd_estados)
 
     def set_estado_inicial(self, estado_inicial: str):
-        self.estado_inicial = estado_inicial
+        self.estado_inicial = Estado(estado_inicial, self)
+        self.estados.append(self.estado_inicial)
 
     def set_estados_finais(self, estados_finais: str):
-        self.estados_finais = estados_finais.split(',')
+        for nome in estados_finais.split(','):
+            estado: Estado = Estado(nome, self)
+            self.estados_finais.append(estado)
+            self.estados.append(estado)
 
     def set_alfabeto(self, alfabeto: str):
         if "&" in alfabeto:
@@ -47,33 +51,39 @@ class AF:
         self.alfabeto = alfabeto.split(',')
 
     def set_transicao(self, transicao: str):
-        estado_nome, letra_alfabeto, proximo_estado = transicao.split(',')
-        estado: Estado = Estado(estado_nome, self)
+        estado_nome, letra_alfabeto, proximo_estado_nome = transicao.split(',')
 
-        if "-" in proximo_estado:
+        estado: Estado = self.find_estado(estado_nome)
+
+        if "-" in proximo_estado_nome:
             self.is_deterministico = False
 
-            split = proximo_estado.split('-')
+            split = proximo_estado_nome.split('-')
             for estado_transicao in split:
-                estado.add_transicao(letra_alfabeto, estado_transicao)
+                proximo_estado = self.find_estado(estado_transicao)
+                estado.add_transicao(letra_alfabeto, proximo_estado)
         else:
-            estado.add_transicao(letra_alfabeto, proximo_estado)
-
-        self.estados.append(estado)
+            estado.add_transicao(letra_alfabeto, self.find_estado(proximo_estado_nome))
 
     def parse_file(self, file_name: str):
         with open(file_name) as file:
             for index, line in enumerate(file, 1):
                 line = line.replace("\n", "")
                 self.functions_file[index if index < 5 else "default"](line)
+        self.estado_now = self.estado_inicial
 
-        self.estado_now = self.get_estado_inicial()
+    def find_estado(self, nome: str) -> Estado:
+        estado: Estado
+        try:
+            estado = self.get_estado(nome)
+            return estado
+        except StopIteration:
+            estado = Estado(nome, self)
+            self.estados.append(estado)
+            return estado
 
     def get_estado(self, nome: str) -> Estado:
         return next(estado for estado in self.estados if estado.nome == nome)
-
-    def get_estado_inicial(self) -> Estado:
-        return self.get_estado(self.estado_inicial)
 
     def run_entrada(self, entrada: str) -> str:
         """
@@ -88,12 +98,12 @@ class AF:
                 return "REJEITA"
 
         return "ACEITOU" \
-            if self.estado_now.nome in self.estados_finais \
+            if self.estado_now in self.estados_finais \
             else "REJEITA"
 
     def run_letra(self, letra: str) -> bool:
         estados = self.estado_now.next_estado(letra)
-        if (len(estados) > 0):
+        if len(estados) > 0:
             self.estado_now = estados[0]
             return True
         else:
