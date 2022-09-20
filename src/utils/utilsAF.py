@@ -25,7 +25,7 @@ def uniao_automatos(af1: AF, af2: AF) -> AF:
 
     af_new.is_deterministico = False
 
-    ## caso não tenha & no alfabeto, adicionar
+    # caso não tenha & no alfabeto, adicionar
     if "&" not in af_new.alfabeto:
         af_new.alfabeto.append("&")
 

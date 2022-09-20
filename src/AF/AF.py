@@ -1,3 +1,4 @@
+import copy
 from typing import List, Union
 from src.AF.Estado import Estado
 from src.utils.utils import pretty_print_matrix
@@ -34,18 +35,38 @@ class AF:
             deterministico: {self.is_deterministico}
         """
 
+    def show_tabela_transicao(self) -> None:
+        """
+        Mostra a tabela de transição do autômato
+        δ           | l1 alfabeto | ln alfabeto
+        estado1     | transição   | transição
+        estado2     | transição   | transiçõa
+        """
+        matrix: List[List[str]] = [["δ"]]
+        matrix[0] = matrix[0] + self.alfabeto
+
+        for estado in self.estados:
+            estado_nome: str = \
+                f'{"*" if estado in self.estados_finais else "->" if estado == self.estado_inicial else ""}{estado.nome}'
+
+            line: List[str] = [estado_nome]
+            for letra in self.alfabeto:
+                next_estados = estado.next_estado(letra)
+                line.append(",".join([x.nome for x in next_estados]))
+            matrix.append(line)
+
+        pretty_print_matrix(matrix)
+
     def set_qtd_estados(self, qtd_estados: str):
         self.qtd_estados = int(qtd_estados)
 
     def set_estado_inicial(self, estado_inicial: str):
-        self.estado_inicial = Estado(estado_inicial, self)
-        self.estados.append(self.estado_inicial)
+        self.estado_inicial = self.find_estado(estado_inicial)
 
     def set_estados_finais(self, estados_finais: str):
         for nome in estados_finais.split(','):
-            estado: Estado = Estado(nome, self)
+            estado: Estado = self.find_estado(nome)
             self.estados_finais.append(estado)
-            self.estados.append(estado)
 
     def set_alfabeto(self, alfabeto: str):
         if "&" in alfabeto:
@@ -80,7 +101,7 @@ class AF:
             estado = self.get_estado(nome)
             return estado
         except StopIteration:
-            estado = Estado(nome, self)
+            estado = Estado(nome)
             self.estados.append(estado)
             return estado
 
@@ -90,28 +111,6 @@ class AF:
     def change_estados_nomes(self):
         for estado in self.estados:
             estado.change_estado_nome()
-
-    def show_tabela_transicao(self) -> None:
-        """
-        Mostra a tabela de transição do autômato
-        δ           | l1 alfabeto | ln alfabeto
-        estado1     | transição   | transição
-        estado2     | transição   | transiçõa
-        """
-        matrix: List[List[str]] = [["δ"]]
-        matrix[0] = matrix[0] + self.alfabeto
-
-        for estado in self.estados:
-            estado_nome: str = \
-                f'{"*" if estado in self.estados_finais else "->" if estado == self.estado_inicial else ""}{estado.nome}'
-
-            line: List[str] = [estado_nome]
-            for letra in self.alfabeto:
-                next_estados = estado.next_estado(letra)
-                line.append(",".join([x.nome for x in next_estados]))
-            matrix.append(line)
-
-        pretty_print_matrix(matrix)
 
     def run_entrada(self, entrada: str) -> str:
         """
@@ -136,3 +135,42 @@ class AF:
             return True
         else:
             return False
+
+    def determinizar(self):
+        """
+        Caso o autômato seja não determinístico,
+        esse método o transforma em determinístico
+        """
+        if not self.is_deterministico:
+            # determinização por epsilon
+            if "&" in self.alfabeto:
+                estados_novos = []
+                self.alfabeto.remove("&")
+
+                estados_epsilon: List[List[Estado]] = self.get_epsilon_fecho()
+                for estados in estados_epsilon:
+                    estado_novo: Estado = Estado(",".join([x.nome for x in estados]))
+                    print(estado_novo.nome)
+                    for letra in self.alfabeto:
+                        pass
+
+    def get_epsilon_fecho(self) -> List[List[Estado]]:
+        estados: List[List[Estado]] = []
+        for estado in self.estados:
+            epsilon_fecho: List[Estado] = []
+            fila_estados: List[Estado] = [estado]
+            while len(fila_estados) != 0:
+                estado_now: Estado = fila_estados.pop(0)
+                epsilon_fecho.append(estado_now)
+
+                transicoes_epsilon: List[Estado] = estado_now.next_estado("&")
+                fila_estados = fila_estados + transicoes_epsilon
+
+            estados.append(epsilon_fecho)
+
+        # for lista_estados in estados:
+        #     print('[', end='')
+        #     print(','.join([x.nome for x in lista_estados]), end='')
+        #     print(']', end='')
+
+        return estados
