@@ -1,5 +1,6 @@
 from typing import List, Union
 from src.AF.Estado import Estado
+from src.utils.utils import pretty_print_matrix
 
 
 class AF:
@@ -7,7 +8,7 @@ class AF:
         self.qtd_estados: int = 0
         self.estados: List[Estado] = []
         self.estados_finais: List[Estado] = []
-        self.estado_inicial: Estado
+        self.estado_inicial: Union[Estado, None] = None
         self.alfabeto: List[str] = []
         self.is_deterministico: bool = True
         self.estado_now: Union[Estado, None] = None
@@ -89,6 +90,25 @@ class AF:
     def change_estados_nomes(self):
         for estado in self.estados:
             estado.change_estado_nome()
+
+    def show_tabela_transicao(self) -> None:
+        """
+        Mostra a tabela de transição do autômato
+        δ           | l1 alfabeto | ln alfabeto
+        estado1     | transição   | transição
+        estado2     | transição   | transiçõa
+        """
+        matrix: List[List[str]] = [["δ"]]
+        matrix[0] = matrix[0] + self.alfabeto
+
+        for estado in self.estados:
+            line: List[str] = [estado.nome]
+            for letra in self.alfabeto:
+                next_estados = estado.next_estado(letra)
+                line.append(",".join([x.nome for x in next_estados]))
+            matrix.append(line)
+
+        pretty_print_matrix(matrix)
 
     def run_entrada(self, entrada: str) -> str:
         """
