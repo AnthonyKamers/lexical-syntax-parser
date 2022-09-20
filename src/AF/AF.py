@@ -102,7 +102,10 @@ class AF:
         matrix[0] = matrix[0] + self.alfabeto
 
         for estado in self.estados:
-            line: List[str] = [estado.nome]
+            estado_nome: str = \
+                f'{"*" if estado in self.estados_finais else "->" if estado == self.estado_inicial else ""}{estado.nome}'
+
+            line: List[str] = [estado_nome]
             for letra in self.alfabeto:
                 next_estados = estado.next_estado(letra)
                 line.append(",".join([x.nome for x in next_estados]))
