@@ -1,4 +1,4 @@
-# Gerador de analisador léxica e sintático
+# Gerador de analisador léxico e sintático
 
 Tal trabalho tem como objetivo fazer um gerador de analisador léxico e sintático para a disciplina de Linguagens Formais e Compiladores da UFSC (INE5421).
 
