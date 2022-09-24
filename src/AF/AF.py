@@ -136,6 +136,13 @@ class AF:
         else:
             return False
 
+    """
+    Verificar se tem alguma transição por &, que o torna AFND.
+    """
+    def is_AFND(self):
+        if "&" in self.alfabeto:
+            return True
+
     def determinizar(self):
         """
         Caso o autômato seja não determinístico,
@@ -143,7 +150,7 @@ class AF:
         """
         if not self.is_deterministico:
             # determinização por epsilon
-            if "&" in self.alfabeto:
+            if self.is_AFND():
                 estados_novos = []
                 self.alfabeto.remove("&")
 
