@@ -13,3 +13,6 @@ def pretty_print_matrix(matrix: List[List[str]]) -> None:
     fmt = '\t'.join('{{:{}}}'.format(x) for x in lens)
     table = [fmt.format(*row) for row in s]
     print('\n'.join(table))
+
+def remove_duplicates_lista(lista: List[any]) -> List[any]:
+    return list(dict.fromkeys(lista))

@@ -1,7 +1,7 @@
 import copy
 from typing import List, Union
 from src.AF.Estado import Estado
-from src.utils.utils import pretty_print_matrix
+from src.utils.utils import pretty_print_matrix, remove_duplicates_lista
 
 
 class AF:
@@ -29,8 +29,8 @@ class AF:
         return f"""
             qtd estados: {self.qtd_estados},
             estado inicial: {self.estado_inicial.nome}
-            estados finais: { ','.join([x.nome for x in self.estados_finais]) }
-            estados: { ','.join([x.nome for x in self.estados]) }
+            estados finais: {' - '.join([x.nome for x in self.estados_finais])}
+            estados: {' - '.join([x.nome for x in self.estados])}
             alfabeto: {self.alfabeto}
             deterministico: {self.is_deterministico}
         """
@@ -139,7 +139,7 @@ class AF:
     def determinizar(self):
         """
         Caso o autômato seja não determinístico,
-        esse método o transforma em determinístico
+        esse método o determiniza
         """
         if not self.is_deterministico:
             # determinização por epsilon
@@ -147,12 +147,36 @@ class AF:
                 estados_novos = []
                 self.alfabeto.remove("&")
 
+                af_new: AF = AF()
+                af_new.alfabeto = self.alfabeto
+
                 estados_epsilon: List[List[Estado]] = self.get_epsilon_fecho()
                 for estados in estados_epsilon:
-                    estado_novo: Estado = Estado(",".join([x.nome for x in estados]))
-                    print(estado_novo.nome)
+                    estado_novo: Estado = af_new.find_estado(",".join([x.nome for x in estados]))
+                    if estados[0] == self.estado_inicial:
+                        af_new.estado_inicial = estado_novo
+
                     for letra in self.alfabeto:
-                        pass
+                        estado_transicao: List[Estado] = []
+                        for estado in estados:
+                            estado_now: List[Estado] = estado.next_estado(letra)
+                            estado_transicao = estado_transicao + estado_now
+
+                        estado_transicao = remove_duplicates_lista(estado_transicao)
+                        next_estado: List[Estado] = []
+                        for estado in estado_transicao:
+                            try:
+                                estado_fecho: List[Estado] = next(x for x in estados_epsilon if x[0] == estado)
+                                next_estado = next_estado + estado_fecho
+                            except StopIteration:
+                                pass
+                        next_estado = remove_duplicates_lista(next_estado)
+                        next_estado_estado: Estado = af_new.find_estado(",".join([x.nome for x in next_estado]))
+
+                        if any(elem in next_estado for elem in self.estados_finais):
+                            af_new.estados_finais.append(next_estado_estado)
+                        estado_novo.add_transicao(letra, next_estado_estado)
+                print(af_new)
 
     def get_epsilon_fecho(self) -> List[List[Estado]]:
         estados: List[List[Estado]] = []
@@ -167,10 +191,5 @@ class AF:
                 fila_estados = fila_estados + transicoes_epsilon
 
             estados.append(epsilon_fecho)
-
-        # for lista_estados in estados:
-        #     print('[', end='')
-        #     print(','.join([x.nome for x in lista_estados]), end='')
-        #     print(']', end='')
 
         return estados
