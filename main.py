@@ -12,4 +12,5 @@ if __name__ == '__main__':
 
     af: AF = AF()
     af.parse_file("entradas/AF/exemplo2.af")
-    af.determinizar()
+    af_new: AF = af.determinizar()
+    af_new.show_tabela_transicao()

@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import copy
-from typing import List, Union, Set
+from typing import List, Union
 from src.AF.Estado import Estado
 from src.utils.utils import pretty_print_matrix, remove_duplicates_lista
 
@@ -46,8 +48,12 @@ class AF:
         matrix[0] = matrix[0] + self.alfabeto
 
         for estado in self.estados:
-            estado_nome: str = \
-                f'{"*" if estado in self.estados_finais else "->" if estado == self.estado_inicial else ""}{estado.nome}'
+            estado_nome: str = ""
+            if estado in self.estados_finais:
+                estado_nome += "*"
+            if estado == self.estado_inicial:
+                estado_nome += "->"
+            estado_nome += estado.nome
 
             line: List[str] = [estado_nome]
             for letra in self.alfabeto:
@@ -136,7 +142,7 @@ class AF:
         else:
             return False
 
-    def determinizar(self):
+    def determinizar(self) -> AF:
         """
         Caso o autômato seja não determinístico,
         esse método o determiniza
@@ -196,8 +202,7 @@ class AF:
                             af_new.estados_finais.append(next_estado_estado)
                         estado_analisado_now.add_transicao(letra, next_estado_estado)
                 af_new.remove_useless_estados()
-                print(af_new)
-                af_new.show_tabela_transicao()
+                return af_new
 
     def get_epsilon_fecho(self) -> List[List[Estado]]:
         estados: List[List[Estado]] = []
@@ -217,14 +222,25 @@ class AF:
 
     def remove_useless_estados(self):
         estados_novos: List[Estado] = copy.copy(self.estados)
+        estados_removidos: List[Estado] = []
+        len_estados: int = len(estados_novos)
+        len_now: int = 0
 
-        has_transicao: bool = False
-        for estado in self.estados:
-            for estado2 in self.estados:
-                if estado != estado2 and estado.has_estado_transicao(estado2):
-                    has_transicao = True
+        while len_estados != len_now:
+            len_estados = len(estados_novos)
+
+            for estado in estados_novos:
+                has_transicao: bool = False
+                for estado2 in estados_novos:
+                    if (estado != estado2 and estado2.has_estado_transicao(estado)) or estado == self.estado_inicial:
+                        has_transicao = True
+                        break
+                if not has_transicao:
+                    estados_removidos.append(estado)
+                    estados_novos.remove(estado)
                     break
-            if not has_transicao:
-                print('estado não tem transicao')
 
-        print(" - ".join([x.nome for x in estados_novos]))
+            len_now = len(estados_novos)
+
+        self.estados = estados_novos
+        self.estados_finais = remove_duplicates_lista([x for x in self.estados_finais if x in self.estados])
