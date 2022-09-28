@@ -68,7 +68,34 @@ ______
   - É aconselhável separar entradas e saídas para cada etapa, para assegurar da assertividade de cada etapa
 - É aconselhável fazer testes unitários, para garantir a corretude de funções já implementadas (para eventuais atualizações no futuro)
 - Também pode ser feita uma pipeline utilizando o github-pro, para facilitar demais implementações (como automatização de testes e entradas de arquivos (conforme especificado na seção abaixo))
+
 ______
+
+## Explicação do trabalho de maneira prática
+```text
+DEFINICOES REGULARES
+{
+    "digit": [0,1,2,3,4,5,6,7,8,9],
+    "letter": [a,b,c,...],
+    "id": [[letter],[AND],[(letter OR digit)*]],
+    "er": [[a],[OPTIONAL],[(a OR b)+]]
+}
+
+ARQUIVO FONTE
+program teste;
+var a: integer;
+begin
+.
+.
+.
+end
+
+TABELA DE SIMBOLOS (TS)
+[(program, PR), (teste, id)]
+
+LISTA DE TOKENS
+[(program, PR), (id, 1), (;, SE)]
+```
 
 ## Formatos de entrada
 
