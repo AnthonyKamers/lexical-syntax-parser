@@ -3,6 +3,7 @@ from typing import Tuple, List
 
 
 class Estado:
+    # FIXME: Necessário trocar as estruturas de dados de lista para set
     def __init__(self, nome: str):
         self.nome: str = nome
         self.transicoes: List[Tuple[str, Estado]] = []
@@ -19,8 +20,15 @@ class Estado:
         tuplas = [x for x in self.transicoes if x[0] == letra_alfabeto]
         return [b for a, b in tuplas]
 
+    def remove_transicao(self, letra_alfabeto: str):
+        self.transicoes = [tupla for tupla in self.transicoes if tupla[0] != letra_alfabeto]
+
     def change_estado_nome(self):
         self.nome = self.nome + "'"
+
+    def add_estados(self, estados: List[Estado]):
+        for estado in estados:
+            self.add_estado(estado)
 
     def add_estado(self, estado: Estado):
         if estado not in self.estados:

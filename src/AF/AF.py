@@ -7,6 +7,7 @@ from src.utils.utils import pretty_print_matrix, remove_duplicates_lista
 
 
 class AF:
+    # FIXME: Necessário trocar as estruturas de dados de lista para set
     def __init__(self):
         self.qtd_estados: int = 0
         self.estados: List[Estado] = []
@@ -150,10 +151,11 @@ class AF:
         if not self.is_deterministico:
             # determinização por epsilon
             if "&" in self.alfabeto:
-                self.alfabeto.remove("&")
+                alfabeto_novo: List[str] = copy.deepcopy(self.alfabeto)
+                alfabeto_novo.remove("&")
 
                 af_new: AF = AF()
-                af_new.alfabeto = self.alfabeto
+                af_new.alfabeto = alfabeto_novo
 
                 estados_epsilon: List[List[Estado]] = self.get_epsilon_fecho()
 
@@ -175,7 +177,7 @@ class AF:
                     estado_analisado_now: Estado = fila_estados.pop(0)
                     estados_analisados.append(estado_analisado_now)
 
-                    for letra in self.alfabeto:
+                    for letra in af_new.alfabeto:
                         estado_transicao: List[Estado] = []
                         for estado in estado_analisado_now.estados:
                             estado_now: List[Estado] = estado.next_estado(letra)
@@ -203,6 +205,80 @@ class AF:
                         estado_analisado_now.add_transicao(letra, next_estado_estado)
                 af_new.remove_useless_estados()
                 return af_new
+            else:
+                # determinização sem epsilon
+                af_new = AF()
+                af_new.estado_inicial = self.estado_inicial
+                af_new.estados = [self.estado_inicial]
+                af_new.alfabeto = self.alfabeto
+                estados_analyze = []
+
+                # fazer análise do estado inicial
+                self.run_letra_determinizacao_estados(self.estado_inicial, estados_analyze, af_new)
+
+                # percorrer estados_analyze até zerar a fila
+                while len(estados_analyze) != 0:
+                    estado_now: Estado = estados_analyze.pop(0)
+
+                    # ver se é um estado não determinístico
+                    if len(estado_now.estados) > 0:
+                        # estado não determinístico
+                        for letra in self.alfabeto:
+                            estados_transicao_letra: List[Estado] = []
+                            for estado in estado_now.estados:
+                                estados_letra: List[Estado] = estado.next_estado(letra)
+                                estados_transicao_letra = estados_transicao_letra + estados_letra
+                            estados_transicao_letra = remove_duplicates_lista(estados_transicao_letra)
+
+                            estados_anteriores = copy.copy(af_new.estados)
+                            estado_new = af_new.find_estado(','.join(x.nome for x in estados_transicao_letra))
+
+                            estado_now.add_transicao(letra, estado_new)
+
+                            if estado_new != estado_now and estado_new not in estados_analyze and \
+                                    estado_new not in estados_anteriores:
+                                estado_new.add_estados(estados_transicao_letra)
+                                estados_analyze.append(estado_new)
+
+                                # checar por estados finais
+                                if any(elem in estados_transicao_letra for elem in self.estados_finais):
+                                    af_new.estados_finais.append(estado_new)
+                    else:
+                        # estado determinístico
+                        self.run_letra_determinizacao_estados(estado_now, estados_analyze, af_new)
+                af_new.estados_finais = remove_duplicates_lista(af_new.estados_finais)
+                af_new.qtd_estados = len(af_new.estados)
+                return af_new
+
+    def run_letra_determinizacao_estados(self,
+                                         estado_now: Estado,
+                                         estados_analyze: List[Estado],
+                                         af_new: AF):
+        for letra in af_new.alfabeto:
+            estados_transicao: List[Estado] = estado_now.next_estado(letra)
+            if len(estados_transicao) > 1:
+                # é não determinístico
+                estado_new: Estado = af_new.find_estado(",".join(x.nome for x in estados_transicao))
+                estado_new.add_estados(estados_transicao)
+                estados_analyze.append(estado_new)
+
+                # checar por estados finais
+                if any(elem in estados_transicao for elem in self.estados_finais):
+                    af_new.estados_finais.append(estado_new)
+
+                # nova transição de estado inicial é para estado novo
+                estado_now.remove_transicao(letra)
+                estado_now.add_transicao(letra, estado_new)
+            elif len(estados_transicao) == 1:
+                # é estado determinístico
+                estado_new: Estado = estados_transicao[0]
+                if estado_new not in af_new.estados and \
+                        estado_new not in estados_analyze:
+                    estados_analyze.append(estado_new)
+
+                    # checar por estados finais
+                    if any(elem in estados_transicao for elem in self.estados_finais):
+                        af_new.estados_finais.append(estado_new)
 
     def get_epsilon_fecho(self) -> List[List[Estado]]:
         estados: List[List[Estado]] = []

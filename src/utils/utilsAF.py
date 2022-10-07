@@ -32,7 +32,7 @@ def uniao_automatos(af1: AF, af2: AF) -> AF:
     # para fazer a união entre dois estados, é necessário
     # fazer um novo estado e fazer união por epsilon-transição
     # para seus antigos estados iniciais
-    estado_new: Estado = Estado("EstadoUniao", af_new)
+    estado_new: Estado = Estado("EstadoUniao")
     estado_new.add_transicao("&", af1.estado_inicial)
     estado_new.add_transicao("&", af2.estado_inicial)
     af_new.estado_inicial = estado_new
