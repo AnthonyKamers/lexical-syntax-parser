@@ -1,4 +1,5 @@
 from src.AF.AF import AF
+from src.AF.Estado import Estado
 from src.utils.utilsAF import uniao_automatos
 
 if __name__ == '__main__':
@@ -18,8 +19,13 @@ if __name__ == '__main__':
     # af_new.show_tabela_transicao()
 
     # exemplo determinizando autômato sem &-transição
+    # af: AF = AF()
+    # af.parse_file("entradas/AF/exemplo4.af")
+    # af_new: AF = af.determinizar()
+    # print(af_new)
+    # af_new.show_tabela_transicao()
+
+    # exemplo minimização de autômato
     af: AF = AF()
-    af.parse_file("entradas/AF/exemplo4.af")
-    af_new: AF = af.determinizar()
-    print(af_new)
-    af_new.show_tabela_transicao()
+    af.parse_file("entradas/AF/exemplo5.af")
+    af_new: AF = af.minimizar()

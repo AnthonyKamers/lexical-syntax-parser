@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import copy
 from typing import List, Union
+
+from src.AF.CE import CE
 from src.AF.Estado import Estado
 from src.utils.utils import pretty_print_matrix, remove_duplicates_lista
 
@@ -142,6 +144,89 @@ class AF:
             return True
         else:
             return False
+
+    def minimizar(self) -> AF:
+        """
+        Determiniza o autômato para o menor número
+        de estados possível
+        :return: Novo autômato minimizado
+        """
+
+        def get_ce_estado(estado_search: Estado) -> Union[CE, None]:
+            for ce in classes_equivalencia:
+                if estado_search in ce.estados:
+                    return ce
+            return None
+
+        def get_ce_transicao(transicao: Union[CE, None]) -> Union[CE, None]:
+            for ce_ in classes_equivalencia:
+                if ce_.transicao == transicao:
+                    return ce_
+            return None
+
+        f: CE = CE(copy.copy(self.estados_finais))
+        f.is_f = True
+
+        estados_nao_finais = [x for x in self.estados if x not in self.estados_finais]
+        kf: CE = CE(estados_nao_finais)
+
+        classes_equivalencia: List[CE] = [kf, f]
+
+        # enquanto houver diferença, roda o laço
+        for letra in self.alfabeto:
+            # fazer primeiro elemento de cada CE, para dar transição inicial da classe de equivalência
+            for ce in classes_equivalencia:
+                if len(ce.estados) == 1:
+                    continue
+                primeiro_estado: Estado = ce.estados[0]
+                estados_transicao: List[Estado] = primeiro_estado.next_estado(letra)
+                if len(estados_transicao) == 1:
+                    # transita para alguém
+                    estado_transicao: Estado = estados_transicao[0]
+                    ce_estado: Union[CE, None] = get_ce_estado(estado_transicao)
+                    ce.transicao = ce_estado
+                elif len(estados_transicao) == 0:
+                    # transita para nulo
+                    ce_transicao: Union[CE, None] = get_ce_transicao(None)
+                    if ce_transicao is not None:
+                        ce.transicao = ce_transicao
+                    else:
+                        ce_new: CE = CE(primeiro_estado)
+                        ce_new.transicao = None
+                        classes_equivalencia.append(ce_new)
+
+            # com as transições de cada CE definida, fazer o loop de cada CE
+            # que tenha tamanho de estados > 1
+            for ce in classes_equivalencia:
+                if len(ce.estados) == 1:
+                    continue
+                for estado in ce.estados:
+                    estados_transicao: List[Estado] = estado.next_estado(letra)
+                    if len(estados_transicao) == 1:
+                        # transita para alguém
+                        estado_transicao: Estado = estados_transicao[0]
+                        ce_transicao: CE = get_ce_estado(estado_transicao)
+
+                        if ce.transicao != ce_transicao:
+                            ce_new: CE = CE(estado)
+                            ce.remove_estado(estado)
+                            classes_equivalencia.append(ce_new)
+                    elif len(estados_transicao) == 0:
+                        # transita para nulo
+                        ce_transicao: CE = get_ce_transicao(None)
+                        if ce_transicao is None:
+                            ce_new: CE = CE(estado)
+                            ce_new.transicao = None
+                        elif ce_transicao is not None and ce.transicao != ce_transicao:
+                            ce_new: CE = CE(estado)
+                            ce.remove_estado(estado)
+                            classes_equivalencia.append(ce_new)
+
+        # conferir classes de equivalência
+        for ce in classes_equivalencia:
+            print(",".join([x.nome for x in ce.estados]))
+            print(" - ")
+        return self
 
     def determinizar(self) -> AF:
         """
