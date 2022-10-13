@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import copy
-from typing import List, Union
+from typing import List, Union, Tuple
 
 from src.AF.CE import CE
 from src.AF.Estado import Estado
@@ -60,8 +60,11 @@ class AF:
 
             line: List[str] = [estado_nome]
             for letra in self.alfabeto:
-                next_estados = estado.next_estado(letra)
-                line.append(",".join([x.nome for x in next_estados]))
+                next_estados: List[Estado] = estado.next_estado(letra)
+                if len(next_estados) == 0:
+                    line.append("-")
+                else:
+                    line.append(",".join([x.nome for x in next_estados]))
             matrix.append(line)
 
         pretty_print_matrix(matrix)
@@ -152,81 +155,94 @@ class AF:
         :return: Novo autômato minimizado
         """
 
-        def get_ce_estado(estado_search: Estado) -> Union[CE, None]:
+        def get_index_estado(estado_search: Estado) -> int:
+            for k_, classe_ in enumerate(classes_now):
+                if estado_search in classe_:
+                    return k_
+
+        def copy_classes_equivalencia() -> List[List[Estado]]:
+            lista: List[List[Estado]] = []
             for ce in classes_equivalencia:
-                if estado_search in ce.estados:
-                    return ce
-            return None
+                ces = []
+                for estado__ in ce:
+                    ces.append(estado__)
+                lista.append(ces)
+            return lista
 
-        def get_ce_transicao(transicao: Union[CE, None]) -> Union[CE, None]:
-            for ce_ in classes_equivalencia:
-                if ce_.transicao == transicao:
-                    return ce_
-            return None
-
-        f: CE = CE(copy.copy(self.estados_finais))
-        f.is_f = True
-
+        estados_finais = copy.copy(self.estados_finais)
         estados_nao_finais = [x for x in self.estados if x not in self.estados_finais]
-        kf: CE = CE(estados_nao_finais)
+        classes_equivalencia: List[List[Estado]] = [estados_nao_finais, estados_finais]
 
-        classes_equivalencia: List[CE] = [kf, f]
+        while True:
+            classes_now: List[List[Estado]] = []
+            for letra in self.alfabeto:
+                classes_now = copy_classes_equivalencia()
+                for i, classe in enumerate(classes_now):
+                    transicao_now: int = -2
+                    index_ce_estado: int = -2
+                    estados_removidos: List[Tuple[int, int, Estado]] = []  # index, transicao, Estado
 
-        # enquanto houver diferença, roda o laço
-        for letra in self.alfabeto:
-            # fazer primeiro elemento de cada CE, para dar transição inicial da classe de equivalência
-            for ce in classes_equivalencia:
-                if len(ce.estados) == 1:
-                    continue
-                primeiro_estado: Estado = ce.estados[0]
-                estados_transicao: List[Estado] = primeiro_estado.next_estado(letra)
+                    for k, estado in enumerate(classe):
+                        estados_transicao: List[Estado] = estado.next_estado(letra)
+                        if len(estados_transicao) == 1:
+                            # transita para alguém
+                            estado_transicao: Estado = estados_transicao[0]
+                            index_ce_estado = get_index_estado(estado_transicao)
+
+                        elif len(estados_transicao) == 0:
+                            # transição para nulo
+                            index_ce_estado = -1
+
+                        # se é o primeiro elemento, ver qual a transição do subset
+                        if k == 0:
+                            transicao_now = index_ce_estado
+
+                        # realiza verificação
+                        if transicao_now != index_ce_estado:
+                            # ver se já está nos removidos
+                            found: bool = False
+                            for index_, transicao_, estado_ in estados_removidos:
+                                if transicao_ == index_ce_estado:
+                                    classes_equivalencia[index_ - 1].append(estado)
+                                    classes_equivalencia[i].remove(estado)
+                                    estados_removidos.append((index_, index_ce_estado, estado))
+                                    found = True
+                                    break
+
+                            if not found:
+                                # se não, adicionar nova classe de equivalência
+                                classes_equivalencia.append([estado])
+                                classes_equivalencia[i].remove(estado)
+                                estados_removidos.append((len(classes_equivalencia), index_ce_estado, estado))
+            if classes_now == classes_equivalencia:
+                break
+
+        af_new: AF = AF()
+        af_new.qtd_estados = len(classes_equivalencia)
+        af_new.alfabeto = self.alfabeto
+
+        # fazer os estados
+        for classe in classes_equivalencia:
+            estado_old: Estado = classe[0]
+            estado_new: Estado = af_new.find_estado(",".join([x.nome for x in classe]))
+
+            # ver se é estado inicial ou final
+            if any(elem == self.estado_inicial for elem in classe):
+                af_new.estado_inicial = estado_new
+            elif any(elem in self.estados_finais for elem in classe):
+                af_new.estados_finais.append(estado_new)
+
+            # ver transição para cada letra
+            for letra in self.alfabeto:
+                estados_transicao: List[Estado] = estado_old.next_estado(letra)
                 if len(estados_transicao) == 1:
-                    # transita para alguém
                     estado_transicao: Estado = estados_transicao[0]
-                    ce_estado: Union[CE, None] = get_ce_estado(estado_transicao)
-                    ce.transicao = ce_estado
-                elif len(estados_transicao) == 0:
-                    # transita para nulo
-                    ce_transicao: Union[CE, None] = get_ce_transicao(None)
-                    if ce_transicao is not None:
-                        ce.transicao = ce_transicao
-                    else:
-                        ce_new: CE = CE(primeiro_estado)
-                        ce_new.transicao = None
-                        classes_equivalencia.append(ce_new)
+                    for classe_now in classes_equivalencia:
+                        if estado_transicao in classe_now:
+                            estado_transicao_estado = af_new.find_estado(",".join([x.nome for x in classe_now]))
+                            estado_new.add_transicao(letra, estado_transicao_estado)
 
-            # com as transições de cada CE definida, fazer o loop de cada CE
-            # que tenha tamanho de estados > 1
-            for ce in classes_equivalencia:
-                if len(ce.estados) == 1:
-                    continue
-                for estado in ce.estados:
-                    estados_transicao: List[Estado] = estado.next_estado(letra)
-                    if len(estados_transicao) == 1:
-                        # transita para alguém
-                        estado_transicao: Estado = estados_transicao[0]
-                        ce_transicao: CE = get_ce_estado(estado_transicao)
-
-                        if ce.transicao != ce_transicao:
-                            ce_new: CE = CE(estado)
-                            ce.remove_estado(estado)
-                            classes_equivalencia.append(ce_new)
-                    elif len(estados_transicao) == 0:
-                        # transita para nulo
-                        ce_transicao: CE = get_ce_transicao(None)
-                        if ce_transicao is None:
-                            ce_new: CE = CE(estado)
-                            ce_new.transicao = None
-                        elif ce_transicao is not None and ce.transicao != ce_transicao:
-                            ce_new: CE = CE(estado)
-                            ce.remove_estado(estado)
-                            classes_equivalencia.append(ce_new)
-
-        # conferir classes de equivalência
-        for ce in classes_equivalencia:
-            print(",".join([x.nome for x in ce.estados]))
-            print(" - ")
-        return self
+        return af_new
 
     def determinizar(self) -> AF:
         """

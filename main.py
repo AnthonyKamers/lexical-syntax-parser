@@ -29,3 +29,5 @@ if __name__ == '__main__':
     af: AF = AF()
     af.parse_file("entradas/AF/exemplo5.af")
     af_new: AF = af.minimizar()
+    af_new.show_tabela_transicao()
+    print(af_new)
