@@ -1,6 +1,8 @@
 from src.AF.AF import AF
 from src.AF.Estado import Estado
+from src.ER.ER import ER
 from src.utils.utilsAF import uniao_automatos
+from src.utils.utilsER import *
 
 if __name__ == '__main__':
     # exemplo fazendo união de autômatos
@@ -26,8 +28,12 @@ if __name__ == '__main__':
     # af_new.show_tabela_transicao()
 
     # exemplo minimização de autômato
-    af: AF = AF()
-    af.parse_file("entradas/AF/exemplo5.af")
-    af_new: AF = af.minimizar()
-    af_new.show_tabela_transicao()
-    print(af_new)
+    # af: AF = AF()
+    # af.parse_file("entradas/AF/exemplo5.af")
+    # af_new: AF = af.minimizar()
+    # af_new.show_tabela_transicao()
+    # print(af_new)
+
+    # ER
+    er: ER = ER()
+    er.parse_file("entradas/ER/exemplo2.er")

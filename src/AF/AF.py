@@ -3,7 +3,6 @@ from __future__ import annotations
 import copy
 from typing import List, Union, Tuple
 
-from src.AF.CE import CE
 from src.AF.Estado import Estado
 from src.utils.utils import pretty_print_matrix, remove_duplicates_lista
 
