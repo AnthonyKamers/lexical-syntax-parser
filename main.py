@@ -38,4 +38,4 @@ if __name__ == '__main__':
     er: ER = ER()
     er.parse_file("entradas/ER/exemplo1.er")
     er.construct_syntactic_tree()
-    print("")
+    er.make_followpos()

@@ -1,6 +1,9 @@
+import copy
 from typing import Union, Tuple
 from enum import Enum
 
+from src.AF.AF import AF
+from src.AF.Estado import Estado
 from src.utils.utilsER import *
 
 caracteres_especiais = ["(", "|", "*", "?", "+", ")"]
@@ -19,14 +22,60 @@ class Node:
     def __init__(self, el, operation: Operation):
         self.el = el
         self.op = operation
-        self.left = None
-        self.right = None
+        self.left: Union[None, Node] = None
+        self.right: Union[None, Node] = None
+        self.father: Union[None, Node] = None
+        self.first_pos = set()
+        self.last_pos = set()
+        self.follow_pos = set()
+
+    def __repr__(self):
+        return self.el
+
+    def is_nullable(self) -> bool:
+        if self.op == Operation.CONCAT:
+            return self.left.is_nullable() and self.right.is_nullable()
+        elif self.op == Operation.OR:
+            return self.left.is_nullable() or self.right.is_nullable()
+        elif self.op == Operation.FECHO:
+            return True
+        elif self.op == Operation.CLOSE:
+            return False
+        elif self.op == Operation.ELEMENT:
+            return self.el != "&"
+
+    def get_first_pos(self):
+        if self.op == Operation.CONCAT:
+            if self.left.is_nullable():
+                return self.left.get_first_pos().union(self.right.get_first_pos())
+            else:
+                return self.left.get_first_pos()
+        elif self.op == Operation.OR:
+            return self.left.get_first_pos().union(self.right.get_first_pos())
+        elif self.op == Operation.FECHO:
+            return self.right.get_first_pos()
+        elif self.op in (Operation.CLOSE, Operation.ELEMENT):
+            return self.first_pos
+
+    def get_last_pos(self):
+        if self.op == Operation.CONCAT:
+            if self.right.is_nullable():
+                return self.right.get_last_pos().union(self.left.get_last_pos())
+            else:
+                return self.right.get_last_pos()
+        elif self.op == Operation.OR:
+            return self.right.get_last_pos().union(self.left.get_last_pos())
+        elif self.op == Operation.FECHO:
+            return self.right.get_last_pos()
+        elif self.op in (Operation.CLOSE, Operation.ELEMENT):
+            return self.last_pos
 
 
 class ER:
     def __init__(self):
         self.er = {}
         self.er_tree = {}
+        self.afds = []
 
     def __repr__(self):
         return "ER()"
@@ -132,11 +181,9 @@ class ER:
                     node.left = make_node_concat(subset_left)
                     node.right = make_node_concat(subset_right)
 
-                    break
+                    return node
                 except ValueError:
                     pass
-
-            return node
 
         for key, value in self.er.items():
             operations = []
@@ -170,6 +217,12 @@ class ER:
                         node_aux = Node(".", Operation.CONCAT)
                         node_aux.left = node_now
                         node_aux.right = node_aux1
+
+                        # atualizar nodo pai
+                        node_now.father = node_aux
+                        node_aux1.father = node_aux
+
+                        # atualizar node_now
                         node_now = node_aux
                     else:
                         node_aux = node_aux1
@@ -179,22 +232,153 @@ class ER:
                     last_right = node_now.right
                     node_aux.right = last_right
                     node_now.right = node_aux
+
+                    # atualizar nodo pai
+                    last_right.father = node_aux
+                    node_aux.father = node_now
                 elif first_op == Operation.OR:
                     node_aux = Node(first, first_op)
                     node_aux.left = node_now
+
+                    # atualizar nodo pai
+                    node_now.father = node_aux
+
+                    # atualizar node_now
                     node_now = node_aux
                 elif first_op == Operation.ELEMENT:
                     node_aux = Node(first, first_op)
                     node_now.right = node_aux
+
+                    # atualizar nodo pai
+                    node_aux.father = node_now
 
                 # fazer checagens de parada e de primeira instância
                 if first_run:
                     node_now = node_aux
                     first_run = False
 
+            # fazer nodo de finalização
+            node_close = Node("#", Operation.CLOSE)
+
+            # fazer nodo pai final
             father_final = Node(".", Operation.CONCAT)
             father_final.left = node_now
-            father_final.right = Node("#", Operation.CLOSE)
+            father_final.right = node_close
+
+            # atualizar nodo pai
+            node_close.father = father_final
+            node_now.father = father_final
 
             # adiciona no dicionário a árvore construída
             self.er_tree[key] = father_final
+
+    def make_followpos(self):
+        def mark_elements(node: Node):
+            if node is None:
+                return
+
+            # check its first and last pos
+            if (node.op == Operation.ELEMENT and node.el != "&") or \
+                    node.op == Operation.CLOSE:
+                node.first_pos.add(node)
+                node.last_pos.add(node)
+
+            mark_elements(node.right)
+            mark_elements(node.left)
+
+        def mark_last_pos(node: Node):
+            if node is None:
+                return
+
+            if node.op == Operation.CONCAT:
+                c2_first_pos = node.right.get_first_pos()
+                for i in node.left.get_last_pos():
+                    i.follow_pos = i.follow_pos.union(c2_first_pos)
+
+            elif node.op == Operation.FECHO:
+                for i in node.get_last_pos():
+                    i.follow_pos = i.follow_pos.union(node.get_first_pos())
+
+            mark_last_pos(node.right)
+            mark_last_pos(node.left)
+
+        def find_identical_el(list_node: List[Node]):
+            obj = {}
+            for i in list_node:
+                try:
+                    obj[i.el].append(i)
+                except KeyError:
+                    obj[i.el] = [i]
+            return obj
+
+        def make_afd_estado(transition_nodes, af, estado_now):
+            for transition, nodes in transition_nodes.items():
+                # ver se é preciso colocar transição no alfabeto do AFD
+                if transition not in af.alfabeto:
+                    af.alfabeto.append(transition)
+
+                # pegar follow_pos dos nodes
+                follow_pos = set()
+                for node in nodes:
+                    follow_pos = follow_pos.union(node.follow_pos)
+
+                list_follow_pos = list(follow_pos)
+                obj = find_identical_el(list_follow_pos)
+
+                # follow_pos é zerado, não precisa fazer nada
+                if len(list_follow_pos) == 0:
+                    return
+
+                # fazer cópia dos estados anteriores, para ver
+                # se o novo já existia antes, para ver se é necessário
+                # fazer recusão ou não
+                estados_before = copy.copy(af.estados)
+
+                # criar estado novo ou pegar já criado
+                estado_new: Estado = af.find_estado(",".join([x.el for x in list_follow_pos]))
+
+                # colocar transição do estado antigo para este
+                estado_now.add_transicao(transition, estado_new)
+
+                # ver se é o estado final
+                if any(elem.op == Operation.CLOSE for elem in list_follow_pos) and \
+                        estado_new not in af.estados_finais:
+                    af.estados_finais.append(estado_new)
+
+                # ver se é necessário fazer recursão (caso este estado
+                # não tenha sido percorrido ainda
+                if estado_new not in estados_before:
+                    make_afd_estado(obj, af, estado_new)
+
+        def make_afd(node: Node) -> AF:
+            af_new = AF()
+
+            # pegar nodos de maneira a identificar
+            # quais são as mesmas letras de transição
+            first_pos: List[Node] = list(node.get_first_pos())
+            obj = find_identical_el(first_pos)
+
+            # fazer estado inicial
+            estado: Estado = af_new.find_estado(",".join([x.el for x in first_pos]))
+            af_new.estado_inicial = estado
+
+            # ver se é o estado final
+            if any(elem.op == Operation.CLOSE for elem in first_pos):
+                af_new.estados_finais.append(estado)
+
+            # percorrer transições e fazer cada transição recursivamente
+            make_afd_estado(obj, af_new, estado)
+
+            # colocar último atributo
+            af_new.qtd_estados = len(af_new.estados)
+
+            # retornar o AFD construído do ER, pela
+            # árvore de transformação
+            return af_new
+
+        for key, root in self.er_tree.items():
+            mark_elements(root)
+            mark_last_pos(root)
+            afd: AF = make_afd(root)
+            print(afd)
+            self.afds.append(afd)
