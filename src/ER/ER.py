@@ -15,11 +15,6 @@ class Operation(Enum):
     ELEMENT = 0
 
 
-class Orientation(Enum):
-    LEFT = 0,
-    RIGHT = 1
-
-
 class Node:
     def __init__(self, el, operation: Operation):
         self.el = el
@@ -28,20 +23,10 @@ class Node:
         self.right = None
 
 
-class Tree:
-    def __init__(self, root: Node):
-        self.root = root
-
-
-#   "[", "a", "]", "*", "#"
-#
-#  raiz.left(node(xx))      continua a arvore por esse galho ..
-#  raiz.right(node("#"))
-#
-
 class ER:
     def __init__(self):
         self.er = {}
+        self.er_tree = {}
 
     def __repr__(self):
         return "ER()"
@@ -154,171 +139,62 @@ class ER:
             return node
 
         for key, value in self.er.items():
-            tree = []
             operations = []
 
-            if key == "id":
-                print(value)
+            # construir prioridades
+            for el_now in value:
+                if el_now == "*":
+                    operations.append(Operation.FECHO)
+                elif el_now == "|":
+                    operations.append(Operation.OR)
+                elif isinstance(el_now, list):
+                    operations.append(Operation.CONCAT)
+                else:
+                    operations.append(Operation.ELEMENT)
 
-                # construir prioridades
-                for el_now in value:
-                    if el_now == "*":
-                        operations.append(Operation.FECHO)
-                    elif el_now == "|":
-                        operations.append(Operation.OR)
-                    elif isinstance(el_now, list):
-                        operations.append(Operation.CONCAT)
-                    else:
-                        operations.append(Operation.ELEMENT)
+            # inicia de qualquer maneira o nodo (somente para iniciar)
+            node_now: Node = Node("", Operation.CLOSE)
+            first_run = True
+            while len(value) != 0:
+                first = value.pop(0)
+                first_op = operations.pop(0)
 
-                # inicia de qualquer maneira o nodo (somente para funcionar)
-                node_now: Node = Node("", Operation.CLOSE)
-                orientation_now: Orientation = Orientation.LEFT
-                first_run = True
-                stop = False
-                while len(value) != 0:
-                    first = value.pop(0)
-                    first_op = operations.pop(0)
+                # iniciar node_aux com qualquer valor
+                node_aux: Node = Node("", Operation.CLOSE)
 
-                    # iniciar node_aux com qualquer valor
-                    node_aux: Node = Node("", Operation.CLOSE)
+                # ver qual operação estou fazendo no momento
+                if first_op == Operation.CONCAT:
+                    node_aux1 = make_node_concat(first)
 
-                    # ver qual operação estou fazendo no momento
-                    if first_op == Operation.CONCAT:
-                        node_aux1 = make_node_concat(first)
-
-                        if not first_run:
-                            node_aux = Node(".", Operation.CONCAT)
-                            if orientation_now == Orientation.LEFT:
-                                node_aux.left = node_now
-                                node_aux.right = node_aux1
-                                orientation_now = Orientation.LEFT
-                            else:
-                                node_aux.right = node_now
-                                node_aux.left = node_aux1
-                                orientation_now = Orientation.LEFT
-                            node_now = node_aux
-                            stop = True
-                        else:
-                            node_aux = node_aux1
-                    elif first_op == Operation.FECHO:
-                        node_aux = Node(first, first_op)
-
-                        last_right = node_now.right
-                        node_aux.right = last_right
-                        node_now.right = node_aux
-                        stop = True
-                    elif first_op == Operation.OR:
-                        pass
-                    elif first_op == Operation.ELEMENT:
-                        node_aux = Node(first, first_op)
-
-                    # fazer checagens de parada e de primeira instância
-                    if first_run:
+                    if not first_run:
+                        node_aux = Node(".", Operation.CONCAT)
+                        node_aux.left = node_now
+                        node_aux.right = node_aux1
                         node_now = node_aux
-                        first_run = False
                     else:
-                        if not stop:
-                            if orientation_now == Orientation.LEFT:
-                                node_aux.left = node_now
-                                orientation_now = Orientation.RIGHT
-                            else:
-                                node_aux.right = node_now
-                                orientation_now = Orientation.LEFT
-                            node_now = node_aux
-                        else:
-                            stop = False
+                        node_aux = node_aux1
+                elif first_op == Operation.FECHO:
+                    node_aux = Node(first, first_op)
 
+                    last_right = node_now.right
+                    node_aux.right = last_right
+                    node_now.right = node_aux
+                elif first_op == Operation.OR:
+                    node_aux = Node(first, first_op)
+                    node_aux.left = node_now
+                    node_now = node_aux
+                elif first_op == Operation.ELEMENT:
+                    node_aux = Node(first, first_op)
+                    node_now.right = node_aux
 
-                    # # se for uma concatenação, pegar da lista
-                    # if first_op == Operation.CONCAT:
-                    #     node_aux = make_node_concat(first)
-                    #     orientation_now = Orientation.LEFT
-                    # else:
-                    #     node_aux = Node(first, first_op)
-                    #     orientation_now = Orientation.LEFT
-                    #
-                    # if first_run:
-                    #     first_run = False
-                    #     node_now = node_aux
-                    # else:
-                    #     if orientation_now == Orientation.LEFT:
-                    #         node_aux.left = node_now
-                    #         orientation_now = Orientation.RIGHT
-                    #     else:
-                    #         node_now.right = node_aux
-                    #         orientation_now = Orientation.LEFT
-                    #     node_now = node_aux
-                    #
-                    # # tem segundo argumento, ver o que fazer
-                    # try:
-                    #     second = value[0]
-                    #     second_op = operations[0]
-                    #
-                    #     # se for uma concatenação, pegar da lista
-                    #     if second_op.CONCAT:
-                    #         # se vai usar o valor, preciso removê-lo da lista
-                    #         value.pop(0)
-                    #         operations.pop(0)
-                    #
-                    #         try:
-                    #             third = value[0]
-                    #             third_op = operations[0]
-                    #
-                    #             father = Node(".", Operation.CONCAT)
-                    #
-                    #             # adiciona na orientação certa
-                    #             if orientation_now == Orientation.LEFT:
-                    #                 father.left = node_now
-                    #                 orientation_now = Orientation.RIGHT
-                    #             else:
-                    #                 father.right = node_now
-                    #                 orientation_now = Orientation.LEFT
-                    #
-                    #             # se o próximo depois da concatenação for um
-                    #             # fecho, colocar a concatenação à direita de fecho
-                    #             if third_op == Operation.FECHO:
-                    #                 # se vai usar o valor, preciso removê-lo da lista
-                    #                 value.pop(0)
-                    #                 operations.pop(0)
-                    #
-                    #                 # atualizar com dados do fecho
-                    #                 nodo_medium = Node(third, third_op)
-                    #                 nodo_medium.right = make_node_concat(second)
-                    #                 father.right = nodo_medium
-                    #             else:
-                    #                 # se não, apenas colocar normalmente
-                    #                 if orientation_now == Orientation.LEFT:
-                    #                     father.left = make_node_concat(second)
-                    #                 else:
-                    #                     father.right = make_node_concat(second)
-                    #         except IndexError:
-                    #             # não tem teceiro elemento, colocar
-                    #             father = Node(".", Operation.CONCAT)
-                    #
-                    #             # fazer de acordo com a orientação do momento
-                    #             if orientation_now == Orientation.LEFT:
-                    #                 father.left = node_now
-                    #                 father.right = make_node_concat(second)
-                    #             else:
-                    #                 father.right = node_now
-                    #                 father.left = make_node_concat(second)
-                    #
-                    #         # atualizar node_now
-                    #         node_now = father
-                    #
-                    #     elif second_op.FECHO:
-                    #         node_aux = Node(second, )
-                    #
-                    # # se não tem segundo elemento, node_now está finalizado
-                    # except IndexError:
-                    #     pass
+                # fazer checagens de parada e de primeira instância
+                if first_run:
+                    node_now = node_aux
+                    first_run = False
 
-                father_final = Node(".", Operation.CONCAT)
-                father_final.left = node_now
-                father_final.right = Node("#", Operation.CLOSE)
-                print("")
+            father_final = Node(".", Operation.CONCAT)
+            father_final.left = node_now
+            father_final.right = Node("#", Operation.CLOSE)
 
-# ['letter', ['letter', '|', 'digit'], '*']
-
-# [o, [o, letter, [*, [|, letter, digit], NADA]], '#']
+            # adiciona no dicionário a árvore construída
+            self.er_tree[key] = father_final
