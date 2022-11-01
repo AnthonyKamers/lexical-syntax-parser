@@ -130,6 +130,9 @@ class AF:
         :param entrada: entrada do AF
         :return: ACEITA caso aceite, REJEITA caso rejeite
         """
+        if self.estado_now is None:
+            self.estado_now = self.estado_inicial
+
         for letra in entrada:
             retorno = self.run_letra(letra)
             if not retorno:

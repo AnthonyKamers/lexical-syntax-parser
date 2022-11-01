@@ -380,5 +380,4 @@ class ER:
             mark_elements(root)
             mark_last_pos(root)
             afd: AF = make_afd(root)
-            print(afd)
             self.afds.append(afd)
