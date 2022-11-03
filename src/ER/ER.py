@@ -201,6 +201,7 @@ class ER:
 
             # inicia de qualquer maneira o nodo (somente para iniciar)
             node_now: Node = Node("", Operation.CLOSE)
+            first_operator: Union[None, Operation] = None
             first_run = True
             while len(value) != 0:
                 first = value.pop(0)
@@ -238,13 +239,24 @@ class ER:
                     node_aux.father = node_now
                 elif first_op == Operation.OR:
                     node_aux = Node(first, first_op)
-                    node_aux.left = node_now
 
-                    # atualizar nodo pai
-                    node_now.father = node_aux
+                    if node_now.op == Operation.OR:
+                        # atualizar para o lado esquerdo
+                        node_aux.left = node_now.right
+                        node_aux.left.father = node_aux
 
-                    # atualizar node_now
-                    node_now = node_aux
+                        # atualizar node_now
+                        node_aux.father = node_now
+                        node_now.right = node_aux
+                        node_now = node_aux
+                    else:
+                        node_aux.left = node_now
+
+                        # atualizar nodo pai
+                        node_now.father = node_aux
+
+                        # atualizar node_now
+                        node_now = node_aux
                 elif first_op == Operation.ELEMENT:
                     node_aux = Node(first, first_op)
                     node_now.right = node_aux
@@ -256,6 +268,16 @@ class ER:
                 if first_run:
                     node_now = node_aux
                     first_run = False
+
+                # ver qual foi o primeiro operador
+                if first_operator is None and first_op in (Operation.OR, Operation.CONCAT):
+                    first_operator = first_op
+
+            # ver quem é o nodo pai, pelo primeiro operador
+            # se for OR, tem que fazer recursão com o enésimo pai
+            if first_operator == Operation.OR:
+                while node_now.father is not None:
+                    node_now = node_now.father
 
             # fazer nodo de finalização
             node_close = Node("#", Operation.CLOSE)
@@ -286,7 +308,7 @@ class ER:
             mark_elements(node.right)
             mark_elements(node.left)
 
-        def mark_last_pos(node: Node):
+        def mark_follow_pos(node: Node):
             if node is None:
                 return
 
@@ -299,8 +321,8 @@ class ER:
                 for i in node.get_last_pos():
                     i.follow_pos = i.follow_pos.union(node.get_first_pos())
 
-            mark_last_pos(node.right)
-            mark_last_pos(node.left)
+            mark_follow_pos(node.right)
+            mark_follow_pos(node.left)
 
         def find_identical_el(list_node: List[Node]):
             obj = {}
@@ -327,7 +349,7 @@ class ER:
 
                 # follow_pos é zerado, não precisa fazer nada
                 if len(list_follow_pos) == 0:
-                    return
+                    continue
 
                 # fazer cópia dos estados anteriores, para ver
                 # se o novo já existia antes, para ver se é necessário
@@ -378,6 +400,6 @@ class ER:
 
         for key, root in self.er_tree.items():
             mark_elements(root)
-            mark_last_pos(root)
+            mark_follow_pos(root)
             afd: AF = make_afd(root)
             self.afds.append(afd)
