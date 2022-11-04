@@ -42,7 +42,7 @@ class Node:
         elif self.op == Operation.CLOSE:
             return False
         elif self.op == Operation.ELEMENT:
-            return self.el != "&"
+            return self.el == "&"
 
     def get_first_pos(self):
         if self.op == Operation.CONCAT:
@@ -75,7 +75,7 @@ class ER:
     def __init__(self):
         self.er = {}
         self.er_tree = {}
-        self.afds = []
+        self.afds = {}
 
     def __repr__(self):
         return "ER()"
@@ -152,6 +152,10 @@ class ER:
                 else:
                     # another type of ER, parse it
                     self.er[key] = parse_content(content, 0)
+
+    def make_afd_er(self):
+        self.construct_syntactic_tree()
+        self.make_followpos()
 
     def construct_syntactic_tree(self):
         def make_node_concat(lista: list) -> Node:
@@ -335,9 +339,25 @@ class ER:
 
         def make_afd_estado(transition_nodes, af, estado_now):
             for transition, nodes in transition_nodes.items():
+                has_afd: bool = transition in list(self.afds.keys())
+                afd_link: Union[None, AF] = None if not has_afd else self.afds[transition]
+
+                # se possui um AF, colocar no AF correspondente, para poder fazer a busca posteriomente
+                if has_afd:
+                    af.afds.add(afd_link)
+
                 # ver se é preciso colocar transição no alfabeto do AFD
-                if transition not in af.alfabeto:
-                    af.alfabeto.append(transition)
+                if transition not in af.alfabeto and transition != "#":
+                    if not has_afd:
+                        if len(transition) > 1:
+                            raise "Erro: Identificador deve ser declarado primeiramente"
+
+                        # é apenas uma letra
+                        af.alfabeto.append(transition)
+                    else:
+                        # é um AF, logo seu alfabeto vêm dele
+                        for el in afd_link.alfabeto:
+                            af.alfabeto.append(el)
 
                 # pegar follow_pos dos nodes
                 follow_pos = set()
@@ -360,7 +380,12 @@ class ER:
                 estado_new: Estado = af.find_estado(",".join([x.el for x in list_follow_pos]))
 
                 # colocar transição do estado antigo para este
-                estado_now.add_transicao(transition, estado_new)
+                if has_afd:
+                    # adicionar transição de todos os elementos de seu alfabeto para estado_new
+                    for letra in afd_link.alfabeto:
+                        estado_now.add_transicao(letra, estado_new, afd_link)
+                else:
+                    estado_now.add_transicao(transition, estado_new, afd_link)
 
                 # ver se é o estado final
                 if any(elem.op == Operation.CLOSE for elem in list_follow_pos) and \
@@ -402,4 +427,4 @@ class ER:
             mark_elements(root)
             mark_follow_pos(root)
             afd: AF = make_afd(root)
-            self.afds.append(afd)
+            self.afds[key] = afd

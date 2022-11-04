@@ -17,6 +17,7 @@ class AF:
         self.alfabeto: List[str] = []
         self.is_deterministico: bool = True
         self.estado_now: Union[Estado, None] = None
+        self.afds = set()
 
         self.functions_file = {
             1: self.set_qtd_estados,
