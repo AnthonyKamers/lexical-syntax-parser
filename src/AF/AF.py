@@ -3,7 +3,6 @@ from __future__ import annotations
 import copy
 from typing import List, Union, Tuple
 
-from src.AF.CE import CE
 from src.AF.Estado import Estado
 from src.utils.utils import pretty_print_matrix, remove_duplicates_lista
 
@@ -18,6 +17,7 @@ class AF:
         self.alfabeto: List[str] = []
         self.is_deterministico: bool = True
         self.estado_now: Union[Estado, None] = None
+        self.afds = set()
 
         self.functions_file = {
             1: self.set_qtd_estados,
@@ -131,6 +131,8 @@ class AF:
         :param entrada: entrada do AF
         :return: ACEITA caso aceite, REJEITA caso rejeite
         """
+        self.estado_now = self.estado_inicial
+
         for letra in entrada:
             retorno = self.run_letra(letra)
             if not retorno:
