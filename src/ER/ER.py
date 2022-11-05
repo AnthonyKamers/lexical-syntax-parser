@@ -99,9 +99,9 @@ class ER:
                     elif character == "*":
                         lista.append(character)
                     elif character == "?":
-                        pass
+                        lista.append(character)
                     elif character == "+":
-                        pass
+                        lista.append(character)
                     elif character == ")":
                         lista.append(palavra_now)
                         return lista, index + 1, substring
@@ -123,16 +123,46 @@ class ER:
                         lista = lista + parse_content(substring_novo, index_novo)
                         break
                     elif character == "|":
-                        lista.append(palavra_now)
+                        if palavra_now != "":
+                            lista.append(palavra_now)
                         lista.append(character)
                         palavra_now = ""
                     elif character == "*":
                         lista.append(character)
                     elif character == "?":
-                        pass
+                        if palavra_now != "":
+                            lista.append(palavra_now)
+                        lista.append(character)
+                        palavra_now = ""
                     elif character == "+":
-                        pass
+                        if palavra_now != "":
+                            lista.append(palavra_now)
+                        lista.append(character)
+                        palavra_now = ""
             return lista
+
+        def treat_exceptions(parsed):
+            # busca por ?
+            for k, el in enumerate(parsed):
+                if el == "?":
+                    before = parsed[k-1]
+
+                    # substituir no índice k-1
+                    parsed[k-1] = [before, "|", "&"]
+
+                    # remover índice k
+                    parsed.pop(k)
+
+            # busca por +
+            for k, el in enumerate(parsed):
+                if el == "+":
+                    before = parsed[k-1]
+
+                    # substituir no índice k
+                    parsed[k] = before
+
+                    # adicionar fecho no próximo elemento
+                    parsed.insert(k+1, "*")
 
         with open(file_name) as file:
             for line in file:
@@ -151,7 +181,9 @@ class ER:
                     self.er[key] = get_uppercase_letters()
                 else:
                     # another type of ER, parse it
-                    self.er[key] = parse_content(content, 0)
+                    er_parsed = parse_content(content, 0)
+                    treat_exceptions(er_parsed)
+                    self.er[key] = er_parsed
 
     def make_afd_er(self):
         self.construct_syntactic_tree()
