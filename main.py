@@ -3,6 +3,7 @@ from typing import Union
 from src.AF.AF import AF
 from src.AF.Estado import Estado
 from src.ER.ER import ER
+from src.Grammar.Grammar import Grammar
 from src.utils.utilsAF import uniao_automatos
 from src.utils.utilsER import *
 
@@ -37,8 +38,8 @@ if __name__ == '__main__':
     # print(af_new)
 
     # ER
-    er: ER = ER()
-    er.parse_file("entradas/ER/exemplo4.er")
+    # er: ER = ER()
+    # er.parse_file("entradas/ER/exemplo4.er")
     # er.make_afd_er()
     #
     # print(list(er.afds.keys()))
@@ -61,4 +62,10 @@ if __name__ == '__main__':
     # printtar para testar
     # print(afd_geral)
     # afd_geral.show_tabela_transicao()
+
+    # Gramática
+    grammar = Grammar()
+    grammar.parse_file("entradas/gramaticas/exemplo2.grammar")
+    print(grammar.has_nullable(), grammar.has_recursive())
+    print("")
 
