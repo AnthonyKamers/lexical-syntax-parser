@@ -17,9 +17,9 @@ ______
 # Analisador léxico (peso 4)
 Algoritmos a serem implementados
 
-- [ ] Conversão de Expressão Regular (ER) para Autômato Finito Determinístico (AFD) -> disponível algoritmo no livro do Aho
-- [ ] União de Autômatos via epsilon-transição
-- [ ] Determinização de Autômatos
+- [X] Conversão de Expressão Regular (ER) para Autômato Finito Determinístico (AFD) -> disponível algoritmo no livro do Aho
+- [X] União de Autômatos via epsilon-transição
+- [X] Determinização de Autômatos
 - [ ] Construção da Tabela de Símbolos (TS)
   - Deve ser incluído palavras reservadas e outras informações importantes (para auxiliar nas etapas do analisador sintático)
 
