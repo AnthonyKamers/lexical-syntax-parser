@@ -65,7 +65,9 @@ if __name__ == '__main__':
 
     # Gramática
     grammar = Grammar()
-    grammar.parse_file("entradas/gramaticas/exemplo2.grammar")
+    # grammar.parse_file("entradas/gramaticas/exemplo-nao-det-det.grammar")
+    grammar.parse_file("entradas/gramaticas/exemplo-nao-det-nao-det.grammar")
+    grammar.remove_nao_determinismo()
     print(grammar.has_nullable(), grammar.has_recursive())
     print("")
 

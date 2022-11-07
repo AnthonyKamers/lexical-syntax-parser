@@ -2,6 +2,12 @@ from typing import List, Union
 
 from src.Grammar.Symbol import Symbol
 
+import string
+import random
+
+# flags
+MAX_EXECUTION_NAO_DETERMINISMO = 50
+
 
 class Grammar:
     def __init__(self):
@@ -15,6 +21,9 @@ class Grammar:
 
         with open(file_name) as file:
             for line in file:
+                # ignorar comentários (para facilitar debbug)
+                if line.startswith("#"):
+                    continue
                 line = line.replace(" ", "").replace("\n", "")
                 simbolo, producoes = line.split("->")
                 producoes = producoes.split("|")
@@ -54,3 +63,49 @@ class Grammar:
 
     def get_symbol(self, simbolo: str):
         return next(symbol for symbol in self.simbolos if symbol.simbolo == simbolo)
+
+    def has_symbol(self, simbolo: str):
+        try:
+            self.get_symbol(simbolo)
+            return True
+        except StopIteration:
+            return False
+
+    def generate_random_symbol(self) -> Symbol:
+        while True:
+            random_char = random.choice(string.ascii_uppercase)
+            if not self.has_symbol(random_char):
+                symbol = Symbol(random_char, self)
+                self.simbolos.append(symbol)
+                return symbol
+
+    def remove_nao_determinismo(self):
+        """
+        Este método transforma a gramática em não determinística para
+        uma deterministica (na forma fatorada).
+        Este método deve ser executado após a transformação de recursão à
+        esquerda, podendo levar a um "loop" infinito caso isso não seja feito.
+        """
+        i = 0
+        while True:
+            changed = False
+            for symbol in self.get_nao_terminais():
+                flag = symbol.remove_nao_determinismo_direto()
+                flag1 = symbol.transforma_nao_determinismo_indireto()
+
+                changed = changed or flag or flag1
+            i += 1
+
+            if not changed:
+                break
+
+            if i == MAX_EXECUTION_NAO_DETERMINISMO:
+                raise "Não foi possível transformar a gramática em " \
+                      "não determinista (entrou em loop infinito)."
+
+    def remove_recursao_esquerda(self):
+        """
+        Este método transforma a gramática de recursiva à esquerda para
+        não recursiva à esquerda
+        """
+        pass

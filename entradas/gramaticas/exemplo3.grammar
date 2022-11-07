@@ -1,0 +1,10 @@
+S -> aC | BC
+B -> aB | dD
+C -> eC | eB
+D -> g
+#primeiro passo
+#S -> aC | aBC | dDC
+#
+#segundo passo
+#S -> aX | dDC
+#X -> C | BC
