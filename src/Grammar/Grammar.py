@@ -47,9 +47,25 @@ class Grammar:
         return [x for x in self.simbolos if x.is_terminal == type_terminal]
 
     def has_recursive(self) -> bool:
+        """
+        Retorna se a gramática é recursiva de alguma maneira
+        (não necessariamente à esquerda)
+        :return: Se a gramática é recursiva
+        """
         return len([x for x in self.get_nao_terminais() if x.is_recursive()]) > 0
 
+    def has_left_recursion(self) -> bool:
+        """
+        Retorna se a gramática é recursiva à esquerda
+        :return: Se a gramática é recursiva à esquerda
+        """
+        return len([x for x in self.get_nao_terminais() if x.is_left_recursive()]) > 0
+
     def has_nullable(self) -> bool:
+        """
+        Retorna se a gramática contém o símbolo nulo (&)
+        :return: Se a gramática contém o símbolo nulo (&)
+        """
         return len([x for x in self.get_nao_terminais() if x.is_nullable()]) > 0
 
     def find_symbol(self, simbolo: str) -> Symbol:
@@ -108,4 +124,24 @@ class Grammar:
         Este método transforma a gramática de recursiva à esquerda para
         não recursiva à esquerda
         """
-        pass
+        nao_terminais = self.get_nao_terminais()
+
+        # fazer para todos os terminais
+        for k1, terminal1 in enumerate(nao_terminais):
+            # se for o símbolo inicial, remover recursão direta
+            if k1 == 0:
+                terminal1.remove_recursao_esquerda_direta()
+
+            for k2, terminal2 in enumerate(nao_terminais):
+                if terminal1 == terminal2 or k2 < k1:
+                    # se for o mesmo terminal, não precisa fazer nada,
+                    # pois a recursão direta é feita em outro momento
+                    continue
+
+                else:
+                    # fazer recursão indireta de terminal1 em terminal2
+                    changed = terminal2.remove_recursao_esquerda_indireta(terminal1)
+
+                    # se houve alteração, fazer remoção de recursão direta em terminal2
+                    if changed:
+                        terminal2.remove_recursao_esquerda_direta()

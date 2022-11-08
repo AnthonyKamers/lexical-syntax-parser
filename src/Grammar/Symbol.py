@@ -1,5 +1,7 @@
 from typing import List
 
+from src.utils.utils import subtract_listas
+
 
 class Symbol:
     def __init__(self, simbolo: str, grammar: any):
@@ -30,7 +32,24 @@ class Symbol:
                     return True
         return False
 
-    def is_recursive(self):
+    def is_left_recursive(self) -> bool:
+        return self.is_left_recursive_check(self)
+
+    def is_left_recursive_check(self, symbol_check) -> bool:
+        # checar produções diretas
+        if len(self.find_producoes_start(self)) > 0:
+            return True
+
+        # checar produções indiretas
+        for producao in self.producoes:
+            first = producao[0]
+            if not first.is_terminal:
+                result = first.is_left_recursive_check(symbol_check)
+                if result:
+                    return True
+        return False
+
+    def is_recursive(self) -> bool:
         return self.is_recursive_check(self)
 
     def is_recursive_check(self, symbol_check) -> bool:
@@ -45,7 +64,7 @@ class Symbol:
             for symbol in producao:
                 if not symbol.is_terminal:
                     # se for não terminal, seguir
-                    result = symbol.is_recursive_check(self)
+                    result = symbol.is_recursive_check(symbol_check)
                     if result:
                         return True
         return False
@@ -77,6 +96,18 @@ class Symbol:
         return changed
 
     def transforma_nao_determinismo_indireto(self) -> bool:
+        def check_terminais_nao_terminal(nao_terminal) -> List[any]:
+            producoes_nao_terminal: List[any] = nao_terminal.producoes
+            terminais_now = []
+
+            for prod in producoes_nao_terminal:
+                first_prod = prod[0]
+                if first_prod.is_terminal:
+                    terminais_now.append(first_prod)
+                else:
+                    terminais_now = terminais_now + check_terminais_nao_terminal(first_prod)
+            return terminais_now
+
         def transform_nao_terminal_in_terminal(nao_terminal_now):
             producoes_start = self.find_producoes_start(nao_terminal_now)
 
@@ -121,28 +152,15 @@ class Symbol:
 
                 # checar quais são seus terminais
                 flag_check = False
-                terminais = self.check_terminais_nao_terminal(first_search)
+                terminais = check_terminais_nao_terminal(first_search)
                 for terminal in terminais:
                     flag_check = flag_check or check_other_terminais(terminal)
 
-                # se houve mudança, mudar suas próprias produções
+                # se houve mudança, mudar as suas próprias produções
                 if flag_check:
                     transform_nao_terminal_in_terminal(first_search)
                     return True
         return False
-
-    @staticmethod
-    def check_terminais_nao_terminal(nao_terminal) -> List[any]:
-        producoes_nao_terminal: List[any] = nao_terminal.producoes
-        terminais = []
-
-        for prod in producoes_nao_terminal:
-            first_prod = prod[0]
-            if first_prod.is_terminal:
-                terminais.append(first_prod)
-            else:
-                terminais = terminais + first_prod.check_terminais_nao_terminal(first_prod)
-        return terminais
 
     def find_producoes_start(self, symbol):
         return [x for x in self.producoes if x[0] == symbol]
@@ -158,3 +176,39 @@ class Symbol:
                 search_list.append(first_prod)
                 return first_prod.search_other_symbol(search, prod, search_list)
         return False, search_list
+
+    def remove_recursao_esquerda_direta(self):
+        if self.is_left_recursive():
+            producoes_symbol = self.find_producoes_start(self)
+            producoes_not_symbol = subtract_listas(self.producoes, producoes_symbol)
+            new_symbol = self.grammar.generate_random_symbol()
+
+            # adicionar símbolo novo nas produções
+            # que não contém o símbolo à esquerda
+            for producao in producoes_not_symbol:
+                producao.append(new_symbol)
+
+            # preencher o new_symbol e remover das produções deste símbolo
+            for producao in producoes_symbol:
+                self.producoes.remove(producao)
+                producao_sem_primeiro = producao[1:]
+                producao_sem_primeiro.append(new_symbol)
+                new_symbol.producoes.append(producao_sem_primeiro)
+
+            # adicionar &
+            new_symbol.producoes.append([self.grammar.find_symbol("&")])
+
+    def remove_recursao_esquerda_indireta(self, symbol_remove) -> bool:
+        producoes_start = self.find_producoes_start(symbol_remove)
+
+        if len(producoes_start) == 0:
+            return False
+
+        for producao in producoes_start:
+            self.producoes.remove(producao)
+            resto = producao[1:]
+
+            for producao_symbol in symbol_remove.producoes:
+                producao_new = producao_symbol + resto
+                self.producoes.append(producao_new)
+        return True

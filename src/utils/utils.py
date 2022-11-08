@@ -14,5 +14,10 @@ def pretty_print_matrix(matrix: List[List[str]]) -> None:
     table = [fmt.format(*row) for row in s]
     print('\n'.join(table))
 
+
 def remove_duplicates_lista(lista: List[any]) -> List[any]:
     return list(dict.fromkeys(lista))
+
+
+def subtract_listas(lista1: List[any], lista2: List[any]) -> List[any]:
+    return [x for x in lista1 if x not in lista2]
