@@ -6,7 +6,7 @@ import string
 import random
 
 # flags
-MAX_EXECUTION_NAO_DETERMINISMO = 50
+MAX_EXECUTION_NAO_DETERMINISMO = 50  # quantidade máxima de "loops" em não determinismo
 
 
 class Grammar:
@@ -110,14 +110,15 @@ class Grammar:
                 flag1 = symbol.transforma_nao_determinismo_indireto()
 
                 changed = changed or flag or flag1
+            print(i)
             i += 1
 
             if not changed:
                 break
 
             if i == MAX_EXECUTION_NAO_DETERMINISMO:
-                raise "Não foi possível transformar a gramática em " \
-                      "não determinista (entrou em loop infinito)."
+                raise Exception("Não foi possível transformar a gramática em não determinista (entrou em loop "
+                                "infinito).")
 
     def remove_recursao_esquerda(self):
         """

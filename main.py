@@ -68,6 +68,6 @@ if __name__ == '__main__':
     grammar.parse_file("entradas/gramaticas/exemplo-rec-esquerda-indireta.grammar")
     print(grammar.has_left_recursion())
     grammar.remove_recursao_esquerda()
-    # grammar.remove_nao_determinismo()
+    grammar.remove_nao_determinismo()
     print(grammar.has_nullable(), grammar.has_left_recursion())
     print("")

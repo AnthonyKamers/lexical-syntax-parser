@@ -81,7 +81,10 @@ class Symbol:
                     first_prod = prod1[0]
 
                     # gerar novo símbolo aleatório
-                    new_symbol = self.grammar.generate_random_symbol()
+                    # new_symbol = self.grammar.generate_random_symbol()
+
+                    # gerar novo símbolo com base nesse
+                    new_symbol = self.grammar.find_symbol(self.simbolo + "'")
 
                     # trocar produção antiga por novo símbolo
                     resto_1 = prod1[1:]
@@ -170,7 +173,7 @@ class Symbol:
         for prod in producoes:
             first_prod = prod[0]
 
-            if first_prod.is_terminal and first_prod == search:
+            if first_prod.is_terminal and first_prod == search and len(search_list) > 0:
                 return True, search_list
             else:
                 search_list.append(first_prod)
@@ -196,7 +199,9 @@ class Symbol:
                 new_symbol.producoes.append(producao_sem_primeiro)
 
             # adicionar &
-            new_symbol.producoes.append([self.grammar.find_symbol("&")])
+            epsilon = self.grammar.find_symbol("&")
+            epsilon.is_terminal = True
+            new_symbol.producoes.append([epsilon])
 
     def remove_recursao_esquerda_indireta(self, symbol_remove) -> bool:
         producoes_start = self.find_producoes_start(symbol_remove)
