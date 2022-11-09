@@ -1,9 +1,12 @@
+import copy
 from typing import List, Union
 
 from src.Grammar.Symbol import Symbol
 
 import string
 import random
+
+from src.Utils.utils import remove_duplicates_lista, subtract_listas
 
 # flags
 MAX_EXECUTION_NAO_DETERMINISMO = 50  # quantidade máxima de "loops" em não determinismo
@@ -15,10 +18,6 @@ class Grammar:
         self.simbolo_inicial: Union[Symbol, None] = None
 
     def parse_file(self, file_name: str):
-        def get_terminal():
-            for symbol in self.simbolos:
-                symbol.check_terminal()
-
         with open(file_name) as file:
             for line in file:
                 # ignorar comentários (para facilitar debbug)
@@ -30,11 +29,6 @@ class Grammar:
 
                 new_symbol = self.find_symbol(simbolo)
                 new_symbol.add_producoes(producoes)
-
-        # análise de quais símbolos são terminais devem
-        # ser feitos após varredura completa no arquivo,
-        # pois não há um padrão para símbolo terminal ou não terminal
-        get_terminal()
         self.simbolo_inicial = self.simbolos[0]
 
     def get_terminais(self) -> List[Symbol]:
@@ -44,7 +38,7 @@ class Grammar:
         return self.get_specific_simbolos(False)
 
     def get_specific_simbolos(self, type_terminal: bool) -> List[Symbol]:
-        return [x for x in self.simbolos if x.is_terminal == type_terminal]
+        return [x for x in self.simbolos if x.is_terminal() == type_terminal]
 
     def has_recursive(self) -> bool:
         """
@@ -110,7 +104,6 @@ class Grammar:
                 flag1 = symbol.transforma_nao_determinismo_indireto()
 
                 changed = changed or flag or flag1
-            print(i)
             i += 1
 
             if not changed:
@@ -146,3 +139,103 @@ class Grammar:
                     # se houve alteração, fazer remoção de recursão direta em terminal2
                     if changed:
                         terminal2.remove_recursao_esquerda_direta()
+
+    def get_firsts(self):
+        """
+        Preenche os Firsts, para fazer o analisador sintático LL(1)
+        """
+        epsilon = self.find_symbol("&")
+        set_epsilon = {epsilon}
+
+        # fazer firsts dos terminais
+        for simbolo in self.get_terminais():
+            simbolo.firsts.add(simbolo)
+
+        # fazer firsts dos não terminais
+        while True:
+            firsts_copy = []
+
+            # para cada terminal, adiciona ele próprio em seus firsts
+            for simbolo in self.simbolos:
+                firsts_copy.append(frozenset(simbolo.firsts))
+
+            # para cada não terminal, checar firsts e &-produções
+            for nao_terminal in self.get_nao_terminais():
+                # para cada produção do não terminal, fazer checagens
+                for producao in nao_terminal.producoes:
+                    first_producao = producao[0]
+
+                    if first_producao in set(self.get_terminais()) | set_epsilon:
+                        # se a primeira produção é um terminal, adicionar no set do não terminal
+                        nao_terminal.firsts.add(first_producao)
+                    else:
+                        # se não, fazer checagem se todos os símbolos da produção contém &
+                        for simbolo in producao:
+                            nao_terminal.firsts.update(simbolo.firsts - set_epsilon)
+                            if epsilon not in simbolo.firsts:
+                                break
+                        else:
+                            # se tiver, adiciona o próprio &
+                            nao_terminal.firsts.add(epsilon)
+
+            # checar parada com as cópias dos firsts
+            has_change = False
+            for k, simbolo in enumerate(self.simbolos):
+                if firsts_copy[k] != simbolo.firsts:
+                    has_change = True
+                    break
+
+            if not has_change:
+                break
+
+    def get_follows(self):
+        """
+        Preenche os Follows, para fazer o analisador sintático LL(1)
+        """
+        epsilon = self.find_symbol("&")
+        set_epsilon = {epsilon}
+        nao_terminais = self.get_nao_terminais()
+
+        while True:
+            follows_copy = []
+
+            # para cada terminal, adiciona ele próprio em seus follows
+            for simbolo in self.simbolos:
+                follows_copy.append(frozenset(simbolo.follows))
+
+            for nao_terminal in nao_terminais:
+                if nao_terminal == self.simbolo_inicial:
+                    # se for o símbolo inicial da gramática,
+                    # adiciona o símbolo inicial de pilha
+                    nao_terminal.follows.add(self.find_symbol("$"))
+                    continue
+
+                for producao in nao_terminal.producoes:
+                    for k, simbolo in enumerate(producao):
+                        if not simbolo.is_terminal():
+                            try:
+                                next_symbol = producao[k + 1]
+                                simbolo.follows.update(next_symbol.firsts - set_epsilon)
+                            except IndexError:
+                                pass
+                            for i in range(k+1, len(producao)-1):
+                                if epsilon in producao[i].firsts:
+                                    next_ = producao[i+1]
+                                    simbolo.follows.update(next_.firsts - set_epsilon)
+                    for i in range(len(producao) - 1, -1, -1):
+                        symbol_now = producao[i]
+                        if not symbol_now.is_terminal():
+                            break
+                        symbol_now.follows.update(nao_terminal.follows)
+                        if epsilon not in symbol_now.firsts:
+                            break
+
+            # checar parada com as cópias dos follows
+            has_change = False
+            for k, simbolo in enumerate(self.simbolos):
+                if follows_copy[k] != simbolo.follows:
+                    has_change = True
+                    break
+
+            if not has_change:
+                break

@@ -1,6 +1,6 @@
-from typing import List
+from typing import List, Set
 
-from src.utils.utils import subtract_listas
+from src.Utils.utils import subtract_listas
 
 
 class Symbol:
@@ -8,10 +8,14 @@ class Symbol:
         self.grammar = grammar
         self.simbolo = simbolo
         self.producoes: List[List[Symbol]] = []
-        self.is_terminal = False
+        self.firsts: Set[Symbol] = set()
+        self.follows: Set[Symbol] = set()
 
     def __repr__(self):
-        return f"{'Terminal' if self.is_terminal else 'Não terminal'} - {self.simbolo}"
+        return f"{'Terminal' if self.is_terminal() else 'Não terminal'} - {self.simbolo}"
+
+    def is_terminal(self) -> bool:
+        return len(self.producoes) == 0
 
     def add_producoes(self, producoes: List[str]):
         for producao in producoes:
@@ -21,15 +25,11 @@ class Symbol:
                 lista.append(symbol)
             self.producoes.append(lista)
 
-    def check_terminal(self):
-        if len(self.producoes) == 0:
-            self.is_terminal = True
-
     def is_nullable(self) -> bool:
         for producao in self.producoes:
-            for symbol in producao:
-                if symbol.simbolo == "&":
-                    return True
+            has_epsilon = "&" in [x.simbolo for x in producao]
+            if has_epsilon:
+                return True
         return False
 
     def is_left_recursive(self) -> bool:
@@ -43,7 +43,7 @@ class Symbol:
         # checar produções indiretas
         for producao in self.producoes:
             first = producao[0]
-            if not first.is_terminal:
+            if not first.is_terminal():
                 result = first.is_left_recursive_check(symbol_check)
                 if result:
                     return True
@@ -62,7 +62,7 @@ class Symbol:
         # checar produções indiretas
         for producao in self.producoes:
             for symbol in producao:
-                if not symbol.is_terminal:
+                if not symbol.is_terminal():
                     # se for não terminal, seguir
                     result = symbol.is_recursive_check(symbol_check)
                     if result:
@@ -79,9 +79,6 @@ class Symbol:
                 # tem determinismo direto
                 if prod1[0] == prod2[0]:
                     first_prod = prod1[0]
-
-                    # gerar novo símbolo aleatório
-                    # new_symbol = self.grammar.generate_random_symbol()
 
                     # gerar novo símbolo com base nesse
                     new_symbol = self.grammar.find_symbol(self.simbolo + "'")
@@ -105,7 +102,7 @@ class Symbol:
 
             for prod in producoes_nao_terminal:
                 first_prod = prod[0]
-                if first_prod.is_terminal:
+                if first_prod.is_terminal():
                     terminais_now.append(first_prod)
                 else:
                     terminais_now = terminais_now + check_terminais_nao_terminal(first_prod)
@@ -140,7 +137,7 @@ class Symbol:
 
         for k1, prod1 in enumerate(self.producoes):
             first_search = prod1[0]
-            if first_search.is_terminal:
+            if first_search.is_terminal():
                 flag_check = check_other_terminais(first_search)
 
                 # retornar a cada mudança na lista, para não
@@ -173,7 +170,7 @@ class Symbol:
         for prod in producoes:
             first_prod = prod[0]
 
-            if first_prod.is_terminal and first_prod == search and len(search_list) > 0:
+            if first_prod.is_terminal() and first_prod == search and len(search_list) > 0:
                 return True, search_list
             else:
                 search_list.append(first_prod)
@@ -199,9 +196,7 @@ class Symbol:
                 new_symbol.producoes.append(producao_sem_primeiro)
 
             # adicionar &
-            epsilon = self.grammar.find_symbol("&")
-            epsilon.is_terminal = True
-            new_symbol.producoes.append([epsilon])
+            new_symbol.producoes.append([self.grammar.find_symbol("&")])
 
     def remove_recursao_esquerda_indireta(self, symbol_remove) -> bool:
         producoes_start = self.find_producoes_start(symbol_remove)
@@ -217,3 +212,23 @@ class Symbol:
                 producao_new = producao_symbol + resto
                 self.producoes.append(producao_new)
         return True
+
+    def get_terminais(self) -> List[any]:
+        return self.get_specific_simbolos(True)
+
+    def get_nao_terminais(self) -> List[any]:
+        return self.get_specific_simbolos(False)
+
+    def get_specific_simbolos(self, type_terminal: bool) -> List[any]:
+        return [x for x in self.producoes if x.is_terminal() == type_terminal]
+
+    def get_all_terminais(self) -> Set[any]:
+        """
+        Pegar os terminais recursivamente de todos os não terminais presentes
+        :return: Todos os não terminais atingíveis por este símbolo
+        """
+        lista_terminais = {self.get_terminais()}
+        for symbol in self.get_nao_terminais():
+            lista_terminais = lista_terminais + symbol.get_all_terminais()
+
+        return lista_terminais

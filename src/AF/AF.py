@@ -4,7 +4,7 @@ import copy
 from typing import List, Union, Tuple
 
 from src.AF.Estado import Estado
-from src.utils.utils import pretty_print_matrix, remove_duplicates_lista
+from src.Utils.utils import pretty_print_matrix, remove_duplicates_lista
 
 
 class AF:

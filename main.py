@@ -4,8 +4,8 @@ from src.AF.AF import AF
 from src.AF.Estado import Estado
 from src.ER.ER import ER
 from src.Grammar.Grammar import Grammar
-from src.utils.utilsAF import uniao_automatos
-from src.utils.utilsER import *
+from src.Utils.utilsAF import uniao_automatos
+from src.Utils.utilsER import *
 
 if __name__ == '__main__':
     # exemplo fazendo união de autômatos
@@ -64,10 +64,16 @@ if __name__ == '__main__':
     # afd_geral.show_tabela_transicao()
 
     # Gramática
+    # grammar = Grammar()
+    # grammar.parse_file("entradas/gramaticas/exemplo-rec-esquerda-indireta.grammar")
+    # print(grammar.has_left_recursion())
+    # grammar.remove_recursao_esquerda()
+    # grammar.remove_nao_determinismo()
+    # print(grammar.has_nullable(), grammar.has_left_recursion())
+
+    # Analisador Sintático
     grammar = Grammar()
-    grammar.parse_file("entradas/gramaticas/exemplo-rec-esquerda-indireta.grammar")
-    print(grammar.has_left_recursion())
-    grammar.remove_recursao_esquerda()
-    grammar.remove_nao_determinismo()
-    print(grammar.has_nullable(), grammar.has_left_recursion())
+    grammar.parse_file("entradas/gramaticas/exemplo-first-follow.grammar")
+    grammar.get_firsts()
+    grammar.get_follows()
     print("")

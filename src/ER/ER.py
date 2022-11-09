@@ -4,7 +4,7 @@ from enum import Enum
 
 from src.AF.AF import AF
 from src.AF.Estado import Estado
-from src.utils.utilsER import *
+from src.Utils.utilsER import *
 
 caracteres_especiais = ["(", "|", "*", "?", "+", ")"]
 order_preference = ["#", "*", ".", "|"]
