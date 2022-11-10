@@ -155,7 +155,7 @@ class Grammar:
         while True:
             firsts_copy = []
 
-            # para cada terminal, adiciona ele próprio em seus firsts
+            # fazer cópia dos dos símbolos firsts
             for simbolo in self.simbolos:
                 firsts_copy.append(frozenset(simbolo.firsts))
 
@@ -192,6 +192,33 @@ class Grammar:
         """
         Preenche os Follows, para fazer o analisador sintático LL(1)
         """
+        def get_next(k_now):
+            set_now = set()
+            if k_now >= len(producao):
+                return set_now
+
+            symbol_now = producao[k_now]
+            firsts_now = symbol_now.firsts
+            set_now.update(firsts_now)
+
+            if symbol_now.is_terminal():
+                return set_now
+            elif epsilon in firsts_now:
+                return set_now.update(get_next(k_now + 1))
+
+        def get_previous(k_now):
+            if k_now == -1:
+                return
+
+            symbol_now = producao[k_now]
+            if symbol_now.is_terminal():
+                return
+
+            symbol_now.follows.update(nao_terminal.follows)
+
+            if epsilon in symbol_now.firsts:
+                get_previous(k_now - 1)
+
         epsilon = self.find_symbol("&")
         set_epsilon = {epsilon}
         nao_terminais = self.get_nao_terminais()
@@ -199,35 +226,37 @@ class Grammar:
         while True:
             follows_copy = []
 
-            # para cada terminal, adiciona ele próprio em seus follows
+            # fazer cópia dos follows dos símbolos
             for simbolo in self.simbolos:
                 follows_copy.append(frozenset(simbolo.follows))
 
-            for nao_terminal in nao_terminais:
-                if nao_terminal == self.simbolo_inicial:
-                    # se for o símbolo inicial da gramática,
-                    # adiciona o símbolo inicial de pilha
-                    nao_terminal.follows.add(self.find_symbol("$"))
-                    continue
+            # primeira regra: símbolo de final de pilha no símbolo inicial
+            self.simbolo_inicial.follows.add(self.find_symbol("$"))
 
+            # para cada não terminal, executar as regras 2 e 3
+            for nao_terminal in nao_terminais:
                 for producao in nao_terminal.producoes:
+                    # segunda regra: ida
                     for k, simbolo in enumerate(producao):
-                        if not simbolo.is_terminal():
-                            try:
-                                next_symbol = producao[k + 1]
-                                simbolo.follows.update(next_symbol.firsts - set_epsilon)
-                            except IndexError:
-                                pass
-                            for i in range(k+1, len(producao)-1):
-                                if epsilon in producao[i].firsts:
-                                    next_ = producao[i+1]
-                                    simbolo.follows.update(next_.firsts - set_epsilon)
-                    for i in range(len(producao) - 1, -1, -1):
-                        symbol_now = producao[i]
-                        if not symbol_now.is_terminal():
+                        if simbolo.is_terminal() or k == len(producao) - 1:
+                            continue
+
+                        next_symbol = producao[k+1]
+                        firsts_next = next_symbol.firsts
+
+                        simbolo.follows.update(firsts_next - set_epsilon)
+                        if epsilon in firsts_next:
+                            simbolo.follows.update(get_next(k+2))
+
+                    # terceira regra: volta
+                    for k in range(len(producao)-1, -1, -1):
+                        simbolo = producao[k]
+                        if simbolo.is_terminal():
                             break
-                        symbol_now.follows.update(nao_terminal.follows)
-                        if epsilon not in symbol_now.firsts:
+
+                        simbolo.follows.update(nao_terminal.follows)
+                        if epsilon in simbolo.firsts:
+                            get_previous(k - 1)
                             break
 
             # checar parada com as cópias dos follows
