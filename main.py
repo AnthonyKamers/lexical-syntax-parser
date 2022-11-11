@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
     # Analisador Sintático
     grammar = Grammar()
-    grammar.parse_file("entradas/gramaticas/exemplo-first-follow1.grammar")
+    grammar.parse_file("entradas/gramaticas/exemplo-ll1-valido.grammar")
     grammar.get_firsts()
     grammar.get_follows()
-    print("")
+    print(grammar.is_ll1())

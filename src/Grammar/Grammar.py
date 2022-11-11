@@ -1,6 +1,9 @@
 import copy
 from typing import List, Union
 
+from src.Exceptions.Syntactic.LoopNaoDeterminismoException import LoopNaoDeterminismoException
+
+from src.Exceptions.Syntactic.NotLL1Exception import NotLL1Exception
 from src.Grammar.Symbol import Symbol
 
 import string
@@ -110,8 +113,7 @@ class Grammar:
                 break
 
             if i == MAX_EXECUTION_NAO_DETERMINISMO:
-                raise Exception("Não foi possível transformar a gramática em não determinista (entrou em loop "
-                                "infinito).")
+                raise LoopNaoDeterminismoException
 
     def remove_recursao_esquerda(self):
         """
@@ -268,3 +270,19 @@ class Grammar:
 
             if not has_change:
                 break
+
+    def is_ll1(self):
+        """
+        Para que uma gramática possa ser convertida em um analisador sintático LL(1),
+        é necessário que não seja recursiva à esquerda, que esteja na forma fatorada
+        (sem não determinismo) e que a interseção dos firsts dos símbolos que contém
+        epsilon com seus respectivos follows seja nulo.
+        :return: Se é aceito converter para LL(1)
+        :raise NotLL1Exception Caso não seja compatível com analisador sintático LL(1)
+        """
+        symbols_first_null = [x for x in self.simbolos if self.find_symbol("&") in x.firsts]
+
+        for simbolo in symbols_first_null:
+            if len(simbolo.firsts.intersection(simbolo.follows)) != 0:
+                raise NotLL1Exception
+        return True

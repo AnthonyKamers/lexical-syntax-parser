@@ -4,6 +4,7 @@ from enum import Enum
 
 from src.AF.AF import AF
 from src.AF.Estado import Estado
+from src.Exceptions.Lexicon.SymbolNotPreviousDeclaredException import SymbolNotPreviousDeclaredException
 from src.Utils.utilsER import *
 
 caracteres_especiais = ["(", "|", "*", "?", "+", ")"]
@@ -382,7 +383,7 @@ class ER:
                 if transition not in af.alfabeto and transition != "#":
                     if not has_afd:
                         if len(transition) > 1:
-                            raise "Erro: Identificador deve ser declarado primeiramente"
+                            raise SymbolNotPreviousDeclaredException
 
                         # é apenas uma letra
                         af.alfabeto.append(transition)
