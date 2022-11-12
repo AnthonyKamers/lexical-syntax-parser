@@ -2,6 +2,7 @@ from typing import Union
 
 from src.AF.AF import AF
 from src.AF.Estado import Estado
+from src.Analisadores.AnalisadorSintatico import AnalisadorSintatico
 from src.ER.ER import ER
 from src.Grammar.Grammar import Grammar
 from src.Utils.utilsAF import uniao_automatos
@@ -72,8 +73,11 @@ if __name__ == '__main__':
     # print(grammar.has_nullable(), grammar.has_left_recursion())
 
     # Analisador Sintático
-    grammar = Grammar()
-    grammar.parse_file("entradas/gramaticas/exemplo-ll1-valido.grammar")
-    grammar.get_firsts()
-    grammar.get_follows()
-    print(grammar.is_ll1())
+    # grammar = Grammar()
+    # grammar.parse_file("entradas/gramaticas/exemplo-ll1-valido1.grammar")
+    # grammar.get_firsts()
+    # grammar.get_follows()
+    # print(grammar.is_ll1())
+
+    analisador = AnalisadorSintatico("entradas/gramaticas/exemplo-ll1-valido1.grammar")
+    analisador.execute()
