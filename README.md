@@ -37,7 +37,7 @@ ______
 # Analisador sintático (peso 6)
 Algoritmos a serem implementados
 
-- [ ] Se preditivo LL(1)
+- [X] Se preditivo LL(1)
   - Eliminar recursão à esquerda
   - Fatoração
   - Cálculo de Firsts e Follows
