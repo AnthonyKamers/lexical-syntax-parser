@@ -8,6 +8,11 @@ from src.Utils.utils import pretty_print_matrix, remove_duplicates_lista
 
 
 class AF:
+    """
+    Implementação genérica de um AF, seja ele determinístico ou não determinístico.
+    Também realiza várias funções sobre ele, a fim de deixá-lo determinizado ou
+    minimizado
+    """
     # FIXME: Necessário trocar as estruturas de dados de lista para set
     def __init__(self):
         self.qtd_estados: int = 0
@@ -101,6 +106,10 @@ class AF:
             estado.add_transicao(letra_alfabeto, self.find_estado(proximo_estado_nome))
 
     def parse_file(self, file_name: str):
+        """
+        Faz parse de um arquivo de AF
+        :param file_name: Path do arquivo de entrada
+        """
         with open(file_name) as file:
             for index, line in enumerate(file, 1):
                 line = line.replace("\n", "")
@@ -108,6 +117,11 @@ class AF:
         self.estado_now = self.estado_inicial
 
     def find_estado(self, nome: str) -> Estado:
+        """
+        Para determinado nome de estado, retorna um objeto da classe Estado
+        :param nome: Nome do estado de busca
+        :return: Objeto da classe Estado correspondente
+        """
         estado: Estado
         try:
             estado = self.get_estado(nome)
@@ -384,6 +398,10 @@ class AF:
                         af_new.estados_finais.append(estado_new)
 
     def get_epsilon_fecho(self) -> List[List[Estado]]:
+        """
+        Pega o &-fecho de cada estado
+        :return: Lista de &-fecho de cada estado
+        """
         estados: List[List[Estado]] = []
         for estado in self.estados:
             epsilon_fecho: List[Estado] = []
@@ -400,6 +418,9 @@ class AF:
         return estados
 
     def remove_useless_estados(self):
+        """
+        Remove estados inalcançáveis e/ou improdutivos
+        """
         estados_novos: List[Estado] = copy.copy(self.estados)
         estados_removidos: List[Estado] = []
         len_estados: int = len(estados_novos)

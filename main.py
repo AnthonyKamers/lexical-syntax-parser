@@ -80,4 +80,4 @@ if __name__ == '__main__':
     # print(grammar.is_ll1())
 
     analisador = AnalisadorSintatico("entradas/gramaticas/exemplo-ll1-valido1.grammar")
-    analisador.execute()
+    analisador.run_entrada("dadbd")

@@ -1,26 +1,28 @@
-import copy
+import random
+import string
 from typing import List, Union
 
 from src.Exceptions.Syntactic.LoopNaoDeterminismoException import LoopNaoDeterminismoException
-
 from src.Exceptions.Syntactic.NotLL1Exception import NotLL1Exception
 from src.Grammar.Symbol import Symbol
-
-import string
-import random
-
-from src.Utils.utils import remove_duplicates_lista, subtract_listas
 
 # flags
 MAX_EXECUTION_NAO_DETERMINISMO = 50  # quantidade máxima de "loops" em não determinismo
 
 
 class Grammar:
+    """
+    Implementação de uma gramática, a fim de fazer operações importantes para análise sintática
+    """
     def __init__(self):
         self.simbolos: List[Symbol] = []
         self.simbolo_inicial: Union[Symbol, None] = None
 
     def parse_file(self, file_name: str):
+        """
+        Faz parse de um arquivo de gramática
+        :param file_name: Path do arquivo de entrada
+        """
         with open(file_name) as file:
             for line in file:
                 # ignorar comentários (para facilitar debbug)
@@ -77,7 +79,12 @@ class Grammar:
     def get_symbol(self, simbolo: str):
         return next(symbol for symbol in self.simbolos if symbol.simbolo == simbolo)
 
-    def has_symbol(self, simbolo: str):
+    def has_symbol(self, simbolo: str) -> bool:
+        """
+        Checa se já existe um símbolo
+        :param simbolo: Símbolo de busca
+        :return: Se já existe ou não o símbolo na gramática
+        """
         try:
             self.get_symbol(simbolo)
             return True
@@ -85,6 +92,10 @@ class Grammar:
             return False
 
     def generate_random_symbol(self) -> Symbol:
+        """
+        Retorna um símbolo não terminal ainda não presente na gramática (para implementar novos símbolos não terminais)
+        :return: Novo símbolo não terminal da gramática
+        """
         while True:
             random_char = random.choice(string.ascii_uppercase)
             if not self.has_symbol(random_char):

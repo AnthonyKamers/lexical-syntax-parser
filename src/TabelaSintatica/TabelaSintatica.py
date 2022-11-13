@@ -10,6 +10,9 @@ from src.Grammar.Grammar import Grammar
 # }
 
 class TabelaSintatica:
+    """
+    Implentação de uma tabela sintática utilizada no analisador LL(1)
+    """
     def __init__(self, grammar: Grammar):
         self.grammar = grammar
         self.table = {}

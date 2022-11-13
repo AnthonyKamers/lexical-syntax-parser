@@ -18,6 +18,10 @@ class Symbol:
         return len(self.producoes) == 0
 
     def add_producoes(self, producoes: List[str]):
+        """
+        Adiciona uma lista de produções de um símbolo (quando está fazendo parse de um arquivo de entrada de ER)
+        :param producoes: Lista de string de produções
+        """
         for producao in producoes:
             lista = []
             for char in producao:
@@ -26,6 +30,9 @@ class Symbol:
             self.producoes.append(lista)
 
     def is_nullable(self) -> bool:
+        """
+        Checa se alguma produção leva para nulo (diretamente)
+        """
         for producao in self.producoes:
             has_epsilon = "&" in [x.simbolo for x in producao]
             if has_epsilon:
@@ -33,6 +40,10 @@ class Symbol:
         return False
 
     def is_left_recursive(self) -> bool:
+        """
+        Checa se o próprio símbolo é recursivo à esquerda
+        :return: Se o símbolo é recursivo à esquerda
+        """
         return self.is_left_recursive_check(self)
 
     def is_left_recursive_check(self, symbol_check) -> bool:
@@ -70,6 +81,10 @@ class Symbol:
         return False
 
     def remove_nao_determinismo_direto(self) -> bool:
+        """
+        Remove o não determinismo direto (um dos passos do procedimento de deixar na forma fatorada)
+        :return: Se houve mudança ao realizar o procedimento
+        """
         changed = False
         for k1, prod1 in enumerate(self.producoes):
             for k2, prod2 in enumerate(self.producoes):
@@ -96,6 +111,11 @@ class Symbol:
         return changed
 
     def transforma_nao_determinismo_indireto(self) -> bool:
+        """
+        Transforma os casos de não determinismo indireto (para que na próxima passagem,
+         sejam pegos os determinismos diretos)
+        :return: Se houve alguma mudança de determinismo indireto
+        """
         def check_terminais_nao_terminal(nao_terminal) -> List[any]:
             producoes_nao_terminal: List[any] = nao_terminal.producoes
             terminais_now = []
@@ -163,6 +183,11 @@ class Symbol:
         return False
 
     def find_producoes_start(self, symbol):
+        """
+        Retorna lista de produções que começam com determinado símbolo
+        :param symbol: Símbolo que deve ser o primeiro da produção
+        :return: Lista de produções que começam com symbol
+        """
         return [x for x in self.producoes if x[0] == symbol]
 
     def search_other_symbol(self, search, prod_start, search_list):
@@ -178,6 +203,9 @@ class Symbol:
         return False, search_list
 
     def remove_recursao_esquerda_direta(self):
+        """
+        Como um dos passos do algoritmo de remoção de recursão à esquerda, é removido a recursão diretamente
+        """
         if self.is_left_recursive():
             producoes_symbol = self.find_producoes_start(self)
             producoes_not_symbol = subtract_listas(self.producoes, producoes_symbol)
@@ -199,6 +227,11 @@ class Symbol:
             new_symbol.producoes.append([self.grammar.find_symbol("&")])
 
     def remove_recursao_esquerda_indireta(self, symbol_remove) -> bool:
+        """
+        Remove recursão indireta à esquerda
+        :param symbol_remove: Símbolo que deseja remover a recursão à esquerda (fazer troca de posições)
+        :return: Se houve mudança na recursão indireta
+        """
         producoes_start = self.find_producoes_start(symbol_remove)
 
         if len(producoes_start) == 0:
@@ -214,12 +247,25 @@ class Symbol:
         return True
 
     def get_terminais(self) -> List[any]:
+        """
+        Retorna lista de terminais que este símbolo possui em suas produções
+        :return: Lista de terminais que este símbolo possui em suas produções
+        """
         return self.get_specific_simbolos(True)
 
     def get_nao_terminais(self) -> List[any]:
+        """
+        Retorna lista de não terminais que este símbolo possui em suas produções
+        :return: Lista de não terminais que este símbolo possui em suas produções
+        """
         return self.get_specific_simbolos(False)
 
     def get_specific_simbolos(self, type_terminal: bool) -> List[any]:
+        """
+        Pega os símbolos em suas produções que são ou terminais ou não terminais
+        :param type_terminal: Tipo do terminal que deseja procurar (terminal ou não terminal)
+        :return: Lista de símbolos com tipo type_terminal
+        """
         return [x for x in self.producoes if x.is_terminal() == type_terminal]
 
     def get_all_terminais(self) -> Set[any]:

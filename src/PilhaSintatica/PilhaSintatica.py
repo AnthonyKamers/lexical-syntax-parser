@@ -4,12 +4,25 @@ from src.Exceptions.Syntactic.DifferentSyntaxExpected import DifferentSyntaxExpe
 
 
 class PilhaSintatica:
+    """
+    Implementação da pilha sintática, que faz uso da tabela sintática gerada pelo
+    analisador sintático LL(1)
+    """
     def __init__(self, analisador_sintatico: any):
         self.analisador_sintatico = analisador_sintatico
         self.pilha = []
 
-    def testar_entrada(self, entrada: str):
+    def run_entrada(self, entrada: str):
+        """
+        Roda para a entrada especificada o algoritmo de autômato de pilha,
+        fazendo com que retorna que a aceite ou rejeite
+        :param entrada: palavra que deseja testar a gramática
+        :return: Se aceita a entrada
+        """
         def desempilhar_nao_terminais():
+            """
+            Roda laço de desempilhamento com base em um terminal
+            """
             while True:
                 if len(self.pilha) == 0:
                     break

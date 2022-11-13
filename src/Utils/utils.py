@@ -16,8 +16,19 @@ def pretty_print_matrix(matrix: List[List[str]]) -> None:
 
 
 def remove_duplicates_lista(lista: List[any]) -> List[any]:
+    """
+    Remove duplicadas de uma lista (mesmo procedimento de um Set())
+    :param lista: Lista que deseja remover duplicatas
+    :return: Lista sem duplicatas
+    """
     return list(dict.fromkeys(lista))
 
 
 def subtract_listas(lista1: List[any], lista2: List[any]) -> List[any]:
+    """
+    Método genérico para fazer a subtração de duas listas (o que tem em lista1 que não tem em lista2)
+    :param lista1: Lista primária da subtração
+    :param lista2: Lista secundária da subtração
+    :return: A diferença entre lista1 e lista2
+    """
     return [x for x in lista1 if x not in lista2]
