@@ -1,4 +1,4 @@
-S -> AB
+S -> BA
 A -> aBA | &
 B -> DC
 C -> bDC | &

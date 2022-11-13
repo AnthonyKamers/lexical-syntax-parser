@@ -1,4 +1,5 @@
 from src.Grammar.Grammar import Grammar
+from src.PilhaSintatica.PilhaSintatica import PilhaSintatica
 from src.TabelaSintatica.TabelaSintatica import TabelaSintatica
 
 
@@ -7,7 +8,7 @@ class AnalisadorSintatico:
         self.grammar = Grammar()
         self.grammar.parse_file(file_name)
         self.tabela_sintatica = TabelaSintatica(self.grammar)
-        self.pilha = Pilha()
+        self.pilha = PilhaSintatica(self)
 
     def execute(self):
         self.grammar.remove_recursao_esquerda()
@@ -18,5 +19,5 @@ class AnalisadorSintatico:
 
         self.tabela_sintatica.get_table()
 
-    def testar_entrada(self, entrada: str):
-        pass
+        print(self.pilha.testar_entrada("dadbd"))
+
