@@ -1,9 +1,10 @@
 digit: [0-9]
 letter: [a-zA-Z]
 num: (digito)+ (digito)*
-float: num+ (num)* .? E (num)+
+integer: num+
+string: letter*
 END: ;
-SE: +.
+SE: + | .
 LE: <=
-OA: +-*/
-PR: program
+OA: + | - | * | /
+PR: program | if | else | elseif | begin | end | var | ,

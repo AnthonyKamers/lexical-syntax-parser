@@ -38,25 +38,26 @@ if __name__ == '__main__':
 
     # ER
     er: ER = ER()
-    er.parse_file("entradas/ER/exemplo1.er")
-    er.make_afd_er()
-
-    print(list(er.afds.keys()))
+    er.parse_file("entradas/ER/exemplo3.er")
+    print("")
+    # er.make_afd_er()
+    #
+    # print(list(er.afds.keys()))
 
     # fazer união de AFDs
-    afnd_geral: Union[None, AF] = None
-    afds = list(er.afds.values())
-
-    for i in range(len(afds)):
-        if i == 0:
-            continue
-        if afnd_geral is None:
-            afnd_geral = uniao_automatos(afds[i-1], afds[i])
-        else:
-            afnd_geral = uniao_automatos(afnd_geral, afds[i])
-
-    # determinizar união dos autômatos
-    afd_geral = afnd_geral.determinizar()
+    # afnd_geral: Union[None, AF] = None
+    # afds = list(er.afds.values())
+    #
+    # for i in range(len(afds)):
+    #     if i == 0:
+    #         continue
+    #     if afnd_geral is None:
+    #         afnd_geral = uniao_automatos(afds[i-1], afds[i])
+    #     else:
+    #         afnd_geral = uniao_automatos(afnd_geral, afds[i])
+    #
+    # # determinizar união dos autômatos
+    # afd_geral = afnd_geral.determinizar()
 
     # printtar para testar
     # print(afd_geral)
