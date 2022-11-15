@@ -1,0 +1,7 @@
+inteiro = 4
+string = "teste"
+# TS
+# [(inteiro, id), (=, EQ), (4, digit), (string, id), (=, EQ), (", PS), (teste, letter), (", PS)]
+#
+# lista de tokens
+# [(id, 0), (=, EQ), (digit, 2), (id, 4), (=, EQ), (", PS), (letter, 6), (", PS)]
