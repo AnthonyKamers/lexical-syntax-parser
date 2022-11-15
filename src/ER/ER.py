@@ -1,77 +1,21 @@
 import copy
 from typing import Union, Tuple
-from enum import Enum
 
 from src.AF.AF import AF
 from src.AF.Estado import Estado
-from src.utils.utilsER import *
+from src.ER.Node import Node
+from src.ER.Operation import Operation
+from src.Exceptions.Lexicon.SymbolNotPreviousDeclaredException import SymbolNotPreviousDeclaredException
+from src.Utils.utilsER import *
 
 caracteres_especiais = ["(", "|", "*", "?", "+", ")"]
 order_preference = ["#", "*", ".", "|"]
 
 
-class Operation(Enum):
-    CLOSE = 4,
-    FECHO = 3,
-    CONCAT = 2
-    OR = 1
-    ELEMENT = 0
-
-
-class Node:
-    def __init__(self, el, operation: Operation):
-        self.el = el
-        self.op = operation
-        self.left: Union[None, Node] = None
-        self.right: Union[None, Node] = None
-        self.father: Union[None, Node] = None
-        self.first_pos = set()
-        self.last_pos = set()
-        self.follow_pos = set()
-
-    def __repr__(self):
-        return self.el
-
-    def is_nullable(self) -> bool:
-        if self.op == Operation.CONCAT:
-            return self.left.is_nullable() and self.right.is_nullable()
-        elif self.op == Operation.OR:
-            return self.left.is_nullable() or self.right.is_nullable()
-        elif self.op == Operation.FECHO:
-            return True
-        elif self.op == Operation.CLOSE:
-            return False
-        elif self.op == Operation.ELEMENT:
-            return self.el == "&"
-
-    def get_first_pos(self):
-        if self.op == Operation.CONCAT:
-            if self.left.is_nullable():
-                return self.left.get_first_pos().union(self.right.get_first_pos())
-            else:
-                return self.left.get_first_pos()
-        elif self.op == Operation.OR:
-            return self.left.get_first_pos().union(self.right.get_first_pos())
-        elif self.op == Operation.FECHO:
-            return self.right.get_first_pos()
-        elif self.op in (Operation.CLOSE, Operation.ELEMENT):
-            return self.first_pos
-
-    def get_last_pos(self):
-        if self.op == Operation.CONCAT:
-            if self.right.is_nullable():
-                return self.right.get_last_pos().union(self.left.get_last_pos())
-            else:
-                return self.right.get_last_pos()
-        elif self.op == Operation.OR:
-            return self.right.get_last_pos().union(self.left.get_last_pos())
-        elif self.op == Operation.FECHO:
-            return self.right.get_last_pos()
-        elif self.op in (Operation.CLOSE, Operation.ELEMENT):
-            return self.last_pos
-
-
 class ER:
+    """
+    Implementação de leitura e métodos que atuam sobre definições regulares
+    """
     def __init__(self):
         self.er = {}
         self.er_tree = {}
@@ -81,7 +25,16 @@ class ER:
         return "ER()"
 
     def parse_file(self, file_name: str):
+        """
+        Faz parse de um arquivo de definições regulares
+        :param file_name: Path do arquivo de entrada
+        """
         def get_parenthesis(cont: str, index_: int) -> Tuple[List[Union[str, List[str]]], int, str]:
+            """
+            Faz o parse de uma estrutura que está dentro de parêntese
+            :param cont: Substrint onde se localiza o parêntese
+            :param index_: Índice que deve pegar o parêntese
+            """
             lista = []
             palavra_now: str = ""
             substring: str = cont[index_:len(cont)]
@@ -99,14 +52,19 @@ class ER:
                     elif character == "*":
                         lista.append(character)
                     elif character == "?":
-                        pass
+                        lista.append(character)
                     elif character == "+":
-                        pass
+                        lista.append(character)
                     elif character == ")":
                         lista.append(palavra_now)
                         return lista, index + 1, substring
 
         def parse_content(cont: str, index_: int) -> List[Union[str, List[str]]]:
+            """
+            Faz parse de uma expressão regular
+            :param cont: Substring que deseja fazer parse
+            :param index_: A partir de qual índice deve fazer parse
+            """
             palavra_now = ""
             lista: List[Union[str, List[str]]] = []
             substring: str = cont[index_:len(cont)]
@@ -123,19 +81,54 @@ class ER:
                         lista = lista + parse_content(substring_novo, index_novo)
                         break
                     elif character == "|":
-                        lista.append(palavra_now)
+                        if palavra_now != "":
+                            lista.append(palavra_now)
                         lista.append(character)
                         palavra_now = ""
                     elif character == "*":
                         lista.append(character)
                     elif character == "?":
-                        pass
+                        if palavra_now != "":
+                            lista.append(palavra_now)
+                        lista.append(character)
+                        palavra_now = ""
                     elif character == "+":
-                        pass
+                        if palavra_now != "":
+                            lista.append(palavra_now)
+                        lista.append(character)
+                        palavra_now = ""
             else:
                 if palavra_now != "":
                     lista.append(palavra_now)
             return lista
+
+        def treat_exceptions(parsed):
+            """
+            Definições regulares que contém os operadores de exção (? e +) devem ser
+            substituídos por suas formas originiais
+            :param parsed: Estrutura de dados final já "parseada"
+            """
+            # busca por ?
+            for k, el in enumerate(parsed):
+                if el == "?":
+                    before = parsed[k-1]
+
+                    # substituir no índice k-1
+                    parsed[k-1] = [before, "|", "&"]
+
+                    # remover índice k
+                    parsed.pop(k)
+
+            # busca por +
+            for k, el in enumerate(parsed):
+                if el == "+":
+                    before = parsed[k-1]
+
+                    # substituir no índice k
+                    parsed[k] = before
+
+                    # adicionar fecho no próximo elemento
+                    parsed.insert(k+1, "*")
 
         with open(file_name) as file:
             for line in file:
@@ -154,14 +147,26 @@ class ER:
                     self.er[key] = get_uppercase_letters()
                 else:
                     # another type of ER, parse it
-                    self.er[key] = parse_content(content, 0)
+                    er_parsed = parse_content(content, 0)
+                    treat_exceptions(er_parsed)
+                    self.er[key] = er_parsed
 
     def make_afd_er(self):
+        """
+        Realiza as operações para realmente montar um AFD a partir da ER
+        """
         self.construct_syntactic_tree()
         self.make_followpos()
 
     def construct_syntactic_tree(self):
+        """
+        Constrói a árvore sintática necessária para transformar ER -> AFD
+        """
         def make_node_concat(lista: list) -> Node:
+            """
+            Trata um parêntese (uma concatenação)
+            :param lista: Lista de ER
+            """
             if isinstance(lista, str):
                 # é operador
                 if lista == "*":
@@ -302,6 +307,9 @@ class ER:
             self.er_tree[key] = father_final
 
     def make_followpos(self):
+        """
+        Marca os first, last e follow pos dos nodos feitos
+        """
         def mark_elements(node: Node):
             if node is None:
                 return
@@ -355,7 +363,7 @@ class ER:
                         continue
                     if not has_afd:
                         if len(transition) > 1:
-                            raise "Erro: Identificador deve ser declarado primeiramente"
+                            raise SymbolNotPreviousDeclaredException
 
                         # é apenas uma letra
                         af.alfabeto.append(transition)
@@ -403,6 +411,11 @@ class ER:
                     make_afd_estado(obj, af, estado_new)
 
         def make_afd(node: Node) -> AF:
+            """
+            Método que realmente faz a conversão final da árvore sintática em um AFD
+            :param node: Nodo raiz a ser examinado
+            :return: ER transformado em AF
+            """
             af_new = AF()
 
             # pegar nodos de maneira a identificar

@@ -2,9 +2,11 @@ from typing import Union
 
 from src.AF.AF import AF
 from src.AF.Estado import Estado
+from src.Analisadores.AnalisadorSintatico import AnalisadorSintatico
 from src.ER.ER import ER
-from src.utils.utilsAF import uniao_automatos
-from src.utils.utilsER import *
+from src.Grammar.Grammar import Grammar
+from src.Utils.utilsAF import uniao_automatos
+from src.Utils.utilsER import *
 
 if __name__ == '__main__':
     # exemplo fazendo união de autômatos
@@ -64,3 +66,20 @@ if __name__ == '__main__':
 
     print(afd_geral.run_entrada("asda1"))
 
+    # Gramática
+    # grammar = Grammar()
+    # grammar.parse_file("entradas/gramaticas/exemplo-rec-esquerda-indireta.grammar")
+    # print(grammar.has_left_recursion())
+    # grammar.remove_recursao_esquerda()
+    # grammar.remove_nao_determinismo()
+    # print(grammar.has_nullable(), grammar.has_left_recursion())
+
+    # Analisador Sintático
+    # grammar = Grammar()
+    # grammar.parse_file("entradas/gramaticas/exemplo-ll1-valido1.grammar")
+    # grammar.get_firsts()
+    # grammar.get_follows()
+    # print(grammar.is_ll1())
+
+    # analisador = AnalisadorSintatico("entradas/gramaticas/exemplo-ll1-valido1.grammar")
+    # analisador.run_entrada("dadbd")
