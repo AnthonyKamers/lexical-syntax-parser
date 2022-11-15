@@ -1,0 +1,6 @@
+S -> {id} {=} A | {id} {=} B
+A -> {digit} A | &
+B -> {"} C {"}
+C -> {digit} C | {letter} C | &
+#
+# S -> [id = A] -> [id = {digit} A] -> [id = {digit} {digit} A ]
