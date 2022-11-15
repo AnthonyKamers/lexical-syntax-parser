@@ -132,6 +132,9 @@ class ER:
                         pass
                     elif character == "+":
                         pass
+            else:
+                if palavra_now != "":
+                    lista.append(palavra_now)
             return lista
 
         with open(file_name) as file:
@@ -348,6 +351,8 @@ class ER:
 
                 # ver se é preciso colocar transição no alfabeto do AFD
                 if transition not in af.alfabeto and transition != "#":
+                    if transition == '':
+                        continue
                     if not has_afd:
                         if len(transition) > 1:
                             raise "Erro: Identificador deve ser declarado primeiramente"
