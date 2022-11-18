@@ -79,7 +79,7 @@ class AnalisadorLexico:
     def get_afds(self):
         return [(key, value) for key, value in self.er.afds.items() if key not in self.tokens_iniciais]
 
-    def parse_codigo(self, file_name: str):
+    def set_file(self, file_name: str):
         def get_token():
             token = self.find_token_ts(parte)
             if token is not False:

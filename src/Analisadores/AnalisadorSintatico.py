@@ -1,3 +1,4 @@
+from src.Analisadores.AnalisadorLexico import AnalisadorLexico
 from src.Grammar.Grammar import Grammar
 from src.PilhaSintatica.PilhaSintatica import PilhaSintatica
 from src.TabelaSintatica.TabelaSintatica import TabelaSintatica
@@ -7,7 +8,8 @@ class AnalisadorSintatico:
     """
     Faz os procedimentos necessários para fazer construir o analisador sintático
     """
-    def __init__(self):
+    def __init__(self, lexico: AnalisadorLexico):
+        self.lexico = lexico
         self.grammar = Grammar()
         self.tabela_sintatica = TabelaSintatica(self.grammar)
         self.pilha = PilhaSintatica(self)

@@ -85,14 +85,14 @@ if __name__ == '__main__':
     # analisador = AnalisadorSintatico("entradas/gramaticas/exemplo-ll1-valido1.grammar")
     # analisador.run_entrada("dadbd")
 
-    # grammar = Grammar()
-    # grammar.parse_file("entradas/gramaticas/variavel.grammar", True)
+    grammar = Grammar()
+    grammar.parse_file("entradas/gramaticas/variavel.grammar", True)
 
     # Analisador Léxico
-    analisador = AnalisadorLexico()
-    analisador.set_er("entradas/ER/exemplo1.er")
-    analisador.set_tokens_iniciais("PS,EQ,END")
-    analisador.build()
+    # analisador = AnalisadorLexico()
+    # analisador.set_er("entradas/ER/exemplo1.er")
+    # analisador.set_tokens_iniciais("PS,EQ,END")
+    # analisador.build()
     # analisador.show_tabela_lexica()
-    analisador.parse_codigo("entradas/codigo-fonte/exemplo1.codigo")
-    print("")
+    # analisador.set_file("entradas/codigo-fonte/exemplo1.codigo")
+    # print("")

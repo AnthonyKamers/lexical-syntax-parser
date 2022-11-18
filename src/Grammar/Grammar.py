@@ -42,6 +42,8 @@ class Grammar:
             # identificadores para comparar com tokens da tabela de símbolos
             with open(file_name) as file:
                 for line in file:
+                    line = line.replace("\n", "")
+
                     # ignorar comentários
                     if line.startswith("#"):
                         continue
@@ -50,7 +52,16 @@ class Grammar:
                     dif_producoes: List[str] = producoes.split("|")
                     for producao in dif_producoes:
                         space = producao.split(" ")
-                        pass
+                        for item in space:
+                            # checar por espaços extras
+                            if item == "":
+                                continue
+
+                            # checar por símbolos de produção
+                            if item[0] == "{":
+                                brackets_simbolo = item[1:item.find("}")]
+                                new_symbol: Symbol = self.find_symbol(brackets_simbolo)
+
         self.simbolo_inicial = self.simbolos[0]
 
     def get_terminais(self) -> List[Symbol]:
