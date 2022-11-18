@@ -6,6 +6,7 @@ from src.Analisadores.AnalisadorLexico import AnalisadorLexico
 from src.Analisadores.AnalisadorSintatico import AnalisadorSintatico
 from src.ER.ER import ER
 from src.Grammar.Grammar import Grammar
+from src.Program.Progam import Program
 from src.Utils.utilsAF import uniao_automatos
 from src.Utils.utilsER import *
 
@@ -93,15 +94,18 @@ if __name__ == '__main__':
     # print("")
 
     # Analisador Léxico
-    analisador = AnalisadorLexico()
-    analisador.set_er("entradas/ER/exemplo1.er")
-    analisador.set_tokens_iniciais("PS,EQ,END")
-    analisador.build()
-    # analisador.show_tabela_lexica()
-    analisador.set_file("entradas/codigo-fonte/exemplo1.codigo")
+    # analisador = AnalisadorLexico()
+    # analisador.set_er("entradas/ER/exemplo1.er")
+    # analisador.set_tokens_iniciais("PS,EQ,END")
+    # analisador.build()
+    # # analisador.show_tabela_lexica()
+    # analisador.set_file("entradas/codigo-fonte/exemplo1.codigo")
+    #
+    # sintatico = AnalisadorSintatico(analisador)
+    # sintatico.set_grammar("entradas/gramaticas/variavel.grammar")
+    # sintatico.build()
+    # print(sintatico.run_entrada("teste=3"))
+    # print(sintatico.run_file())
 
-    sintatico = AnalisadorSintatico(analisador)
-    sintatico.set_grammar("entradas/gramaticas/variavel.grammar")
-    sintatico.build()
-    print(sintatico.run_entrada("teste=3"))
-    print(sintatico.run_file())
+    program = Program()
+    program.run()
