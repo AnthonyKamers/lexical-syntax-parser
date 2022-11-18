@@ -1,5 +1,5 @@
-S -> {V} END {S} | &
-V -> id EQ {T}
+S -> V END S | &
+V -> id EQ T
 T -> string | integer
 #
 # S -> [id = A] -> [id = {digit} A] -> [id = {digit} {digit} A ]

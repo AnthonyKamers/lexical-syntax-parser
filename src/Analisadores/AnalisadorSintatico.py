@@ -1,4 +1,5 @@
 from src.Analisadores.AnalisadorLexico import AnalisadorLexico
+from src.Exceptions.Syntactic.SymbolGrammarException import SymbolGrammarException
 from src.Grammar.Grammar import Grammar
 from src.PilhaSintatica.PilhaSintatica import PilhaSintatica
 from src.TabelaSintatica.TabelaSintatica import TabelaSintatica
@@ -15,13 +16,23 @@ class AnalisadorSintatico:
         self.pilha = PilhaSintatica(self)
         self.has_grammar = False
 
-    def set_grammar(self, file_name: str, is_analyze: bool):
+    def set_grammar(self, file_name: str):
         """
         Setta a gramática do analisador sintático
         :param file_name: Path do arquivo de entrada
-        :param is_analyze: Se é um analisador simples/complexo
         """
-        self.grammar.parse_file(file_name, is_analyze)
+        self.grammar.parse_file(file_name)
+
+        # checar se os símbolos terminais da gramática
+        # são diferentes dos estabelecidos no arquivo de definições regulares
+        terminais = self.grammar.get_terminais()
+        definicoes_regulares = self.lexico.get_definicoes_regulares()
+
+        for terminal in terminais:
+            if terminal.simbolo == "&" or terminal.simbolo in definicoes_regulares:
+                continue
+            else:
+                raise SymbolGrammarException
 
     def build(self):
         """
@@ -36,6 +47,14 @@ class AnalisadorSintatico:
         self.grammar.is_ll1()
 
         self.tabela_sintatica.get_table()
+
+    def run_file(self) -> bool:
+        """
+        Roda a TS construída pelo analisador léxico, para garantir
+        que a sintaxe está de acordo a gramática
+        :return: Se o código fonte está de acordo
+        """
+        return self.pilha.run_file()
 
     def run_entrada(self, entrada: str) -> bool:
         """

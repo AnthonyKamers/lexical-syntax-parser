@@ -18,49 +18,32 @@ class Grammar:
         self.simbolos: List[Symbol] = []
         self.simbolo_inicial: Union[Symbol, None] = None
 
-    def parse_file(self, file_name: str, is_analyze: bool):
+    def parse_file(self, file_name: str):
         """
         Faz parse de um arquivo de gramática
-        :param is_analyze: Se está fazendo parse de uma gramática que identifica lexemas
         :param file_name: Path do arquivo de entrada
         """
-        if not is_analyze:
-            # usado para gramáticas símbolos, onde lê símbolo a símbolo
-            with open(file_name) as file:
-                for line in file:
-                    # ignorar comentários (para facilitar debbug)
-                    if line.startswith("#"):
-                        continue
-                    line = line.replace(" ", "").replace("\n", "")
-                    simbolo, producoes = line.split("->")
-                    producoes = producoes.split("|")
+        with open(file_name) as file:
+            for line in file:
+                # ignorar comentários (para facilitar debbug)
+                if line.startswith("#"):
+                    continue
 
-                    new_symbol: Symbol = self.find_symbol(simbolo)
-                    new_symbol.add_producoes(producoes)
-        else:
-            # usado para gramáticas complexas, onde deve ser pego
-            # identificadores para comparar com tokens da tabela de símbolos
-            with open(file_name) as file:
-                for line in file:
-                    line = line.replace("\n", "")
+                line = line.replace("\n", "")
+                simbolo, producoes = line.split(" -> ")
+                producoes = producoes.split("|")
 
-                    # ignorar comentários
-                    if line.startswith("#"):
-                        continue
+                new_symbol: Symbol = self.find_symbol(simbolo)
 
-                    simbolo, producoes = line.split(" -> ")
-                    dif_producoes: List[str] = producoes.split("|")
-                    for producao in dif_producoes:
-                        space = producao.split(" ")
-                        for item in space:
-                            # checar por espaços extras
-                            if item == "":
-                                continue
-
-                            # checar por símbolos de produção
-                            if item[0] == "{":
-                                brackets_simbolo = item[1:item.find("}")]
-                                new_symbol: Symbol = self.find_symbol(brackets_simbolo)
+                for producao in producoes:
+                    simbolos = producao.split(" ")
+                    producao_now = []
+                    for simbolo_now in simbolos:
+                        if simbolo_now == "":
+                            continue
+                        symbol_producao: Symbol = self.find_symbol(simbolo_now)
+                        producao_now.append(symbol_producao)
+                    new_symbol.producoes.append(producao_now)
 
         self.simbolo_inicial = self.simbolos[0]
 
@@ -260,6 +243,7 @@ class Grammar:
             if epsilon in symbol_now.firsts:
                 get_previous(k_now - 1)
 
+        # main code
         epsilon = self.find_symbol("&")
         set_epsilon = {epsilon}
         nao_terminais = self.get_nao_terminais()

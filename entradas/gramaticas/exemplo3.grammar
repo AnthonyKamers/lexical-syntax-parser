@@ -1,6 +1,6 @@
-S -> aC | BC
-B -> aB | dD
-C -> eC | eB
+S -> a C | B C
+B -> a B | d D
+C -> e C | e B
 D -> g
 #primeiro passo
 #S -> aC | aBC | dDC

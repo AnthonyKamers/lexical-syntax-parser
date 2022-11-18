@@ -1,2 +1,2 @@
-S -> aA | a
+S -> a A | a
 A -> S

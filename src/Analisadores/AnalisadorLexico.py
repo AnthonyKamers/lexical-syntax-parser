@@ -79,6 +79,9 @@ class AnalisadorLexico:
     def get_afds(self):
         return [(key, value) for key, value in self.er.afds.items() if key not in self.tokens_iniciais]
 
+    def get_definicoes_regulares(self):
+        return [x[0] for x in list(self.er.er.items())]
+
     def set_file(self, file_name: str):
         def get_token():
             token = self.find_token_ts(parte)
@@ -90,7 +93,9 @@ class AnalisadorLexico:
                 is_valid = self.afd_geral.run_entrada(parte)
                 if is_valid:
                     # token válido, checar qual sua classe
-                    for key, afd in self.get_afds():
+                    afds = self.get_afds()
+                    afds.reverse()
+                    for key, afd in afds:
                         # se o AFD aceitou a entrada, então é desta classe
                         if afd.run_entrada(parte):
                             # adicionar primeiramente na TS

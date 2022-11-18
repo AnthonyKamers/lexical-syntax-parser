@@ -1,8 +1,8 @@
-S -> AC | BC
-A -> aD | cC
-B -> aB | dD
-C -> eC | eA
-D -> fD | CB
+S -> A C | B C
+A -> a D | c C
+B -> a B | d D
+C -> e C | e A
+D -> f D | C B
 #primeiro passo
 #S -> aDC | cCC | aBC | dDC
 #
