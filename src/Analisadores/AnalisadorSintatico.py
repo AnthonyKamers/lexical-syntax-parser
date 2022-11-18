@@ -7,13 +7,19 @@ class AnalisadorSintatico:
     """
     Faz os procedimentos necessários para fazer construir o analisador sintático
     """
-    def __init__(self, file_name: str):
+    def __init__(self):
         self.grammar = Grammar()
-        self.grammar.parse_file(file_name)
         self.tabela_sintatica = TabelaSintatica(self.grammar)
         self.pilha = PilhaSintatica(self)
+        self.has_grammar = False
 
-        self.build()
+    def set_grammar(self, file_name: str, is_analyze: bool):
+        """
+        Setta a gramática do analisador sintático
+        :param file_name: Path do arquivo de entrada
+        :param is_analyze: Se é um analisador simples/complexo
+        """
+        self.grammar.parse_file(file_name, is_analyze)
 
     def build(self):
         """

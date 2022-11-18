@@ -18,22 +18,39 @@ class Grammar:
         self.simbolos: List[Symbol] = []
         self.simbolo_inicial: Union[Symbol, None] = None
 
-    def parse_file(self, file_name: str):
+    def parse_file(self, file_name: str, is_analyze: bool):
         """
         Faz parse de um arquivo de gramática
+        :param is_analyze: Se está fazendo parse de uma gramática que identifica lexemas
         :param file_name: Path do arquivo de entrada
         """
-        with open(file_name) as file:
-            for line in file:
-                # ignorar comentários (para facilitar debbug)
-                if line.startswith("#"):
-                    continue
-                line = line.replace(" ", "").replace("\n", "")
-                simbolo, producoes = line.split("->")
-                producoes = producoes.split("|")
+        if not is_analyze:
+            # usado para gramáticas símbolos, onde lê símbolo a símbolo
+            with open(file_name) as file:
+                for line in file:
+                    # ignorar comentários (para facilitar debbug)
+                    if line.startswith("#"):
+                        continue
+                    line = line.replace(" ", "").replace("\n", "")
+                    simbolo, producoes = line.split("->")
+                    producoes = producoes.split("|")
 
-                new_symbol = self.find_symbol(simbolo)
-                new_symbol.add_producoes(producoes)
+                    new_symbol: Symbol = self.find_symbol(simbolo)
+                    new_symbol.add_producoes(producoes)
+        else:
+            # usado para gramáticas complexas, onde deve ser pego
+            # identificadores para comparar com tokens da tabela de símbolos
+            with open(file_name) as file:
+                for line in file:
+                    # ignorar comentários
+                    if line.startswith("#"):
+                        continue
+
+                    simbolo, producoes = line.split(" -> ")
+                    dif_producoes: List[str] = producoes.split("|")
+                    for producao in dif_producoes:
+                        space = producao.split(" ")
+                        pass
         self.simbolo_inicial = self.simbolos[0]
 
     def get_terminais(self) -> List[Symbol]:

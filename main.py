@@ -2,6 +2,7 @@ from typing import Union
 
 from src.AF.AF import AF
 from src.AF.Estado import Estado
+from src.Analisadores.AnalisadorLexico import AnalisadorLexico
 from src.Analisadores.AnalisadorSintatico import AnalisadorSintatico
 from src.ER.ER import ER
 from src.Grammar.Grammar import Grammar
@@ -39,32 +40,32 @@ if __name__ == '__main__':
     # print(af_new)
 
     # ER
-    er: ER = ER()
-    er.parse_file("entradas/ER/exemplo1.er")
-    er.make_afd_er()
-
-    print(list(er.afds.keys()))
-
-    # fazer união de AFDs
-    afnd_geral: Union[None, AF] = None
-    afds = list(er.afds.values())
-
-    for i in range(len(afds)):
-        if i == 0:
-            continue
-        if afnd_geral is None:
-            afnd_geral = uniao_automatos(afds[i-1], afds[i])
-        else:
-            afnd_geral = uniao_automatos(afnd_geral, afds[i])
-
-    # determinizar união dos autômatos
-    afd_geral = afnd_geral.determinizar()
-
-    # printtar para testar
-    print(afd_geral)
-    afd_geral.show_tabela_transicao()
-
-    print(afd_geral.run_entrada("asda1"))
+    # er: ER = ER()
+    # er.parse_file("entradas/ER/exemplo1.er")
+    # er.make_afd_er()
+    #
+    # print(list(er.afds.keys()))
+    #
+    # # fazer união de AFDs
+    # afnd_geral: Union[None, AF] = None
+    # afds = list(er.afds.values())
+    #
+    # for i in range(len(afds)):
+    #     if i == 0:
+    #         continue
+    #     if afnd_geral is None:
+    #         afnd_geral = uniao_automatos(afds[i-1], afds[i])
+    #     else:
+    #         afnd_geral = uniao_automatos(afnd_geral, afds[i])
+    #
+    # # determinizar união dos autômatos
+    # afd_geral = afnd_geral.determinizar()
+    #
+    # # printtar para testar
+    # print(afd_geral)
+    # afd_geral.show_tabela_transicao()
+    #
+    # print(afd_geral.run_entrada("asda1"))
 
     # Gramática
     # grammar = Grammar()
@@ -83,3 +84,15 @@ if __name__ == '__main__':
 
     # analisador = AnalisadorSintatico("entradas/gramaticas/exemplo-ll1-valido1.grammar")
     # analisador.run_entrada("dadbd")
+
+    # grammar = Grammar()
+    # grammar.parse_file("entradas/gramaticas/variavel.grammar", True)
+
+    # Analisador Léxico
+    analisador = AnalisadorLexico()
+    analisador.set_er("entradas/ER/exemplo1.er")
+    analisador.set_tokens_iniciais("PS,EQ,END")
+    analisador.build()
+    # analisador.show_tabela_lexica()
+    analisador.parse_codigo("entradas/codigo-fonte/exemplo1.codigo")
+    print("")

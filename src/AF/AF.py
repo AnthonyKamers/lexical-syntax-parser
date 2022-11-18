@@ -138,23 +138,23 @@ class AF:
         for estado in self.estados:
             estado.change_estado_nome()
 
-    def run_entrada(self, entrada: str) -> str:
+    def run_entrada(self, entrada: str) -> bool:
         """
         Roda uma entrada para AFD, retornando
         se aceita ou rejeita a entrada
         :param entrada: entrada do AF
-        :return: ACEITA caso aceite, REJEITA caso rejeite
+        :return: true caso aceite, false caso rejeite
         """
         self.estado_now = self.estado_inicial
 
         for letra in entrada:
             retorno = self.run_letra(letra)
             if not retorno:
-                return "REJEITA"
+                return False
 
-        return "ACEITOU" \
+        return True \
             if self.estado_now in self.estados_finais \
-            else "REJEITA"
+            else False
 
     def run_letra(self, letra: str) -> bool:
         estados = self.estado_now.next_estado(letra)
