@@ -1,6 +1,6 @@
 from enum import Enum
 
-from src.Program.AllProgram import AllProgram
+from src.Program.modules.AllProgram import AllProgram
 from src.Program.modules.AFProgram import AFProgram
 from src.Program.modules.ERProgram import ERProgram
 from src.Program.modules.GrammarProgram import GrammarProgram
