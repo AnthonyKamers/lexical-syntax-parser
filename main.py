@@ -44,6 +44,7 @@ if __name__ == '__main__':
     # er: ER = ER()
     # er.parse_file("entradas/ER/exemplo1.er")
     # er.make_afd_er()
+    # print_tree(er.er_tree['id'], 0)
     #
     # print(list(er.afds.keys()))
     #
