@@ -37,7 +37,7 @@ class AF:
 
     def __str__(self):
         return f"""
-            qtd estados: {self.qtd_estados},
+            qtd estados: {len(self.estados)},
             estado inicial: {self.estado_inicial.nome}
             estados finais: {' - '.join([x.nome for x in self.estados_finais])}
             estados: {' - '.join([x.nome for x in self.estados])}
