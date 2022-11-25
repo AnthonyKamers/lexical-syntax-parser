@@ -49,7 +49,7 @@ if __name__ == '__main__':
     # print(list(er.afds.keys()))
     #
     # # fazer união de AFDs
-    # afnd_geral: Union[None, AF] = None
+    # afnd_geral: 'Union'[None, AF] = None
     # afds = list(er.afds.values())
     #
     # for i in range(len(afds)):
