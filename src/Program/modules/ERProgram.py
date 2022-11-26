@@ -26,7 +26,7 @@ class Step(Enum):
 
 class ERProgram(AbstractProgram):
     def __init__(self):
-        self.er = ER()
+        self.er = None
 
         self.functions = {
             Step.CarregarArquivo: self.carregar_arquivo,
@@ -40,8 +40,8 @@ class ERProgram(AbstractProgram):
         }
         
         self.er_now = 0
-        self.afnd_geral
-        self.afd_geral
+        self.afnd_geral = None
+        self.afd_geral = None
 
 
 
@@ -73,18 +73,11 @@ class ERProgram(AbstractProgram):
         path = input(": ")
 
         try:
-            er: ER = ER()
-
+            self.er = ER()
             if path.startswith("/"):
-                er.parse_file(path)
+                self.er.parse_file(path)
             else:
-                er.parse_file(PATH_ER + path)
-
-            if self.er_now == 0:
-                self.er = er
-            else:
-                self.er1 = er
-                self.er_now = 0
+                self.er.parse_file(PATH_ER + path)
 
             print("Arquivo carregado. \n")
         except IOError:

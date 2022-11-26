@@ -41,7 +41,7 @@ class Step(Enum):
 
 class AllProgram(AbstractProgram):
     def __init__(self):
-        self.analisador = AnalisadorLexico()
+        self.analisador = None
         self.sintatico = None
 
         self.functions = {
@@ -78,19 +78,22 @@ class AllProgram(AbstractProgram):
         path = input(": ")
 
         try:
+            self.analisador = AnalisadorLexico()
             if path.startswith("/"):
                 self.analisador.set_er(path)
             else:
                 self.analisador.set_er(PATH_ER + path)
         except IOError:
             print("Houve algum problema ao carregar o arquivo ER. Tente novamente. \n")
-        
+            return
+
         try:
             self.analisador.set_tokens_iniciais("PS,EQ,END")
             self.analisador.build()
             self.analisador.show_tabela_lexica()
         except IOError:
             print("Houve algum problema na execução do Analisador Léxico e Sintático. Tente novamente. \n")
+            return
 
         try:
             if path.startswith("/"):
@@ -99,11 +102,13 @@ class AllProgram(AbstractProgram):
                 self.analisador.set_file(PATH_ER + path)
         except IOError:
             print("Houve algum problema ao carregar o arquivo do código. Tente novamente. \n")
+            return
 
         try:
             self.sintatico = AnalisadorSintatico(self.analisador)
         except IOError:
             print("Houve algum problema na execução do Analisador Léxico e Sintático. Tente novamente. \n")
+            return
 
         try:
             if path.startswith("/"):
@@ -112,13 +117,15 @@ class AllProgram(AbstractProgram):
                 self.sintatico.set_grammar(PATH_ER + path)
         except IOError:
             print("Houve algum problema ao carregar o arquivo de gramatica. Tente novamente. \n")
+            return
 
         try:
             self.sintatico.build()
             print(self.sintatico.run_file())
         except IOError:
             print("Houve algum problema na execução do Analisador Léxico e Sintático. Tente novamente. \n")
-
+            return
+            
     def clear(self):
         self.analisador = None
         self.sintatico = None

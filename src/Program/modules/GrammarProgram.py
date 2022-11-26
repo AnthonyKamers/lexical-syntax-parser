@@ -45,7 +45,7 @@ class Step(Enum):
 
 class GrammarProgram(AbstractProgram):
     def __init__(self):
-        self.grammar = Grammar()
+        self.grammar = None
 
         self.functions = {
             Step.CarregarArquivo: self.carregar_arquivo,
@@ -89,18 +89,12 @@ class GrammarProgram(AbstractProgram):
         """)
         path = input(": ")
         try:
-            grammar: Grammar = Grammar()
+            self.grammar = Grammar()
 
             if path.startswith("/"):
-                grammar.parse_file(path)
+                self.grammar.parse_file(path)
             else:
-                grammar.parse_file(PATH_GR + path)
-
-            if self.grammar_now == 0:
-                self.grammar = grammar
-            else:
-                self.grammar1 = grammar
-                self.grammar_now = 0
+                self.grammar.parse_file(PATH_GR + path)
 
             print("Arquivo carregado. \n")
         except IOError:
