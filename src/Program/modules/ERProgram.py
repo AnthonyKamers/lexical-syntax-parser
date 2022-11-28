@@ -1,11 +1,15 @@
 from enum import Enum
+from typing import Union
 
+from src.AF.AF import AF
 from src.ER.ER import ER
 from src.Program.modules.AbstractProgram import AbstractProgram
 from src.Utils.utilsER import print_tree
 from src.Utils.utilsAF import uniao_automatos
+from src.Utils.utilsProgram import print_steps
 
 PATH_ER = "entradas/ER/"
+
 
 # ER
 #  - carregar arquivo
@@ -21,7 +25,7 @@ class Step(Enum):
     FazerAFD_ER = 4
     Uniao_AFD = 5
     MostrarAFD_Unido = 6
-    Clear = 8
+    Clear = 7
 
 
 class ERProgram(AbstractProgram):
@@ -38,17 +42,15 @@ class ERProgram(AbstractProgram):
             Step.Clear: self.clear
 
         }
-        
+
         self.er_now = 0
         self.afnd_geral = None
         self.afd_geral = None
 
-
-
     def run(self):
         while True:
             print("Você está na sessão de ER: \n")
-            [print(f"{x.value}: {x.name}") for x in Step]
+            print_steps(Step)
 
             try:
                 result = int(input(": "))
@@ -111,7 +113,6 @@ class ERProgram(AbstractProgram):
         except Exception as e:
             print("Houve algum erro ao retornar a ER: " + str(e))
 
-
     def make_afd_er(self):
         if self.er is None:
             print("Ainda não foi carregado um ER principal. \n")
@@ -123,30 +124,26 @@ class ERProgram(AbstractProgram):
         except Exception as e:
             print("Houve algum erro ao fazer o AFD da ER: " + str(e))
 
-
-
     def uniao_afd(self):
         if self.er is None:
             print("Ainda não foi carregado um ER principal. \n")
             return
 
         try:
-            self.afnd_geral: 'Union'[None, AF] = None   # tem erro
+            self.afnd_geral: Union[AF, None] = None
             afds = list(self.er.afds.values())
-            
+
             for i in range(len(afds)):
                 if i == 0:
                     continue
                 if self.afnd_geral is None:
-                    self.afnd_geral = uniao_automatos(afds[i-1], afds[i])
+                    self.afnd_geral = uniao_automatos(afds[i - 1], afds[i])
                 else:
                     self.afnd_geral = uniao_automatos(self.afnd_geral, afds[i])
             self.afd_geral = self.afnd_geral.determinizar()
             return
         except Exception as e:
             print("Houve algum erro ao retornar a ER: " + str(e))
-
-        
 
     def show_afd_unido(self):
         if self.er is None:
@@ -161,9 +158,8 @@ class ERProgram(AbstractProgram):
         except Exception as e:
             print("Houve algum erro ao retornar a ER: " + str(e))
 
-
     def clear(self):
         self.er = None
-        #self.er1 = None
+        # self.er1 = None
 
         print("Expressões Regulares foram reinicializadas. \n")

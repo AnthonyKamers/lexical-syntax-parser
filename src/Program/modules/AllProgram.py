@@ -3,6 +3,7 @@ from enum import Enum
 from src.Program.modules.AbstractProgram import AbstractProgram
 from src.Analisadores.AnalisadorLexico import AnalisadorLexico
 from src.Analisadores.AnalisadorSintatico import AnalisadorSintatico
+from src.Utils.utilsProgram import print_steps
 
 # Analisador Léxico e Sintático
 #  - carregar definições regulares
@@ -35,8 +36,7 @@ PATH_CD = "entradas/codigo-fonte/"
 
 class Step(Enum):
     IniciarAnalisadorLexicoSintatico = 1
-
-    Clear = 8
+    Clear = 2
 
 
 class AllProgram(AbstractProgram):
@@ -45,7 +45,7 @@ class AllProgram(AbstractProgram):
         self.sintatico = None
 
         self.functions = {
-            Step.IniciarAnalisadorLexicoSintatico: self.inicializar_analisador_Lexico_Sintatico,
+            Step.IniciarAnalisadorLexicoSintatico: self.inicializar_analisador_lexico_sintatico,
            
             Step.Clear: self.clear
         }
@@ -53,7 +53,7 @@ class AllProgram(AbstractProgram):
     def run(self):
         while True:
             print("Você está na sessão de Analisador Léxico e Sintático: \n")
-            [print(f"{x.value}: {x.name}") for x in Step]
+            print_steps(Step)
 
             try:
                 result = int(input(": "))
@@ -67,7 +67,7 @@ class AllProgram(AbstractProgram):
             except ValueError:
                 break
 
-    def inicializar_analisador_Lexico_Sintatico(self):
+    def inicializar_analisador_lexico_sintatico(self):
         print(f"""
             Digite o local onde está armazenado o arquivo de ER.
             OBS: Se você não digitar um caminho que comece com "/",

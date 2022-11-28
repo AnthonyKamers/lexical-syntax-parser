@@ -2,9 +2,9 @@ from enum import Enum
 
 from src.Grammar.Grammar import Grammar
 from src.Program.modules.AbstractProgram import AbstractProgram
+from src.Utils.utilsProgram import print_steps
 
 PATH_GR = "entradas/gramaticas/"
-
 
 
 # Gramática
@@ -32,9 +32,8 @@ PATH_GR = "entradas/gramaticas/"
 # print(grammar.is_ll1())
 
 
-
 class Step(Enum):
-    CarregarArquivo = 1 
+    CarregarArquivo = 1
     RetornarSeTemRecursaoEsquerda = 2
     RemoverRecursaoEsquerda = 3
     RemoverNaoDeterminismo = 4
@@ -42,6 +41,7 @@ class Step(Enum):
     FazerFirstsFollows = 6
     VerificarLL1 = 7
     Clear = 8
+
 
 class GrammarProgram(AbstractProgram):
     def __init__(self):
@@ -52,7 +52,7 @@ class GrammarProgram(AbstractProgram):
             Step.RetornarSeTemRecursaoEsquerda: self.retornar_se_rec_esquerda,
             Step.RemoverRecursaoEsquerda: self.remover_rec_esquerda,
             Step.RemoverNaoDeterminismo: self.remover_nao_determinismo,
-            Step.Retornar_Nullable_HasLeftRecursion: self.retornar_nullable_HasLeftRecursion,
+            Step.Retornar_Nullable_HasLeftRecursion: self.retornar_nullable_has_left_recursion,
             Step.FazerFirstsFollows: self.make_firsts_follows,
             Step.VerificarLL1: self.verify_is_ll1,
             Step.Clear: self.clear
@@ -61,11 +61,10 @@ class GrammarProgram(AbstractProgram):
 
         self.grammar_now = 0
 
-
     def run(self):
         while True:
             print("Você está na sessão de Gramática: \n")
-            [print(f"{x.value}: {x.name}") for x in Step]
+            print_steps(Step)
 
             try:
                 result = int(input(": "))
@@ -101,7 +100,6 @@ class GrammarProgram(AbstractProgram):
             print("Houve algum problema ao fazer parse do arquivo. Tente novamente. \n")
             self.carregar_arquivo()
 
-
     def retornar_se_rec_esquerda(self):
         if self.grammar is None:
             print("Ainda não foi carregado uma Gramática. \n")
@@ -133,8 +131,8 @@ class GrammarProgram(AbstractProgram):
             print("Removido não determinismo da Gramática com sucesso. \n")
         except Exception as e:
             print("Houve algum erro ao remover não determinismo da Gramática: " + str(e))
-    
-    def retornar_nullable_HasLeftRecursion(self):
+
+    def retornar_nullable_has_left_recursion(self):
         if self.grammar is None:
             print("Ainda não foi carregado uma Gramática. \n")
             return
@@ -143,7 +141,7 @@ class GrammarProgram(AbstractProgram):
             print(self.grammar.has_nullable(), self.grammar.has_left_recursion())
         except Exception as e:
             print("Houve algum erro ao retornar se ter nullable e recursão a esquerda da Gramática: " + str(e))
-    
+
     def make_firsts_follows(self):
         if self.grammar is None:
             print("Ainda não foi carregado uma Gramática. \n")
@@ -165,7 +163,7 @@ class GrammarProgram(AbstractProgram):
             print(self.grammar.is_ll1())
         except Exception as e:
             print("Houve algum erro ao verificar se a Gramática é LL(1): " + str(e))
-    
+
     def clear(self):
         self.grammar = None
 

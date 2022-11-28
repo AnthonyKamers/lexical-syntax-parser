@@ -5,6 +5,7 @@ from src.AF.AF import AF
 from src.AF.Estado import Estado
 from src.Program.modules.AbstractProgram import AbstractProgram
 from src.Utils.utilsAF import uniao_automatos
+from src.Utils.utilsProgram import print_steps
 
 PATH_AF = "entradas/AF/"
 
@@ -41,7 +42,7 @@ class AFProgram(AbstractProgram):
     def run(self):
         while True:
             print("Você está na sessão de AF: \n")
-            [print(f"{x.value}: {x.name}") for x in Step]
+            print_steps(Step)
 
             try:
                 result = int(input(": "))
