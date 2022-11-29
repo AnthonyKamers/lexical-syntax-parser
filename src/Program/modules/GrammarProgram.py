@@ -1,5 +1,7 @@
 from enum import Enum
+from typing import Union
 
+from src.Exceptions.Syntactic.NotLL1Exception import NotLL1Exception
 from src.Grammar.Grammar import Grammar
 from src.Program.modules.AbstractProgram import AbstractProgram
 from src.Utils.utilsProgram import print_steps
@@ -8,11 +10,11 @@ PATH_GR = "entradas/gramaticas/"
 
 
 # Gramática
-#  - carregar arquivo
-#  - remover recursão à esquerda
-#  - RemoverNaoDeterminismo
-#  - Firsts e Follows
-#  - ver se é LL(1)
+#  - carregar arquivo                   -->
+#  - remover recursão à esquerda        -->
+#  - remover não determinismo           -->
+#  - Firsts e Follows (ver e fazer)     -->
+#  - ver se é LL(1)                     -->
 
 
 # Gramática
@@ -37,26 +39,27 @@ class Step(Enum):
     RetornarSeTemRecursaoEsquerda = 2
     RemoverRecursaoEsquerda = 3
     RemoverNaoDeterminismo = 4
-    Retornar_Nullable_HasLeftRecursion = 5
-    FazerFirstsFollows = 6
+    FazerFirstsFollows = 5
+    VerFirstsFollows = 6
     VerificarLL1 = 7
-    Clear = 8
+    InformacoesGeraisGramatica = 8
+    Clear = 9
 
 
 class GrammarProgram(AbstractProgram):
     def __init__(self):
-        self.grammar = None
+        self.grammar: Union[Grammar, None] = None
 
         self.functions = {
             Step.CarregarArquivo: self.carregar_arquivo,
             Step.RetornarSeTemRecursaoEsquerda: self.retornar_se_rec_esquerda,
             Step.RemoverRecursaoEsquerda: self.remover_rec_esquerda,
             Step.RemoverNaoDeterminismo: self.remover_nao_determinismo,
-            Step.Retornar_Nullable_HasLeftRecursion: self.retornar_nullable_has_left_recursion,
             Step.FazerFirstsFollows: self.make_firsts_follows,
             Step.VerificarLL1: self.verify_is_ll1,
+            Step.VerFirstsFollows: self.ver_firsts_follows,
+            Step.InformacoesGeraisGramatica: self.informacoes_gerais,
             Step.Clear: self.clear
-
         }
 
         self.grammar_now = 0
@@ -108,7 +111,7 @@ class GrammarProgram(AbstractProgram):
         try:
             print(self.grammar.has_left_recursion())
         except Exception as e:
-            print("Houve algum erro ao xx a Gramática: " + str(e))
+            print("Houve algum erro ao retornar se tem recursão a esquerda: " + str(e))
 
     def remover_rec_esquerda(self):
         if self.grammar is None:
@@ -132,16 +135,6 @@ class GrammarProgram(AbstractProgram):
         except Exception as e:
             print("Houve algum erro ao remover não determinismo da Gramática: " + str(e))
 
-    def retornar_nullable_has_left_recursion(self):
-        if self.grammar is None:
-            print("Ainda não foi carregado uma Gramática. \n")
-            return
-
-        try:
-            print(self.grammar.has_nullable(), self.grammar.has_left_recursion())
-        except Exception as e:
-            print("Houve algum erro ao retornar se ter nullable e recursão a esquerda da Gramática: " + str(e))
-
     def make_firsts_follows(self):
         if self.grammar is None:
             print("Ainda não foi carregado uma Gramática. \n")
@@ -161,8 +154,31 @@ class GrammarProgram(AbstractProgram):
 
         try:
             print(self.grammar.is_ll1())
+        except NotLL1Exception as e:
+            print("Não é uma gramática válida LL1: " + str(e))
         except Exception as e:
             print("Houve algum erro ao verificar se a Gramática é LL(1): " + str(e))
+
+    def ver_firsts_follows(self):
+        if self.grammar is None:
+            print("Ainda não foi carregado uma Gramática. \n")
+            return
+
+        try:
+            for simbolo in self.grammar.get_nao_terminais():
+                print(f"{simbolo.simbolo}:\n Firsts: {simbolo.firsts}\n Follows: {simbolo.follows}\n\n")
+        except Exception as e:
+            print("Houve algum erro ao visualizar firsts e follows: " + str(e))
+
+    def informacoes_gerais(self):
+        if self.grammar is None:
+            print("Ainda não foi carregado uma Gramática. \n")
+            return
+
+        try:
+            print(self.grammar)
+        except Exception as e:
+            print("Houve algum erro ao retornar as informações gerais da Gramática: " + str(e))
 
     def clear(self):
         self.grammar = None

@@ -18,6 +18,12 @@ class Grammar:
         self.simbolos: List[Symbol] = []
         self.simbolo_inicial: Union[Symbol, None] = None
 
+    def __str__(self):
+        grammar = ""
+        for simbolo in self.get_nao_terminais():
+            grammar += f"{simbolo.simbolo}: {str(simbolo.producoes)} \n"
+        return grammar
+
     def parse_file(self, file_name: str):
         """
         Faz parse de um arquivo de gramática

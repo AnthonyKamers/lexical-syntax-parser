@@ -1,11 +1,10 @@
 from enum import Enum
-from typing import List
+from typing import Union
 
 from src.AF.AF import AF
-from src.AF.Estado import Estado
 from src.Program.modules.AbstractProgram import AbstractProgram
 from src.Utils.utilsAF import uniao_automatos
-from src.Utils.utilsProgram import print_steps
+from src.Utils.utilsProgram import print_steps, salvar_af
 
 PATH_AF = "entradas/AF/"
 
@@ -18,13 +17,14 @@ class Step(Enum):
     TabelaTransicao = 5
     InformacoesGeraisAF = 6
     SalvarAF = 7
-    Clear = 8
+    RodarEntrada = 8
+    Clear = 9
 
 
 class AFProgram(AbstractProgram):
     def __init__(self):
-        self.af = None
-        self.af1 = None
+        self.af: Union[AF, None] = None
+        self.af1: Union[AF, None] = None
 
         self.functions = {
             Step.CarregarArquivo: self.carregar_arquivo,
@@ -34,6 +34,7 @@ class AFProgram(AbstractProgram):
             Step.TabelaTransicao: self.tabela_transicao,
             Step.InformacoesGeraisAF: self.informacoes_gerais,
             Step.SalvarAF: self.salvar_af,
+            Step.RodarEntrada: self.rodar_entrada,
             Step.Clear: self.clear
         }
 
@@ -66,6 +67,9 @@ class AFProgram(AbstractProgram):
         """)
         path = input(": ")
 
+        if path == "0":
+            return
+
         try:
             af: AF = AF()
 
@@ -74,6 +78,7 @@ class AFProgram(AbstractProgram):
             else:
                 af.parse_file(PATH_AF + path)
 
+            # checar qual AF carregar, se é o primário ou secundário de união
             if self.af_now == 0:
                 self.af = af
             else:
@@ -157,50 +162,27 @@ class AFProgram(AbstractProgram):
             print("Houve algum erro ao mostrar informações do AF: " + str(e))
 
     def salvar_af(self):
-        def parse_estado_nome(estado_now: Estado) -> str:
-            if "," in estado_now.nome:
-                return estado_now.nome.replace(",", "-")
-            return estado_now.nome
+        salvar_af(self.af)
 
-        def parse_estados_nome(estados_now: List[Estado]) -> str:
-            nomes = ""
-            for estado_now in estados_now:
-                nomes += parse_estado_nome(estado_now)
-                nomes += ","
-            return nomes[:-1]
-
-        # main code
+    def rodar_entrada(self):
         if self.af is None:
             print("Ainda não foi carregado um AF principal. \n")
             return
 
         print("""
-            Você deve digitar o caminho para o qual deseja salvar o arquivo.
-            OBS: digite com o nome do arquivo .af no final, por exemplo:
-            /home/jerusa/teste_incrivel.af
+            Entre com alguma entrada para testar o AF. \n
         """)
-        path = input(": ")
+
+        entrada = input(": ")
 
         try:
-            f = open(path, 'w')
-            f.write(str(len(self.af.estados)) + "\n")
-            f.write(parse_estado_nome(self.af.estado_inicial) + "\n")
-            f.write(parse_estados_nome(self.af.estados_finais) + "\n")
-            f.write(",".join(self.af.alfabeto) + "\n")
-
-            for estado in self.af.estados:
-                for transicao in estado.transicoes:
-                    letra, estado_new, _ = transicao
-                    f.write(f"{parse_estado_nome(estado)},{letra},{parse_estado_nome(estado_new)}\n")
-
-            f.close()
-
-            print("Arquivo foi gerado com sucesso! \n")
+            print(self.af.run_entrada(entrada))
         except Exception as e:
-            print("Houve algum erro ao salvar o arquivo de AF: " + str(e))
+            print("Houve algum erro ao rodar entrada: " + str(e))
 
     def clear(self):
         self.af = None
         self.af1 = None
+        self.af_now = 0
 
         print("Autômatos foram reinicializados. \n")

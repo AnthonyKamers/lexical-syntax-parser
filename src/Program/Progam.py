@@ -1,6 +1,6 @@
 from enum import Enum
 
-from src.Program.modules.AllProgram import AllProgram
+from src.Program.modules.LexicoSintaticoProgram import LexicoSintaticoProgram
 from src.Program.modules.AFProgram import AFProgram
 from src.Program.modules.ERProgram import ERProgram
 from src.Program.modules.GrammarProgram import GrammarProgram
@@ -12,7 +12,7 @@ class State(Enum):
     ER = 2
     GRAMMAR = 3
     LEXICO = 4
-    ALL = 5
+    LexicoSintatico = 5
 
 
 class Program:
@@ -22,7 +22,7 @@ class Program:
             State.ER: ERProgram,
             State.GRAMMAR: GrammarProgram,
             State.LEXICO: LexicoProgram,
-            State.ALL: AllProgram
+            State.LexicoSintatico: LexicoSintaticoProgram
         }
 
     def run(self):

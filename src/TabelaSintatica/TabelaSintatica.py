@@ -13,6 +13,7 @@ class TabelaSintatica:
     """
     Implentação de uma tabela sintática utilizada no analisador LL(1)
     """
+
     def __init__(self, grammar: Grammar):
         self.grammar = grammar
         self.table = {}
@@ -34,35 +35,12 @@ class TabelaSintatica:
         self.construct_table()
 
         epsilon = self.grammar.find_symbol("&")
-        set_epsilon = {epsilon}
 
         for nao_terminal in self.grammar.get_nao_terminais():
             for producao in nao_terminal.producoes:
-                # first_prod = producao[0]
-                #
-                # if first_prod.is_terminal() and first_prod is not epsilon:
-                #     self.table[nao_terminal][first_prod].append(producao)
-                # elif not first_prod.is_terminal():
-                #     length = len(producao)
-                #
-                #     i = 0
-                #     for i in range(length):
-                #         for a in (producao[i].firsts - set_epsilon):
-                #             self.table[nao_terminal][a].append(producao)
-                #
-                #         if epsilon not in producao[i].firsts:
-                #             break
-                #
-                #     if i + 1 == length:
-                #         for a in nao_terminal.follows:
-                #             self.table[nao_terminal][a].append(producao)
-                # elif first_prod is epsilon:
-                #     for a in nao_terminal.follows:
-                #         self.table[nao_terminal][a].append(producao)
-
                 if epsilon not in producao:
                     if producao[0].is_terminal():
-                    # if any(elem.is_terminal() for elem in producao):
+                        # if any(elem.is_terminal() for elem in producao):
                         first = set()
                         for simbolo in producao:
                             if simbolo.is_terminal():

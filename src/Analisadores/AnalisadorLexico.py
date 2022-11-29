@@ -85,6 +85,7 @@ class AnalisadorLexico:
     def set_file(self, file_name: str):
         def get_token():
             token = self.find_token_ts(parte)
+
             if token is not False:
                 # token já existente na TS
                 self.tokens.append(token)

@@ -6,16 +6,17 @@ from src.ER.ER import ER
 from src.Program.modules.AbstractProgram import AbstractProgram
 from src.Utils.utilsER import print_tree
 from src.Utils.utilsAF import uniao_automatos
-from src.Utils.utilsProgram import print_steps
+from src.Utils.utilsProgram import print_steps, salvar_af
 
 PATH_ER = "entradas/ER/"
 
 
 # ER
-#  - carregar arquivo
-#  - fazer AFD de cada expressão regular
-#  - mostrar árvore gerada para cada ER
-#  - fazer a união de todos os autômatos gerados
+#  - carregar arquivo                               -->
+#  - fazer AFD de cada expressão regular            -->
+#  - mostrar árvore gerada para cada ER             -->
+#  - fazer a união de todos os autômatos gerados    -->
+#  - salvar AFD de alguma definição regular         -->
 
 
 class Step(Enum):
@@ -25,12 +26,13 @@ class Step(Enum):
     FazerAFD_ER = 4
     Uniao_AFD = 5
     MostrarAFD_Unido = 6
-    Clear = 7
+    SalvarAFD_ER = 7
+    Clear = 8
 
 
 class ERProgram(AbstractProgram):
     def __init__(self):
-        self.er = None
+        self.er: Union[ER, None] = None
 
         self.functions = {
             Step.CarregarArquivo: self.carregar_arquivo,
@@ -39,8 +41,8 @@ class ERProgram(AbstractProgram):
             Step.FazerAFD_ER: self.make_afd_er,
             Step.Uniao_AFD: self.uniao_afd,
             Step.MostrarAFD_Unido: self.show_afd_unido,
+            Step.SalvarAFD_ER: self.save_afd_er,
             Step.Clear: self.clear
-
         }
 
         self.er_now = 0
@@ -73,6 +75,9 @@ class ERProgram(AbstractProgram):
             Digite 0 para sair dessa função.
         """)
         path = input(": ")
+
+        if path == "0":
+            return
 
         try:
             self.er = ER()
@@ -108,7 +113,9 @@ class ERProgram(AbstractProgram):
             return
 
         try:
-            print_tree(self.er.er_tree['id'], 0)
+            for key, tree in self.er.er_tree.items():
+                print(f"Árvore de ER {key}: ")
+                print_tree(tree, 0)
             return
         except Exception as e:
             print("Houve algum erro ao retornar a ER: " + str(e))
@@ -158,8 +165,28 @@ class ERProgram(AbstractProgram):
         except Exception as e:
             print("Houve algum erro ao retornar a ER: " + str(e))
 
+    def save_afd_er(self):
+        if self.er is None:
+            print("Ainda não foi carregado um ER principal. \n")
+            return
+
+        print("Escolha uma definição regular para salvar seu AFD. \n")
+
+        try:
+            print(list(self.er.er.keys()))
+        except Exception as e:
+            print("Houve algum erro ao pegar informações do AF: " + str(e))
+
+        choose = input(": ")
+
+        try:
+            salvar_af(self.er.afds[choose])
+        except Exception as e:
+            print("Houve algum erro ao pegar informações do AF: " + str(e))
+
     def clear(self):
         self.er = None
-        # self.er1 = None
+        self.afnd_geral = None
+        self.afd_geral = None
 
         print("Expressões Regulares foram reinicializadas. \n")
