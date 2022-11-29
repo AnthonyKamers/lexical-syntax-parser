@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.Program.modules.AFProgram &mdash; formais 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> formais
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">formais</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">formais</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.Program.modules.AFProgram</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.Program.modules.AFProgram</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">src.AF.AF</span> <span class="kn">import</span> <span class="n">AF</span>
+<span class="kn">from</span> <span class="nn">src.Program.modules.AbstractProgram</span> <span class="kn">import</span> <span class="n">AbstractProgram</span>
+<span class="kn">from</span> <span class="nn">src.Utils.utilsAF</span> <span class="kn">import</span> <span class="n">uniao_automatos</span>
+<span class="kn">from</span> <span class="nn">src.Utils.utilsProgram</span> <span class="kn">import</span> <span class="n">print_steps</span><span class="p">,</span> <span class="n">salvar_af</span>
+
+<span class="n">PATH_AF</span> <span class="o">=</span> <span class="s2">&quot;entradas/AF/&quot;</span>
+
+
+<div class="viewcode-block" id="Step"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.AFProgram.Step">[docs]</a><span class="k">class</span> <span class="nc">Step</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">CarregarArquivo</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">Determinizar</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">Minimizar</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">UniaoAutomatos</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">TabelaTransicao</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">InformacoesGeraisAF</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">SalvarAF</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">RodarEntrada</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">Clear</span> <span class="o">=</span> <span class="mi">9</span></div>
+
+
+<div class="viewcode-block" id="AFProgram"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.AFProgram.AFProgram">[docs]</a><span class="k">class</span> <span class="nc">AFProgram</span><span class="p">(</span><span class="n">AbstractProgram</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">AF</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af1</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">AF</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">functions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">CarregarArquivo</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">carregar_arquivo</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">Determinizar</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">determinizar</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">Minimizar</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimizar</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">UniaoAutomatos</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniao_automatos</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">TabelaTransicao</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabela_transicao</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">InformacoesGeraisAF</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">informacoes_gerais</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">SalvarAF</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">salvar_af</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">RodarEntrada</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rodar_entrada</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">Clear</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_now</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="AFProgram.run"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.AFProgram.AFProgram.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Você está na sessão de AF: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">print_steps</span><span class="p">(</span><span class="n">Step</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Você deve digitar um número&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">functions</span><span class="p">[</span><span class="n">Step</span><span class="p">(</span><span class="n">result</span><span class="p">)]</span>
+                <span class="n">function</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">break</span></div>
+
+<div class="viewcode-block" id="AFProgram.carregar_arquivo"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.AFProgram.AFProgram.carregar_arquivo">[docs]</a>    <span class="k">def</span> <span class="nf">carregar_arquivo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            Digite o local onde está armazenado o arquivo de AF.</span>
+<span class="s2">            OBS: Se você não digitar um caminho que comece com &quot;/&quot;,</span>
+<span class="s2">            tentará pegar automaticamente da pasta do projeto localizada em</span>
+<span class="s2">            </span><span class="si">{</span><span class="n">PATH_AF</span><span class="si">}</span><span class="s2">.</span>
+<span class="s2">            Digite 0 para sair dessa função.</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">af</span><span class="p">:</span> <span class="n">AF</span> <span class="o">=</span> <span class="n">AF</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                <span class="n">af</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">af</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">PATH_AF</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span>
+
+            <span class="c1"># checar qual AF carregar, se é o primário ou secundário de união</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">af_now</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">af</span> <span class="o">=</span> <span class="n">af</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">af1</span> <span class="o">=</span> <span class="n">af</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">af_now</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Arquivo carregado. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum problema ao fazer parse do arquivo. Tente novamente. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">carregar_arquivo</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AFProgram.determinizar"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.AFProgram.AFProgram.determinizar">[docs]</a>    <span class="k">def</span> <span class="nf">determinizar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">af</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ainda não foi carregado um AF. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">af</span><span class="o">.</span><span class="n">is_deterministico</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;O AF já é determinístico. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">af</span><span class="o">.</span><span class="n">determinizar</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AF Determinizado com sucesso. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao determinizar o AF: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AFProgram.minimizar"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.AFProgram.AFProgram.minimizar">[docs]</a>    <span class="k">def</span> <span class="nf">minimizar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">af</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ainda não foi carregado um AF. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">af</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">af</span><span class="o">.</span><span class="n">minimizar</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AF minimizado com sucesso. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao minimizar o AF: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AFProgram.uniao_automatos"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.AFProgram.AFProgram.uniao_automatos">[docs]</a>    <span class="k">def</span> <span class="nf">uniao_automatos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">af</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ainda não foi carregado um AF principal. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Um AF principal já está definido; Você deve carregar agora outro arquivo para fazer a união: &quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_now</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">carregar_arquivo</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_now</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">af1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao carregar segundo AF. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">af</span> <span class="o">=</span> <span class="n">uniao_automatos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">af</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">af1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao fazer a união dos autômatos; ambos vão&quot;</span>
+                  <span class="s2">&quot; ser reinicilizados; tente novamente: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">af</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">af1</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">af_now</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="AFProgram.tabela_transicao"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.AFProgram.AFProgram.tabela_transicao">[docs]</a>    <span class="k">def</span> <span class="nf">tabela_transicao</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">af</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ainda não foi carregado um AF principal. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">af</span><span class="o">.</span><span class="n">show_tabela_transicao</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao mostrar a tabela de transição: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AFProgram.informacoes_gerais"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.AFProgram.AFProgram.informacoes_gerais">[docs]</a>    <span class="k">def</span> <span class="nf">informacoes_gerais</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">af</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ainda não foi carregado um AF principal. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">af</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao mostrar informações do AF: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AFProgram.salvar_af"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.AFProgram.AFProgram.salvar_af">[docs]</a>    <span class="k">def</span> <span class="nf">salvar_af</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">salvar_af</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">af</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AFProgram.rodar_entrada"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.AFProgram.AFProgram.rodar_entrada">[docs]</a>    <span class="k">def</span> <span class="nf">rodar_entrada</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">af</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ainda não foi carregado um AF principal. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            Entre com alguma entrada para testar o AF. </span><span class="se">\n</span><span class="s2"></span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">entrada</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">af</span><span class="o">.</span><span class="n">run_entrada</span><span class="p">(</span><span class="n">entrada</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao rodar entrada: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AFProgram.clear"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.AFProgram.AFProgram.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af1</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">af_now</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Autômatos foram reinicializados. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, tony &amp; tony.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+src.Utils package
+=================
+
+Submodules
+----------
+
+src.Utils.utils module
+----------------------
+
+.. automodule:: src.Utils.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Utils.utilsAF module
+------------------------
+
+.. automodule:: src.Utils.utilsAF
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Utils.utilsER module
+------------------------
+
+.. automodule:: src.Utils.utilsER
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Utils.utilsProgram module
+-----------------------------
+
+.. automodule:: src.Utils.utilsProgram
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.Utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

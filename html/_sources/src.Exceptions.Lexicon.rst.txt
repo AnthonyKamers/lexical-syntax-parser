@@ -1,0 +1,37 @@
+src.Exceptions.Lexicon package
+==============================
+
+Submodules
+----------
+
+src.Exceptions.Lexicon.LexiconException module
+----------------------------------------------
+
+.. automodule:: src.Exceptions.Lexicon.LexiconException
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Exceptions.Lexicon.SymbolNotPreviousDeclaredException module
+----------------------------------------------------------------
+
+.. automodule:: src.Exceptions.Lexicon.SymbolNotPreviousDeclaredException
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Exceptions.Lexicon.TokenNotValidException module
+----------------------------------------------------
+
+.. automodule:: src.Exceptions.Lexicon.TokenNotValidException
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.Exceptions.Lexicon
+   :members:
+   :undoc-members:
+   :show-inheritance:

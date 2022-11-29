@@ -18,6 +18,12 @@ class Grammar:
         self.simbolos: List[Symbol] = []
         self.simbolo_inicial: Union[Symbol, None] = None
 
+    def __str__(self):
+        grammar = ""
+        for simbolo in self.get_nao_terminais():
+            grammar += f"{simbolo.simbolo}: {str(simbolo.producoes)} \n"
+        return grammar
+
     def parse_file(self, file_name: str):
         """
         Faz parse de um arquivo de gramática
@@ -28,12 +34,23 @@ class Grammar:
                 # ignorar comentários (para facilitar debbug)
                 if line.startswith("#"):
                     continue
-                line = line.replace(" ", "").replace("\n", "")
-                simbolo, producoes = line.split("->")
+
+                line = line.replace("\n", "")
+                simbolo, producoes = line.split(" -> ")
                 producoes = producoes.split("|")
 
-                new_symbol = self.find_symbol(simbolo)
-                new_symbol.add_producoes(producoes)
+                new_symbol: Symbol = self.find_symbol(simbolo)
+
+                for producao in producoes:
+                    simbolos = producao.split(" ")
+                    producao_now = []
+                    for simbolo_now in simbolos:
+                        if simbolo_now == "":
+                            continue
+                        symbol_producao: Symbol = self.find_symbol(simbolo_now)
+                        producao_now.append(symbol_producao)
+                    new_symbol.producoes.append(producao_now)
+
         self.simbolo_inicial = self.simbolos[0]
 
     def get_terminais(self) -> List[Symbol]:
@@ -232,6 +249,7 @@ class Grammar:
             if epsilon in symbol_now.firsts:
                 get_previous(k_now - 1)
 
+        # main code
         epsilon = self.find_symbol("&")
         set_epsilon = {epsilon}
         nao_terminais = self.get_nao_terminais()

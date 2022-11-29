@@ -1,3 +1,8 @@
+PS: "
+EQ: =
+END: ;
 digit: [0-9]
 letter: [a-zA-Z]
 id: letter(letter | digit)*
+string: PS (digit | letter)* (PS)
+integer: digit*

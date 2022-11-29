@@ -1,0 +1,8 @@
+formais
+=======
+
+.. toctree::
+   :maxdepth: 4
+
+   main
+   src

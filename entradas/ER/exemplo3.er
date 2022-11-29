@@ -1,9 +1,1 @@
-digit: [0-9]
-letter: [a-zA-Z]
-num: (digito)+ (digito)*
-float: num+ (num)* .? E (num)+
-END: ;
-SE: +.
-LE: <=
-OA: +-*/
-PR: program
+er: a?(a|b)+

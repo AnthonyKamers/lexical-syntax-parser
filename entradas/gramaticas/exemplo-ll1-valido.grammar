@@ -1,5 +1,5 @@
-E -> TJ
-J -> ∨TJ | &
-T -> FK
-K -> ∧FK | &
-F -> ¬F | id
+E -> T J
+J -> ∨ T J | &
+T -> F K
+K -> ∧ F K | &
+F -> ¬ F | id

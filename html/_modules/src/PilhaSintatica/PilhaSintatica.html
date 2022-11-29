@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.PilhaSintatica.PilhaSintatica &mdash; formais 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> formais
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">formais</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">formais</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.PilhaSintatica.PilhaSintatica</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.PilhaSintatica.PilhaSintatica</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="kn">from</span> <span class="nn">src.Exceptions.Syntactic.DifferentSyntaxExpected</span> <span class="kn">import</span> <span class="n">DifferentSyntaxExpected</span>
+<span class="kn">from</span> <span class="nn">src.Exceptions.Syntactic.NotProductionTabela</span> <span class="kn">import</span> <span class="n">NotProductionTabela</span>
+
+
+<div class="viewcode-block" id="PilhaSintatica"><a class="viewcode-back" href="../../../src.PilhaSintatica.html#src.PilhaSintatica.PilhaSintatica.PilhaSintatica">[docs]</a><span class="k">class</span> <span class="nc">PilhaSintatica</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementação da pilha sintática, que faz uso da tabela sintática gerada pelo</span>
+<span class="sd">    analisador sintático LL(1)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">analisador_sintatico</span><span class="p">:</span> <span class="nb">any</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analisador_sintatico</span> <span class="o">=</span> <span class="n">analisador_sintatico</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pilha</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="PilhaSintatica.run_file"><a class="viewcode-back" href="../../../src.PilhaSintatica.html#src.PilhaSintatica.PilhaSintatica.PilhaSintatica.run_file">[docs]</a>    <span class="k">def</span> <span class="nf">run_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Roda para o arquivo específico no analisador léxico</span>
+<span class="sd">        :return: Se aceita ou rejeita o arquivo-fonte</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">desempilhar_nao_terminais</span><span class="p">():</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Roda laço de desempilhamento com base em um terminal</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pilha</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+                <span class="n">simbolo_pilha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pilha</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+                <span class="c1"># condições de terminal</span>
+                <span class="k">if</span> <span class="n">simbolo_pilha</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">simbolo_pilha</span><span class="o">.</span><span class="n">simbolo</span> <span class="o">==</span> <span class="n">er_now</span><span class="p">:</span>
+                        <span class="c1"># desempilhar e parar o laço</span>
+                        <span class="k">break</span>
+                    <span class="k">elif</span> <span class="n">simbolo_pilha</span> <span class="o">==</span> <span class="n">epsilon</span><span class="p">:</span>
+                        <span class="c1"># somente desempilhar</span>
+                        <span class="k">continue</span>
+                    <span class="k">elif</span> <span class="n">simbolo_pilha</span><span class="o">.</span><span class="n">simbolo</span> <span class="o">!=</span> <span class="n">er_now</span><span class="p">:</span>
+                        <span class="c1"># símbolo terminal diferente do esperado agora</span>
+                        <span class="k">raise</span> <span class="n">DifferentSyntaxExpected</span>
+
+                <span class="c1"># rodar as condições ao contrário na pilha</span>
+                <span class="n">producao</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">tabela_sintatica</span><span class="p">[</span><span class="n">simbolo_pilha</span><span class="p">][</span><span class="n">grammar</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="n">er_now</span><span class="p">)])</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">producao</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">NotProductionTabela</span>
+
+                <span class="n">producao</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">producao</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">producao</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">simbolo</span> <span class="ow">in</span> <span class="n">producao</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pilha</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">simbolo</span><span class="p">)</span>
+
+        <span class="c1"># main code</span>
+        <span class="n">lexico</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analisador_sintatico</span><span class="o">.</span><span class="n">lexico</span>
+        <span class="n">tabela_sintatica</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analisador_sintatico</span><span class="o">.</span><span class="n">tabela_sintatica</span><span class="o">.</span><span class="n">table</span>
+        <span class="n">grammar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analisador_sintatico</span><span class="o">.</span><span class="n">grammar</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">grammar</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)</span>
+        <span class="n">lista_tokens</span> <span class="o">=</span> <span class="n">lexico</span><span class="o">.</span><span class="n">tokens</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pilha</span> <span class="o">=</span> <span class="p">[</span><span class="n">grammar</span><span class="o">.</span><span class="n">simbolo_inicial</span><span class="p">]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">lista_tokens</span><span class="p">:</span>
+                <span class="n">er_now</span> <span class="o">=</span> <span class="n">token</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">desempilhar_nao_terminais</span><span class="p">()</span>
+
+            <span class="c1"># terminar de desempilhar o resto</span>
+            <span class="n">er_now</span> <span class="o">=</span> <span class="s2">&quot;$&quot;</span>
+            <span class="n">desempilhar_nao_terminais</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">,</span> <span class="n">NotProductionTabela</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensagem de erro: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pilha</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="PilhaSintatica.run_entrada"><a class="viewcode-back" href="../../../src.PilhaSintatica.html#src.PilhaSintatica.PilhaSintatica.PilhaSintatica.run_entrada">[docs]</a>    <span class="k">def</span> <span class="nf">run_entrada</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entrada</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Roda para a entrada especificada o algoritmo de autômato de pilha,</span>
+<span class="sd">        fazendo com que retorna que a aceite ou rejeite</span>
+<span class="sd">        :param entrada: palavra que deseja testar a gramática</span>
+<span class="sd">        :return: Se aceita a entrada</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">desempilhar_nao_terminais</span><span class="p">():</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Roda laço de desempilhamento com base em um terminal</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pilha</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+                <span class="n">simbolo_pilha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pilha</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+                <span class="c1"># condições de terminal</span>
+                <span class="k">if</span> <span class="n">simbolo_pilha</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">simbolo_pilha</span><span class="o">.</span><span class="n">simbolo</span> <span class="o">==</span> <span class="n">char</span><span class="p">:</span>
+                        <span class="c1"># desempilhar e parar o laço</span>
+                        <span class="k">break</span>
+                    <span class="k">elif</span> <span class="n">simbolo_pilha</span> <span class="o">==</span> <span class="n">epsilon</span><span class="p">:</span>
+                        <span class="c1"># somente desempilhar</span>
+                        <span class="k">continue</span>
+                    <span class="k">elif</span> <span class="n">simbolo_pilha</span><span class="o">.</span><span class="n">simbolo</span> <span class="o">!=</span> <span class="n">char</span><span class="p">:</span>
+                        <span class="c1"># símbolo terminal diferente do esperado agora</span>
+                        <span class="k">raise</span> <span class="n">DifferentSyntaxExpected</span>
+
+                <span class="c1"># rodar as produções ao contrário na pilha</span>
+                <span class="n">producao</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">tabela_sintatica</span><span class="p">[</span><span class="n">simbolo_pilha</span><span class="p">][</span><span class="n">grammar</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="n">char</span><span class="p">)][</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">producao</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">simbolo</span> <span class="ow">in</span> <span class="n">producao</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pilha</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">simbolo</span><span class="p">)</span>
+
+        <span class="c1"># main code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pilha</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">analisador_sintatico</span><span class="o">.</span><span class="n">grammar</span><span class="o">.</span><span class="n">simbolo_inicial</span><span class="p">]</span>
+        <span class="n">tabela_sintatica</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analisador_sintatico</span><span class="o">.</span><span class="n">tabela_sintatica</span><span class="o">.</span><span class="n">table</span>
+        <span class="n">grammar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analisador_sintatico</span><span class="o">.</span><span class="n">grammar</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">grammar</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">entrada</span><span class="p">:</span>
+                <span class="n">desempilhar_nao_terminais</span><span class="p">()</span>
+
+            <span class="c1"># terminar de desempilhar o resto</span>
+            <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;$&quot;</span>
+            <span class="n">desempilhar_nao_terminais</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mensagem de erro: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># checagem final</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pilha</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, tony &amp; tony.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

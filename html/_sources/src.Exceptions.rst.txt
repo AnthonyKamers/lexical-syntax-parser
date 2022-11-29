@@ -1,0 +1,19 @@
+src.Exceptions package
+======================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   src.Exceptions.Lexicon
+   src.Exceptions.Syntactic
+
+Module contents
+---------------
+
+.. automodule:: src.Exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:

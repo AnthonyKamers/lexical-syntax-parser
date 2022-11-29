@@ -1,5 +1,7 @@
 from typing import List
 
+from src.ER.Node import Node
+
 
 def get_lowercase_letters() -> List[str]:
     """
@@ -42,3 +44,34 @@ def add_or_operation(lista: List[str]) -> List[str]:
     for i in range(1, len(lista) * 2, 2):
         lista.insert(i, "|")
     return lista[:-1]
+
+
+COUNT = [10]
+
+
+def print_tree(root: Node, space: int):
+    """
+    Printta uma árvore lateralmente: inorder.
+    Retirado de: https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/
+    :param root: Nodo sendo visto no momento
+    :param space: Quantidade de itens a deslocar à direita no terminal
+    """
+    # Base case
+    if root is None:
+        return
+
+    # Increase distance between levels
+    space += COUNT[0]
+
+    # Process right child first
+    print_tree(root.right, space)
+
+    # Print current node after space
+    # count
+    print()
+    for i in range(COUNT[0], space):
+        print(end=" ")
+    print(root.el)
+
+    # Process left child
+    print_tree(root.left, space)

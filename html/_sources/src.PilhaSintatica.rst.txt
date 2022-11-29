@@ -1,0 +1,21 @@
+src.PilhaSintatica package
+==========================
+
+Submodules
+----------
+
+src.PilhaSintatica.PilhaSintatica module
+----------------------------------------
+
+.. automodule:: src.PilhaSintatica.PilhaSintatica
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.PilhaSintatica
+   :members:
+   :undoc-members:
+   :show-inheritance:

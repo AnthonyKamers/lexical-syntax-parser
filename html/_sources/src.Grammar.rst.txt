@@ -1,0 +1,29 @@
+src.Grammar package
+===================
+
+Submodules
+----------
+
+src.Grammar.Grammar module
+--------------------------
+
+.. automodule:: src.Grammar.Grammar
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Grammar.Symbol module
+-------------------------
+
+.. automodule:: src.Grammar.Symbol
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.Grammar
+   :members:
+   :undoc-members:
+   :show-inheritance:

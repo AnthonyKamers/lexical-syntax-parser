@@ -97,6 +97,9 @@ class ER:
                             lista.append(palavra_now)
                         lista.append(character)
                         palavra_now = ""
+            else:
+                if palavra_now != "":
+                    lista.append(palavra_now)
             return lista
 
         def treat_exceptions(parsed):
@@ -148,6 +151,9 @@ class ER:
                     treat_exceptions(er_parsed)
                     self.er[key] = er_parsed
 
+    def get_plain_words(self, key: str):
+        return [x for x in self.er[key] if x not in caracteres_especiais]
+
     def make_afd_er(self):
         """
         Realiza as operações para realmente montar um AFD a partir da ER
@@ -195,6 +201,7 @@ class ER:
                     pass
 
         for key, value in self.er.items():
+            value = copy.copy(value)
             operations = []
 
             # construir prioridades
@@ -244,7 +251,10 @@ class ER:
                     node_now.right = node_aux
 
                     # atualizar nodo pai
-                    last_right.father = node_aux
+                    try:
+                        last_right.father = node_aux
+                    except AttributeError:
+                        pass
                     node_aux.father = node_now
                 elif first_op == Operation.OR:
                     node_aux = Node(first, first_op)
@@ -356,9 +366,11 @@ class ER:
 
                 # ver se é preciso colocar transição no alfabeto do AFD
                 if transition not in af.alfabeto and transition != "#":
+                    if transition == '':
+                        continue
                     if not has_afd:
-                        if len(transition) > 1:
-                            raise SymbolNotPreviousDeclaredException
+                        # if len(transition) > 1:
+                        #     raise SymbolNotPreviousDeclaredException
 
                         # é apenas uma letra
                         af.alfabeto.append(transition)

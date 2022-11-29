@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.Grammar.Grammar &mdash; formais 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> formais
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">formais</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">formais</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.Grammar.Grammar</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.Grammar.Grammar</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">src.Exceptions.Syntactic.LoopNaoDeterminismoException</span> <span class="kn">import</span> <span class="n">LoopNaoDeterminismoException</span>
+<span class="kn">from</span> <span class="nn">src.Exceptions.Syntactic.NotLL1Exception</span> <span class="kn">import</span> <span class="n">NotLL1Exception</span>
+<span class="kn">from</span> <span class="nn">src.Grammar.Symbol</span> <span class="kn">import</span> <span class="n">Symbol</span>
+
+<span class="c1"># flags</span>
+<span class="n">MAX_EXECUTION_NAO_DETERMINISMO</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># quantidade máxima de &quot;loops&quot; em não determinismo</span>
+
+
+<div class="viewcode-block" id="Grammar"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar">[docs]</a><span class="k">class</span> <span class="nc">Grammar</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementação de uma gramática, a fim de fazer operações importantes para análise sintática</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simbolos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Symbol</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simbolo_inicial</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Symbol</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">grammar</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">simbolo</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nao_terminais</span><span class="p">():</span>
+            <span class="n">grammar</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">simbolo</span><span class="o">.</span><span class="n">simbolo</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">simbolo</span><span class="o">.</span><span class="n">producoes</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">grammar</span>
+
+<div class="viewcode-block" id="Grammar.parse_file"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.parse_file">[docs]</a>    <span class="k">def</span> <span class="nf">parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Faz parse de um arquivo de gramática</span>
+<span class="sd">        :param file_name: Path do arquivo de entrada</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                <span class="c1"># ignorar comentários (para facilitar debbug)</span>
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>
+                    <span class="k">continue</span>
+
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="n">simbolo</span><span class="p">,</span> <span class="n">producoes</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; -&gt; &quot;</span><span class="p">)</span>
+                <span class="n">producoes</span> <span class="o">=</span> <span class="n">producoes</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
+
+                <span class="n">new_symbol</span><span class="p">:</span> <span class="n">Symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="n">simbolo</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">producao</span> <span class="ow">in</span> <span class="n">producoes</span><span class="p">:</span>
+                    <span class="n">simbolos</span> <span class="o">=</span> <span class="n">producao</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                    <span class="n">producao_now</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">simbolo_now</span> <span class="ow">in</span> <span class="n">simbolos</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">simbolo_now</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="n">symbol_producao</span><span class="p">:</span> <span class="n">Symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="n">simbolo_now</span><span class="p">)</span>
+                        <span class="n">producao_now</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">symbol_producao</span><span class="p">)</span>
+                    <span class="n">new_symbol</span><span class="o">.</span><span class="n">producoes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">producao_now</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">simbolo_inicial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simbolos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Grammar.get_terminais"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.get_terminais">[docs]</a>    <span class="k">def</span> <span class="nf">get_terminais</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Symbol</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_specific_simbolos</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Grammar.get_nao_terminais"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.get_nao_terminais">[docs]</a>    <span class="k">def</span> <span class="nf">get_nao_terminais</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Symbol</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_specific_simbolos</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Grammar.get_specific_simbolos"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.get_specific_simbolos">[docs]</a>    <span class="k">def</span> <span class="nf">get_specific_simbolos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_terminal</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Symbol</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">simbolos</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">()</span> <span class="o">==</span> <span class="n">type_terminal</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Grammar.has_recursive"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.has_recursive">[docs]</a>    <span class="k">def</span> <span class="nf">has_recursive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retorna se a gramática é recursiva de alguma maneira</span>
+<span class="sd">        (não necessariamente à esquerda)</span>
+<span class="sd">        :return: Se a gramática é recursiva</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nao_terminais</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">is_recursive</span><span class="p">()])</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="Grammar.has_left_recursion"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.has_left_recursion">[docs]</a>    <span class="k">def</span> <span class="nf">has_left_recursion</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retorna se a gramática é recursiva à esquerda</span>
+<span class="sd">        :return: Se a gramática é recursiva à esquerda</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nao_terminais</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">is_left_recursive</span><span class="p">()])</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="Grammar.has_nullable"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.has_nullable">[docs]</a>    <span class="k">def</span> <span class="nf">has_nullable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retorna se a gramática contém o símbolo nulo (&amp;)</span>
+<span class="sd">        :return: Se a gramática contém o símbolo nulo (&amp;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nao_terminais</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">is_nullable</span><span class="p">()])</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="Grammar.find_symbol"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.find_symbol">[docs]</a>    <span class="k">def</span> <span class="nf">find_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simbolo</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Symbol</span><span class="p">:</span>
+        <span class="n">symbol</span><span class="p">:</span> <span class="n">Symbol</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_symbol</span><span class="p">(</span><span class="n">simbolo</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="n">symbol</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">simbolo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">simbolos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">symbol</span></div>
+
+<div class="viewcode-block" id="Grammar.get_symbol"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.get_symbol">[docs]</a>    <span class="k">def</span> <span class="nf">get_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simbolo</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">symbol</span> <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">simbolos</span> <span class="k">if</span> <span class="n">symbol</span><span class="o">.</span><span class="n">simbolo</span> <span class="o">==</span> <span class="n">simbolo</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Grammar.has_symbol"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.has_symbol">[docs]</a>    <span class="k">def</span> <span class="nf">has_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simbolo</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checa se já existe um símbolo</span>
+<span class="sd">        :param simbolo: Símbolo de busca</span>
+<span class="sd">        :return: Se já existe ou não o símbolo na gramática</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_symbol</span><span class="p">(</span><span class="n">simbolo</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Grammar.generate_random_symbol"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.generate_random_symbol">[docs]</a>    <span class="k">def</span> <span class="nf">generate_random_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Symbol</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retorna um símbolo não terminal ainda não presente na gramática (para implementar novos símbolos não terminais)</span>
+<span class="sd">        :return: Novo símbolo não terminal da gramática</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">random_char</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_symbol</span><span class="p">(</span><span class="n">random_char</span><span class="p">):</span>
+                <span class="n">symbol</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">random_char</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">simbolos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">symbol</span></div>
+
+<div class="viewcode-block" id="Grammar.remove_nao_determinismo"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.remove_nao_determinismo">[docs]</a>    <span class="k">def</span> <span class="nf">remove_nao_determinismo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Este método transforma a gramática em não determinística para</span>
+<span class="sd">        uma deterministica (na forma fatorada).</span>
+<span class="sd">        Este método deve ser executado após a transformação de recursão à</span>
+<span class="sd">        esquerda, podendo levar a um &quot;loop&quot; infinito caso isso não seja feito.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nao_terminais</span><span class="p">():</span>
+                <span class="n">flag</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">remove_nao_determinismo_direto</span><span class="p">()</span>
+                <span class="n">flag1</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">transforma_nao_determinismo_indireto</span><span class="p">()</span>
+
+                <span class="n">changed</span> <span class="o">=</span> <span class="n">changed</span> <span class="ow">or</span> <span class="n">flag</span> <span class="ow">or</span> <span class="n">flag1</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">changed</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">MAX_EXECUTION_NAO_DETERMINISMO</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">LoopNaoDeterminismoException</span></div>
+
+<div class="viewcode-block" id="Grammar.remove_recursao_esquerda"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.remove_recursao_esquerda">[docs]</a>    <span class="k">def</span> <span class="nf">remove_recursao_esquerda</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Este método transforma a gramática de recursiva à esquerda para</span>
+<span class="sd">        não recursiva à esquerda</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nao_terminais</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nao_terminais</span><span class="p">()</span>
+
+        <span class="c1"># fazer para todos os terminais</span>
+        <span class="k">for</span> <span class="n">k1</span><span class="p">,</span> <span class="n">terminal1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nao_terminais</span><span class="p">):</span>
+            <span class="c1"># se for o símbolo inicial, remover recursão direta</span>
+            <span class="k">if</span> <span class="n">k1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">terminal1</span><span class="o">.</span><span class="n">remove_recursao_esquerda_direta</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">terminal2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nao_terminais</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">terminal1</span> <span class="o">==</span> <span class="n">terminal2</span> <span class="ow">or</span> <span class="n">k2</span> <span class="o">&lt;</span> <span class="n">k1</span><span class="p">:</span>
+                    <span class="c1"># se for o mesmo terminal, não precisa fazer nada,</span>
+                    <span class="c1"># pois a recursão direta é feita em outro momento</span>
+                    <span class="k">continue</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># fazer recursão indireta de terminal1 em terminal2</span>
+                    <span class="n">changed</span> <span class="o">=</span> <span class="n">terminal2</span><span class="o">.</span><span class="n">remove_recursao_esquerda_indireta</span><span class="p">(</span><span class="n">terminal1</span><span class="p">)</span>
+
+                    <span class="c1"># se houve alteração, fazer remoção de recursão direta em terminal2</span>
+                    <span class="k">if</span> <span class="n">changed</span><span class="p">:</span>
+                        <span class="n">terminal2</span><span class="o">.</span><span class="n">remove_recursao_esquerda_direta</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Grammar.get_firsts"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.get_firsts">[docs]</a>    <span class="k">def</span> <span class="nf">get_firsts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Preenche os Firsts, para fazer o analisador sintático LL(1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)</span>
+        <span class="n">set_epsilon</span> <span class="o">=</span> <span class="p">{</span><span class="n">epsilon</span><span class="p">}</span>
+
+        <span class="c1"># fazer firsts dos terminais</span>
+        <span class="k">for</span> <span class="n">simbolo</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_terminais</span><span class="p">():</span>
+            <span class="n">simbolo</span><span class="o">.</span><span class="n">firsts</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">simbolo</span><span class="p">)</span>
+
+        <span class="c1"># fazer firsts dos não terminais</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">firsts_copy</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># fazer cópia dos dos símbolos firsts</span>
+            <span class="k">for</span> <span class="n">simbolo</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">simbolos</span><span class="p">:</span>
+                <span class="n">firsts_copy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">simbolo</span><span class="o">.</span><span class="n">firsts</span><span class="p">))</span>
+
+            <span class="c1"># para cada não terminal, checar firsts e &amp;-produções</span>
+            <span class="k">for</span> <span class="n">nao_terminal</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nao_terminais</span><span class="p">():</span>
+                <span class="c1"># para cada produção do não terminal, fazer checagens</span>
+                <span class="k">for</span> <span class="n">producao</span> <span class="ow">in</span> <span class="n">nao_terminal</span><span class="o">.</span><span class="n">producoes</span><span class="p">:</span>
+                    <span class="n">first_producao</span> <span class="o">=</span> <span class="n">producao</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="n">first_producao</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_terminais</span><span class="p">())</span> <span class="o">|</span> <span class="n">set_epsilon</span><span class="p">:</span>
+                        <span class="c1"># se a primeira produção é um terminal, adicionar no set do não terminal</span>
+                        <span class="n">nao_terminal</span><span class="o">.</span><span class="n">firsts</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">first_producao</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># se não, fazer checagem se todos os símbolos da produção contém &amp;</span>
+                        <span class="k">for</span> <span class="n">simbolo</span> <span class="ow">in</span> <span class="n">producao</span><span class="p">:</span>
+                            <span class="n">nao_terminal</span><span class="o">.</span><span class="n">firsts</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">simbolo</span><span class="o">.</span><span class="n">firsts</span> <span class="o">-</span> <span class="n">set_epsilon</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">epsilon</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">simbolo</span><span class="o">.</span><span class="n">firsts</span><span class="p">:</span>
+                                <span class="k">break</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="c1"># se tiver, adiciona o próprio &amp;</span>
+                            <span class="n">nao_terminal</span><span class="o">.</span><span class="n">firsts</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">epsilon</span><span class="p">)</span>
+
+            <span class="c1"># checar parada com as cópias dos firsts</span>
+            <span class="n">has_change</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">simbolo</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simbolos</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">firsts_copy</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">simbolo</span><span class="o">.</span><span class="n">firsts</span><span class="p">:</span>
+                    <span class="n">has_change</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">has_change</span><span class="p">:</span>
+                <span class="k">break</span></div>
+
+<div class="viewcode-block" id="Grammar.get_follows"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.get_follows">[docs]</a>    <span class="k">def</span> <span class="nf">get_follows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Preenche os Follows, para fazer o analisador sintático LL(1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">get_next</span><span class="p">(</span><span class="n">k_now</span><span class="p">):</span>
+            <span class="n">set_now</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">k_now</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">producao</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">set_now</span>
+
+            <span class="n">symbol_now</span> <span class="o">=</span> <span class="n">producao</span><span class="p">[</span><span class="n">k_now</span><span class="p">]</span>
+            <span class="n">firsts_now</span> <span class="o">=</span> <span class="n">symbol_now</span><span class="o">.</span><span class="n">firsts</span>
+            <span class="n">set_now</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">firsts_now</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">symbol_now</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">set_now</span>
+            <span class="k">elif</span> <span class="n">epsilon</span> <span class="ow">in</span> <span class="n">firsts_now</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">set_now</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">get_next</span><span class="p">(</span><span class="n">k_now</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">def</span> <span class="nf">get_previous</span><span class="p">(</span><span class="n">k_now</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">k_now</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span>
+
+            <span class="n">symbol_now</span> <span class="o">=</span> <span class="n">producao</span><span class="p">[</span><span class="n">k_now</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">symbol_now</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">():</span>
+                <span class="k">return</span>
+
+            <span class="n">symbol_now</span><span class="o">.</span><span class="n">follows</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">nao_terminal</span><span class="o">.</span><span class="n">follows</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">epsilon</span> <span class="ow">in</span> <span class="n">symbol_now</span><span class="o">.</span><span class="n">firsts</span><span class="p">:</span>
+                <span class="n">get_previous</span><span class="p">(</span><span class="n">k_now</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># main code</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)</span>
+        <span class="n">set_epsilon</span> <span class="o">=</span> <span class="p">{</span><span class="n">epsilon</span><span class="p">}</span>
+        <span class="n">nao_terminais</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nao_terminais</span><span class="p">()</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">follows_copy</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># fazer cópia dos follows dos símbolos</span>
+            <span class="k">for</span> <span class="n">simbolo</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">simbolos</span><span class="p">:</span>
+                <span class="n">follows_copy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">simbolo</span><span class="o">.</span><span class="n">follows</span><span class="p">))</span>
+
+            <span class="c1"># primeira regra: símbolo de final de pilha no símbolo inicial</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">simbolo_inicial</span><span class="o">.</span><span class="n">follows</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">))</span>
+
+            <span class="c1"># para cada não terminal, executar as regras 2 e 3</span>
+            <span class="k">for</span> <span class="n">nao_terminal</span> <span class="ow">in</span> <span class="n">nao_terminais</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">producao</span> <span class="ow">in</span> <span class="n">nao_terminal</span><span class="o">.</span><span class="n">producoes</span><span class="p">:</span>
+                    <span class="c1"># segunda regra: ida</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">simbolo</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">producao</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">simbolo</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">()</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">producao</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="k">continue</span>
+
+                        <span class="n">next_symbol</span> <span class="o">=</span> <span class="n">producao</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">firsts_next</span> <span class="o">=</span> <span class="n">next_symbol</span><span class="o">.</span><span class="n">firsts</span>
+
+                        <span class="n">simbolo</span><span class="o">.</span><span class="n">follows</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">firsts_next</span> <span class="o">-</span> <span class="n">set_epsilon</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">epsilon</span> <span class="ow">in</span> <span class="n">firsts_next</span><span class="p">:</span>
+                            <span class="n">simbolo</span><span class="o">.</span><span class="n">follows</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">get_next</span><span class="p">(</span><span class="n">k</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span>
+
+                    <span class="c1"># terceira regra: volta</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">producao</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                        <span class="n">simbolo</span> <span class="o">=</span> <span class="n">producao</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">simbolo</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">():</span>
+                            <span class="k">break</span>
+
+                        <span class="n">simbolo</span><span class="o">.</span><span class="n">follows</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">nao_terminal</span><span class="o">.</span><span class="n">follows</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">epsilon</span> <span class="ow">in</span> <span class="n">simbolo</span><span class="o">.</span><span class="n">firsts</span><span class="p">:</span>
+                            <span class="n">get_previous</span><span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                            <span class="k">break</span>
+
+            <span class="c1"># checar parada com as cópias dos follows</span>
+            <span class="n">has_change</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">simbolo</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simbolos</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">follows_copy</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">simbolo</span><span class="o">.</span><span class="n">follows</span><span class="p">:</span>
+                    <span class="n">has_change</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">has_change</span><span class="p">:</span>
+                <span class="k">break</span></div>
+
+<div class="viewcode-block" id="Grammar.is_ll1"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Grammar.Grammar.is_ll1">[docs]</a>    <span class="k">def</span> <span class="nf">is_ll1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Para que uma gramática possa ser convertida em um analisador sintático LL(1),</span>
+<span class="sd">        é necessário que não seja recursiva à esquerda, que esteja na forma fatorada</span>
+<span class="sd">        (sem não determinismo) e que a interseção dos firsts dos símbolos que contém</span>
+<span class="sd">        epsilon com seus respectivos follows seja nulo.</span>
+<span class="sd">        :return: Se é aceito converter para LL(1)</span>
+<span class="sd">        :raise NotLL1Exception Caso não seja compatível com analisador sintático LL(1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">symbols_first_null</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">simbolos</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">firsts</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">simbolo</span> <span class="ow">in</span> <span class="n">symbols_first_null</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">simbolo</span><span class="o">.</span><span class="n">firsts</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">simbolo</span><span class="o">.</span><span class="n">follows</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">NotLL1Exception</span>
+        <span class="k">return</span> <span class="kc">True</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, tony &amp; tony.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

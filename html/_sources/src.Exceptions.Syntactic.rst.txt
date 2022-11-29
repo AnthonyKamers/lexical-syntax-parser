@@ -1,0 +1,61 @@
+src.Exceptions.Syntactic package
+================================
+
+Submodules
+----------
+
+src.Exceptions.Syntactic.DifferentSyntaxExpected module
+-------------------------------------------------------
+
+.. automodule:: src.Exceptions.Syntactic.DifferentSyntaxExpected
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Exceptions.Syntactic.LoopNaoDeterminismoException module
+------------------------------------------------------------
+
+.. automodule:: src.Exceptions.Syntactic.LoopNaoDeterminismoException
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Exceptions.Syntactic.NotLL1Exception module
+-----------------------------------------------
+
+.. automodule:: src.Exceptions.Syntactic.NotLL1Exception
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Exceptions.Syntactic.NotProductionTabela module
+---------------------------------------------------
+
+.. automodule:: src.Exceptions.Syntactic.NotProductionTabela
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Exceptions.Syntactic.SymbolGrammarException module
+------------------------------------------------------
+
+.. automodule:: src.Exceptions.Syntactic.SymbolGrammarException
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Exceptions.Syntactic.SyntacticException module
+--------------------------------------------------
+
+.. automodule:: src.Exceptions.Syntactic.SyntacticException
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.Exceptions.Syntactic
+   :members:
+   :undoc-members:
+   :show-inheritance:
