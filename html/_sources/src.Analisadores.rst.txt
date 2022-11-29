@@ -1,0 +1,37 @@
+src.Analisadores package
+========================
+
+Submodules
+----------
+
+src.Analisadores.AnalisadorLexico module
+----------------------------------------
+
+.. automodule:: src.Analisadores.AnalisadorLexico
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Analisadores.AnalisadorMain module
+--------------------------------------
+
+.. automodule:: src.Analisadores.AnalisadorMain
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.Analisadores.AnalisadorSintatico module
+-------------------------------------------
+
+.. automodule:: src.Analisadores.AnalisadorSintatico
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.Analisadores
+   :members:
+   :undoc-members:
+   :show-inheritance:

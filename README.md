@@ -1,117 +1,117 @@
 # Gerador de analisador léxico e sintático
 
-Tal trabalho tem como objetivo fazer um gerador de analisador léxico e sintático para a disciplina de Linguagens Formais e Compiladores da UFSC (INE5421).
+Tal trabalho tem como objetivo fazer um gerador de analisador léxico
+e sintático para a disciplina de Linguagens Formais e Compiladores
+da UFSC (INE5421).
+
+Para isso foi utilizado um gerador de analizador sintático preditivo LL(1).
 
 ## Equipe do trabalho:
 - Anthony Bernardo Kamers (19204700)
 - Antonio S. Montagner    (19203742)
 
-Este readme contará, além das especificações do gerador de análise léxica e sintática, o manual de uso e instalação, a divisão de trabalho entre os integrantes do grupo e uso CLI de determinadas ferramentas do projeto.
 
-### As etapas de desenvolvimento serão divididas em duas partes:
-- Analisador léxico
-- Analisador sintático
+## Execução:
+Para executar a aplicação:
+    
+- Requisitos:
+    - Python 3.9 ou mais recente
 
-______
+- Comandos:
+    - python main.py (Windows)
+    - python3 main.py (Linux)
 
-# Analisador léxico (peso 4)
-Algoritmos a serem implementados
+- Execução e Funcionalidades:
+  - Ao executar a aplicação, será pedido entrada, de forma interativa,
+  dependendo da intenção do usuário. O usuário poderar escolher entre
+  as opções fornecidas.
+  - Para sair ou voltar para as opções anteriores, basta
+  digitar o número '0' ou qualquer número que não esteja nas opções;
+  Se for colocado um caractere de texto, será pedido para colocar um
+  número na página de opções de funcionalidades.
 
-- [X] Conversão de Expressão Regular (ER) para Autômato Finito Determinístico (AFD) -> disponível algoritmo no livro do Aho
-- [X] União de Autômatos via epsilon-transição
-- [X] Determinização de Autômatos
-- [ ] Construção da Tabela de Símbolos (TS)
-  - Deve ser incluído palavras reservadas e outras informações importantes (para auxiliar nas etapas do analisador sintático)
+- Testes completos
+  - Como forma de testar todas as funcionalidades dos analisadores léxico
+  e sintático, foram testados os seguintes arquivos (disponibilizados em `entradas/`:
+    - `ER/`: exemplo1.er
+    - `codigo-fonte/`: exemplo1.codigo
+    - `gramaticas/`: variavel.grammar
+  - Apenas estes foram fornecidos inicialmente abrangendo todas as funcionalidades
+  do programa, mas nada impede de criar novos códigos, fazer novos arquivos ou selecionar 
+  outro arquivo já existente para testar as funcionalidades. 
 
-Fluxo de execução do analisador léxico
-1. Inclusão de expressões regulares para todos padrões de tokens, usando definições regulares
-2. Para cada ER deve ser gerado o AFD correspondente
-3. Os AFD devem ser unidos com epsilon-transições
-    - Isso formará um AFND
-4. O AFND resultante deve ser determinizado gerando a tabela de análise léxica (TAL)
-5. O analisador léxico entrará então com um código fonte
-6. O código fonte será analisado, utilizando a TAL e gerará um arquivo de saída com a lista de todos os tokens encontrados (ou reportar erro em caso de entrada inválida)
 
-______
+## Documentação
+Todas as classes e métodos que fazem parte do processo de análise léxica
+e sintática foram comentados rigorosamente, sendo os padrões de documentação
+definidos pelo Python. Além disso, também foi gerada uma documentação automatizada
+em HTML com o gerador Python-Sphinx, disponibilizada em `html/index.html`.
 
-# Analisador sintático (peso 6)
-Algoritmos a serem implementados
 
-- [X] Se preditivo LL(1)
-  - Eliminar recursão à esquerda
-  - Fatoração
-  - Cálculo de Firsts e Follows
-  - Geração de tabela de análise LL(1)
-  - Algoritmo que implementa Autômato de pilha para análise de sentenças que faz uso da tabela LL(1)
-- [ ] Se LR Canônico
-  - Cálculo de Firsts e Follows
-  - Algoritmos de analisador LR Canônico (livro do Aho) para geração da tabela SLR(1) e para análise de sentenças de entrada SLR(1)
-- [ ] Deve receber e validar Gramática Livre de Contexto (GLC)
-  - Descreve código fonte (pseudo-linguagem usado para teste do analisador)
-  - Identifica terminais (tokens) e não terminais
-    - pode ser explícita em uma lista de terminais e uma de não-terminais
+## Passos necessários para execução e teste
+Para que todas as etapas sejam testadas e executadas com sucesso,
+será dada uma breve explicação de como deve ser o padrão dos arquivos
+de entrada para autômatos finitos (AF), expressões regulares (ER),
+gramática e código fonte.
 
-Fluxo de execução do analisador sintático
-1. Leitura token a token do arquivo resultante da análise léxica
-2. Uso da TAL e do algoritmo que simula a pilha para validação da sentença de entrada
-3. Saída: Valida ou invalida código fonte de entrada
 
-______
+### AF
+O formato é o mesmo especificado pela professor no trabalho, sendo:
+* primeira linha: quantidade de estados
+* segunda linha: estado inicial
+* terceira linha: estados finais separado por ,
+* quarta linha: alfabeto separado por ,
+* quinta linha em diante: transições no formato estado,alfabeto,estado_novo
 
-## Observações
-- Usar epsilon como &
-- Tabelas de análise (léxica e sintática) devem poder ser visualizadas
-- AF gerados pela conversão de ERs deve poder ser visualizada
-- Pilha de análise deve ser apresentada
-- Funções separadas devem ser executadas, de maneira a testar cada funcionalidade de maneira separada
-  - Isso facilita a correção por parte da professora, além de poder visualizar cada etapa com mais facilidade
-  - É aconselhável separar entradas e saídas para cada etapa, para assegurar da assertividade de cada etapa
-- É aconselhável fazer testes unitários, para garantir a corretude de funções já implementadas (para eventuais atualizações no futuro)
-- Também pode ser feita uma pipeline utilizando o github-pro, para facilitar demais implementações (como automatização de testes e entradas de arquivos (conforme especificado na seção abaixo))
+Há vários exemplos de AF testados em `entradas/AF/`.
 
-______
 
-## Explicação do trabalho de maneira prática
-```text
-DEFINICOES REGULARES
-{
-    "digit": [0,1,2,3,4,5,6,7,8,9],
-    "letter": [a,b,c,...],
-    "id": [[letter],[AND],[(letter OR digit)*]],
-    "er": [[a],[OPTIONAL],[(a OR b)+]]
-}
+### ER
+Para fazer o parse de expressões regulares, algumas modificações foram
+necessárias:
+* Formato geral: DEF_ER: er;
+* Para facilitar o parse de algumas funcionalidades, foi necessário fazer
+a operação de concatenação sendo feito via parênteses;
+  * Desta forma, um exemplo de expressão regular que deva ser "abb", deve
+  ser colocada da seguinte maneira: ABB: a(b)(b);
+* Não são testadas operações de concatenação dentro das concatenações,
+logo a seguinte expressão não será
+reconhecida corretamente: EXPR: a(b(b));
+* Outros identificadores como OR (|), FECHO (*), FECHO POSITIVO (+) e
+produção com epsilon opcional (?) são feitos de maneira idêntica aos
+estudados em sala de aula;
+* Também são reconhecidos os padrões `[a-z]`, `[A-Z]`, `[0-9]`, `[a-zA-Z]`,
+que são convertidos diretamente para um OR entre todos os elementos do
+alfabeto e/ou algarismos.
+* Há vários exemplos de expressões regulares de exemplo em `entradas/ER/`.
 
-ARQUIVO FONTE
-program teste;
-var a: integer;
-begin
-.
-.
-.
-end
 
-TABELA DE SIMBOLOS (TS)
-[(program, PR), (teste, id)]
+### Gramáticas
+Para se fazer análise do arquivo de gramáticas, colocamos
+uma restrição: em produções que têm mais de um símbolo,
+os símbolos devem ser separados por espaço.
 
-LISTA DE TOKENS
-[(program, PR), (id, 1), (;, SE)]
-```
+Logo para um não terminal S que transita para aA ou bB (`S -> aA | bB`),
+ficaria da seguinte forma: `S -> a A | b B`;
 
-## Formatos de entrada
+Também é importante que siga o seguinte padrão: o símbolo
+do não terminal, seguido de espaço, seguido de `-`, seguido
+de `>`, seguido de espaço e continuar com as produções
+como explicado anteriomente;
 
-Os formatos de entrada de exemplo estão na pasta entradas/
+Cada produções de não terminais deve ser dada em uma única linha;
 
-Vale informar que para cada tipo, será descrito a seguir as especificações
+Também vale contar que para linhas começadas com #, a linha
+inteira é ignorada. Isso é importante para fazer anotações,
+tal como é usualmente feito em linguagens de programação.
 
-- Autômatos Finitos (AF)
-  - número de estados
-  - estado inicial
-  - estados finais
-  - alfabeto
-  - transições (uma por linha)
-- Expressões Regulares (ER)
-  - definicao-reg1: ER1
-  - definicao-reg2: ER2
-  - ...
-- Gramáticas
-  - S -> aSb | &
+Para exemplos de gramáticas que foram testadas e são reconhecidas,
+podem ser testados os arquivos disponíveis em `entradas/gramaticas/`.
+
+
+### Código-fonte
+Para fornecer códigos-fonte de entrada, é necessário colocar cada
+elemento definido nas expressões regulares e gramática, separados por espaços.
+Vale considerar também que a leitura do arquivo é dado linha a linha e não
+caracter a caracter, tendo algumas restrições caso coloque na gramática ou ER
+a separação por quebra de linha `\n`.

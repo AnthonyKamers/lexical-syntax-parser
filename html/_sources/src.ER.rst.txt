@@ -1,0 +1,37 @@
+src.ER package
+==============
+
+Submodules
+----------
+
+src.ER.ER module
+----------------
+
+.. automodule:: src.ER.ER
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.ER.Node module
+------------------
+
+.. automodule:: src.ER.Node
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+src.ER.Operation module
+-----------------------
+
+.. automodule:: src.ER.Operation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.ER
+   :members:
+   :undoc-members:
+   :show-inheritance:

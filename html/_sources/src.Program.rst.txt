@@ -1,0 +1,29 @@
+src.Program package
+===================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   src.Program.modules
+
+Submodules
+----------
+
+src.Program.Progam module
+-------------------------
+
+.. automodule:: src.Program.Progam
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.Program
+   :members:
+   :undoc-members:
+   :show-inheritance:

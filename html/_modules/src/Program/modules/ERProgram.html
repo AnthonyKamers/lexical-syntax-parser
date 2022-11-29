@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.Program.modules.ERProgram &mdash; formais 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> formais
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">formais</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">formais</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.Program.modules.ERProgram</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.Program.modules.ERProgram</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">src.AF.AF</span> <span class="kn">import</span> <span class="n">AF</span>
+<span class="kn">from</span> <span class="nn">src.ER.ER</span> <span class="kn">import</span> <span class="n">ER</span>
+<span class="kn">from</span> <span class="nn">src.Program.modules.AbstractProgram</span> <span class="kn">import</span> <span class="n">AbstractProgram</span>
+<span class="kn">from</span> <span class="nn">src.Utils.utilsER</span> <span class="kn">import</span> <span class="n">print_tree</span>
+<span class="kn">from</span> <span class="nn">src.Utils.utilsAF</span> <span class="kn">import</span> <span class="n">uniao_automatos</span>
+<span class="kn">from</span> <span class="nn">src.Utils.utilsProgram</span> <span class="kn">import</span> <span class="n">print_steps</span><span class="p">,</span> <span class="n">salvar_af</span>
+
+<span class="n">PATH_ER</span> <span class="o">=</span> <span class="s2">&quot;entradas/ER/&quot;</span>
+
+
+<span class="c1"># ER</span>
+<span class="c1">#  - carregar arquivo                               --&gt;</span>
+<span class="c1">#  - fazer AFD de cada expressão regular            --&gt;</span>
+<span class="c1">#  - mostrar árvore gerada para cada ER             --&gt;</span>
+<span class="c1">#  - fazer a união de todos os autômatos gerados    --&gt;</span>
+<span class="c1">#  - salvar AFD de alguma definição regular         --&gt;</span>
+
+
+<div class="viewcode-block" id="Step"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.ERProgram.Step">[docs]</a><span class="k">class</span> <span class="nc">Step</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">CarregarArquivo</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">FazerArvoreER</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">MostrarArvore</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">FazerAFD_ER</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">Uniao_AFD</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">MostrarAFD_Unido</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">SalvarAFD_ER</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">Clear</span> <span class="o">=</span> <span class="mi">8</span></div>
+
+
+<div class="viewcode-block" id="ERProgram"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.ERProgram.ERProgram">[docs]</a><span class="k">class</span> <span class="nc">ERProgram</span><span class="p">(</span><span class="n">AbstractProgram</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">er</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ER</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">functions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">CarregarArquivo</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">carregar_arquivo</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">FazerArvoreER</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_tree_er</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">MostrarArvore</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_tree</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">FazerAFD_ER</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_afd_er</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">Uniao_AFD</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniao_afd</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">MostrarAFD_Unido</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_afd_unido</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">SalvarAFD_ER</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_afd_er</span><span class="p">,</span>
+            <span class="n">Step</span><span class="o">.</span><span class="n">Clear</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">er_now</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">afnd_geral</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">afd_geral</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="ERProgram.run"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.ERProgram.ERProgram.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Você está na sessão de ER: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">print_steps</span><span class="p">(</span><span class="n">Step</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Você deve digitar um número&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">functions</span><span class="p">[</span><span class="n">Step</span><span class="p">(</span><span class="n">result</span><span class="p">)]</span>
+                <span class="n">function</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">break</span></div>
+
+<div class="viewcode-block" id="ERProgram.carregar_arquivo"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.ERProgram.ERProgram.carregar_arquivo">[docs]</a>    <span class="k">def</span> <span class="nf">carregar_arquivo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            Digite o local onde está armazenado o arquivo de ER.</span>
+<span class="s2">            OBS: Se você não digitar um caminho que comece com &quot;/&quot;,</span>
+<span class="s2">            tentará pegar automaticamente da pasta do projeto localizada em</span>
+<span class="s2">            </span><span class="si">{</span><span class="n">PATH_ER</span><span class="si">}</span><span class="s2">.</span>
+<span class="s2">            Digite 0 para sair dessa função.</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">er</span> <span class="o">=</span> <span class="n">ER</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">er</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">er</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">PATH_ER</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Arquivo carregado. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum problema ao fazer parse do arquivo. Tente novamente. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">carregar_arquivo</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ERProgram.make_tree_er"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.ERProgram.ERProgram.make_tree_er">[docs]</a>    <span class="k">def</span> <span class="nf">make_tree_er</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">er</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ainda não foi carregado um ER principal. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">er</span><span class="o">.</span><span class="n">er_tree</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;O ER já possui uma árvore. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">er</span><span class="o">.</span><span class="n">make_afd_er</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Feito AFD da ER com sucesso. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao fazer o AFD da ER: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ERProgram.show_tree"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.ERProgram.ERProgram.show_tree">[docs]</a>    <span class="k">def</span> <span class="nf">show_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">er</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ainda não foi carregado um ER principal. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">tree</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">er</span><span class="o">.</span><span class="n">er_tree</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Árvore de ER </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: &quot;</span><span class="p">)</span>
+                <span class="n">print_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao retornar a ER: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ERProgram.make_afd_er"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.ERProgram.ERProgram.make_afd_er">[docs]</a>    <span class="k">def</span> <span class="nf">make_afd_er</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">er</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ainda não foi carregado um ER principal. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">er</span><span class="o">.</span><span class="n">make_afd_er</span><span class="p">()</span>
+            <span class="k">return</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao fazer o AFD da ER: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ERProgram.uniao_afd"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.ERProgram.ERProgram.uniao_afd">[docs]</a>    <span class="k">def</span> <span class="nf">uniao_afd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">er</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ainda não foi carregado um ER principal. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">afnd_geral</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">AF</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">afds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">er</span><span class="o">.</span><span class="n">afds</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">afds</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">afnd_geral</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">afnd_geral</span> <span class="o">=</span> <span class="n">uniao_automatos</span><span class="p">(</span><span class="n">afds</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">afds</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">afnd_geral</span> <span class="o">=</span> <span class="n">uniao_automatos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">afnd_geral</span><span class="p">,</span> <span class="n">afds</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">afd_geral</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">afnd_geral</span><span class="o">.</span><span class="n">determinizar</span><span class="p">()</span>
+            <span class="k">return</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao retornar a ER: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ERProgram.show_afd_unido"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.ERProgram.ERProgram.show_afd_unido">[docs]</a>    <span class="k">def</span> <span class="nf">show_afd_unido</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">er</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ainda não foi carregado um ER principal. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">afd_geral</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">afd_geral</span><span class="o">.</span><span class="n">show_tabela_transicao</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">afd_geral</span><span class="o">.</span><span class="n">run_entrada</span><span class="p">(</span><span class="s2">&quot;asda1&quot;</span><span class="p">))</span>
+            <span class="k">return</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao retornar a ER: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ERProgram.save_afd_er"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.ERProgram.ERProgram.save_afd_er">[docs]</a>    <span class="k">def</span> <span class="nf">save_afd_er</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">er</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ainda não foi carregado um ER principal. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Escolha uma definição regular para salvar seu AFD. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">er</span><span class="o">.</span><span class="n">er</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao pegar informações do AF: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+        <span class="n">choose</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;: &quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">salvar_af</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">er</span><span class="o">.</span><span class="n">afds</span><span class="p">[</span><span class="n">choose</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Houve algum erro ao pegar informações do AF: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ERProgram.clear"><a class="viewcode-back" href="../../../../src.Program.modules.html#src.Program.modules.ERProgram.ERProgram.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">er</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">afnd_geral</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">afd_geral</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expressões Regulares foram reinicializadas. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, tony &amp; tony.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

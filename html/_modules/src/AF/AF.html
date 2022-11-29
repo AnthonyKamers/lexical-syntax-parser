@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.AF.AF &mdash; formais 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> formais
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">formais</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">formais</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.AF.AF</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.AF.AF</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">src.AF.Estado</span> <span class="kn">import</span> <span class="n">Estado</span>
+<span class="kn">from</span> <span class="nn">src.Utils.utils</span> <span class="kn">import</span> <span class="n">pretty_print_matrix</span><span class="p">,</span> <span class="n">remove_duplicates_lista</span>
+
+
+<div class="viewcode-block" id="AF"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF">[docs]</a><span class="k">class</span> <span class="nc">AF</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementação genérica de um AF, seja ele determinístico ou não determinístico.</span>
+<span class="sd">    Também realiza várias funções sobre ele, a fim de deixá-lo determinizado ou</span>
+<span class="sd">    minimizado</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># FIXME: Necessário trocar as estruturas de dados de lista para set</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qtd_estados</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estados</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estado_inicial</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Estado</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alfabeto</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_deterministico</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estado_now</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Estado</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">afds</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">functions_file</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_qtd_estados</span><span class="p">,</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_estado_inicial</span><span class="p">,</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_estados_finais</span><span class="p">,</span>
+            <span class="mi">4</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_alfabeto</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_transicao</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;AF()&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            qtd estados: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estados</span><span class="p">)</span><span class="si">}</span><span class="s2">,</span>
+<span class="s2">            estado inicial: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">estado_inicial</span><span class="o">.</span><span class="n">nome</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">            estados finais: </span><span class="si">{</span><span class="s1">&#39; - &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">nome</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span><span class="p">])</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">            estados: </span><span class="si">{</span><span class="s1">&#39; - &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">nome</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados</span><span class="p">])</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">            alfabeto: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">alfabeto</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">            deterministico: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">is_deterministico</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AF.show_tabela_transicao"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.show_tabela_transicao">[docs]</a>    <span class="k">def</span> <span class="nf">show_tabela_transicao</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mostra a tabela de transição do autômato</span>
+<span class="sd">        δ           | l1 alfabeto | ln alfabeto</span>
+<span class="sd">        estado1     | transição   | transição</span>
+<span class="sd">        estado2     | transição   | transiçõa</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">matrix</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;δ&quot;</span><span class="p">]]</span>
+        <span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">alfabeto</span>
+
+        <span class="k">for</span> <span class="n">estado</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados</span><span class="p">:</span>
+            <span class="n">estado_nome</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">estado</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span><span class="p">:</span>
+                <span class="n">estado_nome</span> <span class="o">+=</span> <span class="s2">&quot;*&quot;</span>
+            <span class="k">if</span> <span class="n">estado</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">estado_inicial</span><span class="p">:</span>
+                <span class="n">estado_nome</span> <span class="o">+=</span> <span class="s2">&quot;-&gt;&quot;</span>
+            <span class="n">estado_nome</span> <span class="o">+=</span> <span class="n">estado</span><span class="o">.</span><span class="n">nome</span>
+
+            <span class="n">line</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">estado_nome</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">letra</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">alfabeto</span><span class="p">:</span>
+                <span class="n">next_estados</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="n">estado</span><span class="o">.</span><span class="n">next_estado</span><span class="p">(</span><span class="n">letra</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">next_estados</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">nome</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">next_estados</span><span class="p">]))</span>
+            <span class="n">matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="n">pretty_print_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AF.set_qtd_estados"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.set_qtd_estados">[docs]</a>    <span class="k">def</span> <span class="nf">set_qtd_estados</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qtd_estados</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qtd_estados</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">qtd_estados</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AF.set_estado_inicial"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.set_estado_inicial">[docs]</a>    <span class="k">def</span> <span class="nf">set_estado_inicial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estado_inicial</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estado_inicial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_estado</span><span class="p">(</span><span class="n">estado_inicial</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AF.set_estados_finais"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.set_estados_finais">[docs]</a>    <span class="k">def</span> <span class="nf">set_estados_finais</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estados_finais</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">nome</span> <span class="ow">in</span> <span class="n">estados_finais</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">):</span>
+            <span class="n">estado</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_estado</span><span class="p">(</span><span class="n">nome</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AF.set_alfabeto"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.set_alfabeto">[docs]</a>    <span class="k">def</span> <span class="nf">set_alfabeto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alfabeto</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;&amp;&quot;</span> <span class="ow">in</span> <span class="n">alfabeto</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_deterministico</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alfabeto</span> <span class="o">=</span> <span class="n">alfabeto</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AF.set_transicao"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.set_transicao">[docs]</a>    <span class="k">def</span> <span class="nf">set_transicao</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transicao</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">estado_nome</span><span class="p">,</span> <span class="n">letra_alfabeto</span><span class="p">,</span> <span class="n">proximo_estado_nome</span> <span class="o">=</span> <span class="n">transicao</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+        <span class="n">estado</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_estado</span><span class="p">(</span><span class="n">estado_nome</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;-&quot;</span> <span class="ow">in</span> <span class="n">proximo_estado_nome</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_deterministico</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="n">split</span> <span class="o">=</span> <span class="n">proximo_estado_nome</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">estado_transicao</span> <span class="ow">in</span> <span class="n">split</span><span class="p">:</span>
+                <span class="n">proximo_estado</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_estado</span><span class="p">(</span><span class="n">estado_transicao</span><span class="p">)</span>
+                <span class="n">estado</span><span class="o">.</span><span class="n">add_transicao</span><span class="p">(</span><span class="n">letra_alfabeto</span><span class="p">,</span> <span class="n">proximo_estado</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">estado</span><span class="o">.</span><span class="n">add_transicao</span><span class="p">(</span><span class="n">letra_alfabeto</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_estado</span><span class="p">(</span><span class="n">proximo_estado_nome</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AF.parse_file"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.parse_file">[docs]</a>    <span class="k">def</span> <span class="nf">parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Faz parse de um arquivo de AF</span>
+<span class="sd">        :param file_name: Path do arquivo de entrada</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">functions_file</span><span class="p">[</span><span class="n">index</span> <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="k">else</span> <span class="s2">&quot;default&quot;</span><span class="p">](</span><span class="n">line</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estado_now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estado_inicial</span></div>
+
+<div class="viewcode-block" id="AF.find_estado"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.find_estado">[docs]</a>    <span class="k">def</span> <span class="nf">find_estado</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nome</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Estado</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Para determinado nome de estado, retorna um objeto da classe Estado</span>
+<span class="sd">        :param nome: Nome do estado de busca</span>
+<span class="sd">        :return: Objeto da classe Estado correspondente</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">estado</span><span class="p">:</span> <span class="n">Estado</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">estado</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_estado</span><span class="p">(</span><span class="n">nome</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">estado</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="n">estado</span> <span class="o">=</span> <span class="n">Estado</span><span class="p">(</span><span class="n">nome</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">estados</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">estado</span></div>
+
+<div class="viewcode-block" id="AF.get_estado"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.get_estado">[docs]</a>    <span class="k">def</span> <span class="nf">get_estado</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nome</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Estado</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">estado</span> <span class="k">for</span> <span class="n">estado</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados</span> <span class="k">if</span> <span class="n">estado</span><span class="o">.</span><span class="n">nome</span> <span class="o">==</span> <span class="n">nome</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AF.change_estados_nomes"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.change_estados_nomes">[docs]</a>    <span class="k">def</span> <span class="nf">change_estados_nomes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">estado</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados</span><span class="p">:</span>
+            <span class="n">estado</span><span class="o">.</span><span class="n">change_estado_nome</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AF.run_entrada"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.run_entrada">[docs]</a>    <span class="k">def</span> <span class="nf">run_entrada</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entrada</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Roda uma entrada para AFD, retornando</span>
+<span class="sd">        se aceita ou rejeita a entrada</span>
+<span class="sd">        :param entrada: entrada do AF</span>
+<span class="sd">        :return: true caso aceite, false caso rejeite</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estado_now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estado_inicial</span>
+
+        <span class="k">for</span> <span class="n">letra</span> <span class="ow">in</span> <span class="n">entrada</span><span class="p">:</span>
+            <span class="n">retorno</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_letra</span><span class="p">(</span><span class="n">letra</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">retorno</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span> \
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estado_now</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span> \
+            <span class="k">else</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="AF.run_letra"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.run_letra">[docs]</a>    <span class="k">def</span> <span class="nf">run_letra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">letra</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">estados</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estado_now</span><span class="o">.</span><span class="n">next_estado</span><span class="p">(</span><span class="n">letra</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">estados</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">estado_now</span> <span class="o">=</span> <span class="n">estados</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="AF.minimizar"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.minimizar">[docs]</a>    <span class="k">def</span> <span class="nf">minimizar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AF</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determiniza o autômato para o menor número</span>
+<span class="sd">        de estados possível</span>
+<span class="sd">        :return: Novo autômato minimizado</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">get_index_estado</span><span class="p">(</span><span class="n">estado_search</span><span class="p">:</span> <span class="n">Estado</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k_</span><span class="p">,</span> <span class="n">classe_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">classes_now</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">estado_search</span> <span class="ow">in</span> <span class="n">classe_</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">k_</span>
+
+        <span class="k">def</span> <span class="nf">copy_classes_equivalencia</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]]:</span>
+            <span class="n">lista</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ce</span> <span class="ow">in</span> <span class="n">classes_equivalencia</span><span class="p">:</span>
+                <span class="n">ces</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">estado__</span> <span class="ow">in</span> <span class="n">ce</span><span class="p">:</span>
+                    <span class="n">ces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado__</span><span class="p">)</span>
+                <span class="n">lista</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ces</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">lista</span>
+
+        <span class="n">estados_finais</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span><span class="p">)</span>
+        <span class="n">estados_nao_finais</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span><span class="p">]</span>
+        <span class="n">classes_equivalencia</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">estados_nao_finais</span><span class="p">,</span> <span class="n">estados_finais</span><span class="p">]</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">classes_now</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">letra</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">alfabeto</span><span class="p">:</span>
+                <span class="n">classes_now</span> <span class="o">=</span> <span class="n">copy_classes_equivalencia</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">classe</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">classes_now</span><span class="p">):</span>
+                    <span class="n">transicao_now</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
+                    <span class="n">index_ce_estado</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
+                    <span class="n">estados_removidos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Estado</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># index, transicao, Estado</span>
+
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">estado</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">classe</span><span class="p">):</span>
+                        <span class="n">estados_transicao</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="n">estado</span><span class="o">.</span><span class="n">next_estado</span><span class="p">(</span><span class="n">letra</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">estados_transicao</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="c1"># transita para alguém</span>
+                            <span class="n">estado_transicao</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="n">estados_transicao</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">index_ce_estado</span> <span class="o">=</span> <span class="n">get_index_estado</span><span class="p">(</span><span class="n">estado_transicao</span><span class="p">)</span>
+
+                        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">estados_transicao</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="c1"># transição para nulo</span>
+                            <span class="n">index_ce_estado</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+                        <span class="c1"># se é o primeiro elemento, ver qual a transição do subset</span>
+                        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">transicao_now</span> <span class="o">=</span> <span class="n">index_ce_estado</span>
+
+                        <span class="c1"># realiza verificação</span>
+                        <span class="k">if</span> <span class="n">transicao_now</span> <span class="o">!=</span> <span class="n">index_ce_estado</span><span class="p">:</span>
+                            <span class="c1"># ver se já está nos removidos</span>
+                            <span class="n">found</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="k">for</span> <span class="n">index_</span><span class="p">,</span> <span class="n">transicao_</span><span class="p">,</span> <span class="n">estado_</span> <span class="ow">in</span> <span class="n">estados_removidos</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">transicao_</span> <span class="o">==</span> <span class="n">index_ce_estado</span><span class="p">:</span>
+                                    <span class="n">classes_equivalencia</span><span class="p">[</span><span class="n">index_</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado</span><span class="p">)</span>
+                                    <span class="n">classes_equivalencia</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">estado</span><span class="p">)</span>
+                                    <span class="n">estados_removidos</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">index_</span><span class="p">,</span> <span class="n">index_ce_estado</span><span class="p">,</span> <span class="n">estado</span><span class="p">))</span>
+                                    <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                                    <span class="k">break</span>
+
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+                                <span class="c1"># se não, adicionar nova classe de equivalência</span>
+                                <span class="n">classes_equivalencia</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">estado</span><span class="p">])</span>
+                                <span class="n">classes_equivalencia</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">estado</span><span class="p">)</span>
+                                <span class="n">estados_removidos</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">classes_equivalencia</span><span class="p">),</span> <span class="n">index_ce_estado</span><span class="p">,</span> <span class="n">estado</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">classes_now</span> <span class="o">==</span> <span class="n">classes_equivalencia</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="n">af_new</span><span class="p">:</span> <span class="n">AF</span> <span class="o">=</span> <span class="n">AF</span><span class="p">()</span>
+        <span class="n">af_new</span><span class="o">.</span><span class="n">qtd_estados</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes_equivalencia</span><span class="p">)</span>
+        <span class="n">af_new</span><span class="o">.</span><span class="n">alfabeto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alfabeto</span>
+
+        <span class="c1"># fazer os estados</span>
+        <span class="k">for</span> <span class="n">classe</span> <span class="ow">in</span> <span class="n">classes_equivalencia</span><span class="p">:</span>
+            <span class="n">estado_old</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="n">classe</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">estado_new</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="n">af_new</span><span class="o">.</span><span class="n">find_estado</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">nome</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">classe</span><span class="p">]))</span>
+
+            <span class="c1"># ver se é estado inicial ou final</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">elem</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">estado_inicial</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">classe</span><span class="p">):</span>
+                <span class="n">af_new</span><span class="o">.</span><span class="n">estado_inicial</span> <span class="o">=</span> <span class="n">estado_new</span>
+            <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">classe</span><span class="p">):</span>
+                <span class="n">af_new</span><span class="o">.</span><span class="n">estados_finais</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado_new</span><span class="p">)</span>
+
+            <span class="c1"># ver transição para cada letra</span>
+            <span class="k">for</span> <span class="n">letra</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">alfabeto</span><span class="p">:</span>
+                <span class="n">estados_transicao</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="n">estado_old</span><span class="o">.</span><span class="n">next_estado</span><span class="p">(</span><span class="n">letra</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">estados_transicao</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">estado_transicao</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="n">estados_transicao</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">classe_now</span> <span class="ow">in</span> <span class="n">classes_equivalencia</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">estado_transicao</span> <span class="ow">in</span> <span class="n">classe_now</span><span class="p">:</span>
+                            <span class="n">estado_transicao_estado</span> <span class="o">=</span> <span class="n">af_new</span><span class="o">.</span><span class="n">find_estado</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">nome</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">classe_now</span><span class="p">]))</span>
+                            <span class="n">estado_new</span><span class="o">.</span><span class="n">add_transicao</span><span class="p">(</span><span class="n">letra</span><span class="p">,</span> <span class="n">estado_transicao_estado</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">af_new</span></div>
+
+<div class="viewcode-block" id="AF.determinizar"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.determinizar">[docs]</a>    <span class="k">def</span> <span class="nf">determinizar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AF</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Caso o autômato seja não determinístico,</span>
+<span class="sd">        esse método o determiniza</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_deterministico</span><span class="p">:</span>
+            <span class="c1"># determinização por epsilon</span>
+            <span class="k">if</span> <span class="s2">&quot;&amp;&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">alfabeto</span><span class="p">:</span>
+                <span class="n">alfabeto_novo</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alfabeto</span><span class="p">)</span>
+                <span class="n">alfabeto_novo</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)</span>
+
+                <span class="n">af_new</span><span class="p">:</span> <span class="n">AF</span> <span class="o">=</span> <span class="n">AF</span><span class="p">()</span>
+                <span class="n">af_new</span><span class="o">.</span><span class="n">alfabeto</span> <span class="o">=</span> <span class="n">alfabeto_novo</span>
+
+                <span class="n">estados_epsilon</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_epsilon_fecho</span><span class="p">()</span>
+
+                <span class="c1"># adiciona estados de epsilon</span>
+                <span class="k">for</span> <span class="n">estados</span> <span class="ow">in</span> <span class="n">estados_epsilon</span><span class="p">:</span>
+                    <span class="n">estado_novo</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="n">af_new</span><span class="o">.</span><span class="n">find_estado</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">nome</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">estados</span><span class="p">]))</span>
+                    <span class="n">estado_novo</span><span class="o">.</span><span class="n">estados</span> <span class="o">=</span> <span class="n">estados</span>
+
+                    <span class="k">if</span> <span class="n">estados</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">estado_inicial</span><span class="p">:</span>
+                        <span class="n">af_new</span><span class="o">.</span><span class="n">estado_inicial</span> <span class="o">=</span> <span class="n">estado_novo</span>
+
+                    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">elem</span> <span class="ow">in</span> <span class="n">estados</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span><span class="p">):</span>
+                        <span class="n">af_new</span><span class="o">.</span><span class="n">estados_finais</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado_novo</span><span class="p">)</span>
+
+                <span class="c1"># analisa os estados novos recursivamente</span>
+                <span class="n">estados_analisados</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">fila_estados</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">af_new</span><span class="o">.</span><span class="n">estados</span><span class="p">)</span>
+                <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">fila_estados</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">estado_analisado_now</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="n">fila_estados</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">estados_analisados</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado_analisado_now</span><span class="p">)</span>
+
+                    <span class="k">for</span> <span class="n">letra</span> <span class="ow">in</span> <span class="n">af_new</span><span class="o">.</span><span class="n">alfabeto</span><span class="p">:</span>
+                        <span class="n">estado_transicao</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="k">for</span> <span class="n">estado</span> <span class="ow">in</span> <span class="n">estado_analisado_now</span><span class="o">.</span><span class="n">estados</span><span class="p">:</span>
+                            <span class="n">estado_now</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="n">estado</span><span class="o">.</span><span class="n">next_estado</span><span class="p">(</span><span class="n">letra</span><span class="p">)</span>
+                            <span class="n">estado_transicao</span> <span class="o">=</span> <span class="n">estado_transicao</span> <span class="o">+</span> <span class="n">estado_now</span>
+
+                        <span class="n">estado_transicao</span> <span class="o">=</span> <span class="n">remove_duplicates_lista</span><span class="p">(</span><span class="n">estado_transicao</span><span class="p">)</span>
+                        <span class="n">next_estado</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="k">for</span> <span class="n">estado</span> <span class="ow">in</span> <span class="n">estado_transicao</span><span class="p">:</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">estado_fecho</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">estados_epsilon</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">estado</span><span class="p">)</span>
+                                <span class="n">next_estado</span> <span class="o">=</span> <span class="n">next_estado</span> <span class="o">+</span> <span class="n">estado_fecho</span>
+                            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                                <span class="k">pass</span>
+
+                        <span class="n">next_estado</span> <span class="o">=</span> <span class="n">remove_duplicates_lista</span><span class="p">(</span><span class="n">next_estado</span><span class="p">)</span>
+                        <span class="n">next_estado_estado</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="n">af_new</span><span class="o">.</span><span class="n">find_estado</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">nome</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">next_estado</span><span class="p">]))</span>
+                        <span class="n">next_estado_estado</span><span class="o">.</span><span class="n">estados</span> <span class="o">=</span> <span class="n">next_estado</span>
+
+                        <span class="k">if</span> <span class="n">next_estado_estado</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">estados_analisados</span> <span class="ow">and</span> <span class="n">next_estado_estado</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fila_estados</span><span class="p">:</span>
+                            <span class="n">fila_estados</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_estado_estado</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">elem</span> <span class="ow">in</span> <span class="n">next_estado</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span><span class="p">)</span> \
+                                <span class="ow">and</span> <span class="n">next_estado</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">af_new</span><span class="o">.</span><span class="n">estados_finais</span><span class="p">:</span>
+                            <span class="n">af_new</span><span class="o">.</span><span class="n">estados_finais</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_estado_estado</span><span class="p">)</span>
+                        <span class="n">estado_analisado_now</span><span class="o">.</span><span class="n">add_transicao</span><span class="p">(</span><span class="n">letra</span><span class="p">,</span> <span class="n">next_estado_estado</span><span class="p">)</span>
+                <span class="n">af_new</span><span class="o">.</span><span class="n">remove_useless_estados</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">af_new</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># determinização sem epsilon</span>
+                <span class="n">af_new</span> <span class="o">=</span> <span class="n">AF</span><span class="p">()</span>
+                <span class="n">af_new</span><span class="o">.</span><span class="n">estado_inicial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estado_inicial</span>
+                <span class="n">af_new</span><span class="o">.</span><span class="n">estados</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">estado_inicial</span><span class="p">]</span>
+                <span class="n">af_new</span><span class="o">.</span><span class="n">alfabeto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alfabeto</span>
+                <span class="n">estados_analyze</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="c1"># fazer análise do estado inicial</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">run_letra_determinizacao_estados</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estado_inicial</span><span class="p">,</span> <span class="n">estados_analyze</span><span class="p">,</span> <span class="n">af_new</span><span class="p">)</span>
+
+                <span class="c1"># percorrer estados_analyze até zerar a fila</span>
+                <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">estados_analyze</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">estado_now</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="n">estados_analyze</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+                    <span class="c1"># ver se é um estado não determinístico</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">estado_now</span><span class="o">.</span><span class="n">estados</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="c1"># estado não determinístico</span>
+                        <span class="k">for</span> <span class="n">letra</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">alfabeto</span><span class="p">:</span>
+                            <span class="n">estados_transicao_letra</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                            <span class="k">for</span> <span class="n">estado</span> <span class="ow">in</span> <span class="n">estado_now</span><span class="o">.</span><span class="n">estados</span><span class="p">:</span>
+                                <span class="n">estados_letra</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="n">estado</span><span class="o">.</span><span class="n">next_estado</span><span class="p">(</span><span class="n">letra</span><span class="p">)</span>
+                                <span class="n">estados_transicao_letra</span> <span class="o">=</span> <span class="n">estados_transicao_letra</span> <span class="o">+</span> <span class="n">estados_letra</span>
+                            <span class="n">estados_transicao_letra</span> <span class="o">=</span> <span class="n">remove_duplicates_lista</span><span class="p">(</span><span class="n">estados_transicao_letra</span><span class="p">)</span>
+
+                            <span class="n">estados_anteriores</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">af_new</span><span class="o">.</span><span class="n">estados</span><span class="p">)</span>
+                            <span class="n">estado_new</span> <span class="o">=</span> <span class="n">af_new</span><span class="o">.</span><span class="n">find_estado</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">nome</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">estados_transicao_letra</span><span class="p">))</span>
+
+                            <span class="n">estado_now</span><span class="o">.</span><span class="n">add_transicao</span><span class="p">(</span><span class="n">letra</span><span class="p">,</span> <span class="n">estado_new</span><span class="p">)</span>
+
+                            <span class="k">if</span> <span class="n">estado_new</span> <span class="o">!=</span> <span class="n">estado_now</span> <span class="ow">and</span> <span class="n">estado_new</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">estados_analyze</span> <span class="ow">and</span> \
+                                    <span class="n">estado_new</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">estados_anteriores</span><span class="p">:</span>
+                                <span class="n">estado_new</span><span class="o">.</span><span class="n">add_estados</span><span class="p">(</span><span class="n">estados_transicao_letra</span><span class="p">)</span>
+                                <span class="n">estados_analyze</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado_new</span><span class="p">)</span>
+
+                                <span class="c1"># checar por estados finais</span>
+                                <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">elem</span> <span class="ow">in</span> <span class="n">estados_transicao_letra</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span><span class="p">):</span>
+                                    <span class="n">af_new</span><span class="o">.</span><span class="n">estados_finais</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado_new</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># estado determinístico</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">run_letra_determinizacao_estados</span><span class="p">(</span><span class="n">estado_now</span><span class="p">,</span> <span class="n">estados_analyze</span><span class="p">,</span> <span class="n">af_new</span><span class="p">)</span>
+                <span class="n">af_new</span><span class="o">.</span><span class="n">estados_finais</span> <span class="o">=</span> <span class="n">remove_duplicates_lista</span><span class="p">(</span><span class="n">af_new</span><span class="o">.</span><span class="n">estados_finais</span><span class="p">)</span>
+                <span class="n">af_new</span><span class="o">.</span><span class="n">qtd_estados</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">af_new</span><span class="o">.</span><span class="n">estados</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">af_new</span></div>
+
+<div class="viewcode-block" id="AF.run_letra_determinizacao_estados"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.run_letra_determinizacao_estados">[docs]</a>    <span class="k">def</span> <span class="nf">run_letra_determinizacao_estados</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                         <span class="n">estado_now</span><span class="p">:</span> <span class="n">Estado</span><span class="p">,</span>
+                                         <span class="n">estados_analyze</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">],</span>
+                                         <span class="n">af_new</span><span class="p">:</span> <span class="n">AF</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">letra</span> <span class="ow">in</span> <span class="n">af_new</span><span class="o">.</span><span class="n">alfabeto</span><span class="p">:</span>
+            <span class="n">estados_transicao</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="n">estado_now</span><span class="o">.</span><span class="n">next_estado</span><span class="p">(</span><span class="n">letra</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">estados_transicao</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># é não determinístico</span>
+                <span class="n">estado_new</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="n">af_new</span><span class="o">.</span><span class="n">find_estado</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">nome</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">estados_transicao</span><span class="p">))</span>
+                <span class="n">estado_new</span><span class="o">.</span><span class="n">add_estados</span><span class="p">(</span><span class="n">estados_transicao</span><span class="p">)</span>
+                <span class="n">estados_analyze</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado_new</span><span class="p">)</span>
+
+                <span class="c1"># checar por estados finais</span>
+                <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">elem</span> <span class="ow">in</span> <span class="n">estados_transicao</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span><span class="p">):</span>
+                    <span class="n">af_new</span><span class="o">.</span><span class="n">estados_finais</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado_new</span><span class="p">)</span>
+
+                <span class="c1"># nova transição de estado inicial é para estado novo</span>
+                <span class="n">estado_now</span><span class="o">.</span><span class="n">remove_transicao</span><span class="p">(</span><span class="n">letra</span><span class="p">)</span>
+                <span class="n">estado_now</span><span class="o">.</span><span class="n">add_transicao</span><span class="p">(</span><span class="n">letra</span><span class="p">,</span> <span class="n">estado_new</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">estados_transicao</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># é estado determinístico</span>
+                <span class="n">estado_new</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="n">estados_transicao</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">estado_new</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">af_new</span><span class="o">.</span><span class="n">estados</span> <span class="ow">and</span> \
+                        <span class="n">estado_new</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">estados_analyze</span><span class="p">:</span>
+                    <span class="n">estados_analyze</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado_new</span><span class="p">)</span>
+
+                    <span class="c1"># checar por estados finais</span>
+                    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">elem</span> <span class="ow">in</span> <span class="n">estados_transicao</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span><span class="p">):</span>
+                        <span class="n">af_new</span><span class="o">.</span><span class="n">estados_finais</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado_new</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AF.get_epsilon_fecho"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.get_epsilon_fecho">[docs]</a>    <span class="k">def</span> <span class="nf">get_epsilon_fecho</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pega o &amp;-fecho de cada estado</span>
+<span class="sd">        :return: Lista de &amp;-fecho de cada estado</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">estados</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">estado</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados</span><span class="p">:</span>
+            <span class="n">epsilon_fecho</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">fila_estados</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">estado</span><span class="p">]</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">fila_estados</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">estado_now</span><span class="p">:</span> <span class="n">Estado</span> <span class="o">=</span> <span class="n">fila_estados</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">epsilon_fecho</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado_now</span><span class="p">)</span>
+
+                <span class="n">transicoes_epsilon</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="n">estado_now</span><span class="o">.</span><span class="n">next_estado</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)</span>
+                <span class="n">fila_estados</span> <span class="o">=</span> <span class="n">fila_estados</span> <span class="o">+</span> <span class="n">transicoes_epsilon</span>
+
+            <span class="n">estados</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epsilon_fecho</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">estados</span></div>
+
+<div class="viewcode-block" id="AF.remove_useless_estados"><a class="viewcode-back" href="../../../src.AF.html#src.AF.AF.AF.remove_useless_estados">[docs]</a>    <span class="k">def</span> <span class="nf">remove_useless_estados</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove estados inalcançáveis e/ou improdutivos</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">estados_novos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estados</span><span class="p">)</span>
+        <span class="n">estados_removidos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">len_estados</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">estados_novos</span><span class="p">)</span>
+        <span class="n">len_now</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">while</span> <span class="n">len_estados</span> <span class="o">!=</span> <span class="n">len_now</span><span class="p">:</span>
+            <span class="n">len_estados</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">estados_novos</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">estado</span> <span class="ow">in</span> <span class="n">estados_novos</span><span class="p">:</span>
+                <span class="n">has_transicao</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">for</span> <span class="n">estado2</span> <span class="ow">in</span> <span class="n">estados_novos</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">estado</span> <span class="o">!=</span> <span class="n">estado2</span> <span class="ow">and</span> <span class="n">estado2</span><span class="o">.</span><span class="n">has_estado_transicao</span><span class="p">(</span><span class="n">estado</span><span class="p">))</span> <span class="ow">or</span> <span class="n">estado</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">estado_inicial</span><span class="p">:</span>
+                        <span class="n">has_transicao</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">has_transicao</span><span class="p">:</span>
+                    <span class="n">estados_removidos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estado</span><span class="p">)</span>
+                    <span class="n">estados_novos</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">estado</span><span class="p">)</span>
+                    <span class="k">break</span>
+
+            <span class="n">len_now</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">estados_novos</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">estados</span> <span class="o">=</span> <span class="n">estados_novos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span> <span class="o">=</span> <span class="n">remove_duplicates_lista</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados_finais</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estados</span><span class="p">])</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, tony &amp; tony.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

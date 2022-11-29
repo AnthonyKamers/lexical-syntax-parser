@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.Program.modules package &mdash; formais 1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src.TS package" href="src.TS.html" />
+    <link rel="prev" title="src.Program package" href="src.Program.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> formais
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">formais</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="src.html">src package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="src.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="src.AF.html">src.AF package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.Analisadores.html">src.Analisadores package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.ER.html">src.ER package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.Exceptions.html">src.Exceptions package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.Grammar.html">src.Grammar package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.PilhaSintatica.html">src.PilhaSintatica package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="src.Program.html">src.Program package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.TS.html">src.TS package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.TabelaSintatica.html">src.TabelaSintatica package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.Utils.html">src.Utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">formais</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">formais</a></li>
+          <li class="breadcrumb-item"><a href="src.html">src package</a></li>
+          <li class="breadcrumb-item"><a href="src.Program.html">src.Program package</a></li>
+      <li class="breadcrumb-item active">src.Program.modules package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/src.Program.modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="src-program-modules-package">
+<h1>src.Program.modules package<a class="headerlink" href="#src-program-modules-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-src.Program.modules.AFProgram">
+<span id="src-program-modules-afprogram-module"></span><h2>src.Program.modules.AFProgram module<a class="headerlink" href="#module-src.Program.modules.AFProgram" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.AFProgram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.Program.modules.AFProgram.</span></span><span class="sig-name descname"><span class="pre">AFProgram</span></span><a class="reference internal" href="_modules/src/Program/modules/AFProgram.html#AFProgram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AFProgram.AFProgram" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.Program.modules.AbstractProgram.AbstractProgram" title="src.Program.modules.AbstractProgram.AbstractProgram"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractProgram</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.AFProgram.carregar_arquivo">
+<span class="sig-name descname"><span class="pre">carregar_arquivo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/AFProgram.html#AFProgram.carregar_arquivo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AFProgram.AFProgram.carregar_arquivo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.AFProgram.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/AFProgram.html#AFProgram.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AFProgram.AFProgram.clear" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.AFProgram.determinizar">
+<span class="sig-name descname"><span class="pre">determinizar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/AFProgram.html#AFProgram.determinizar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AFProgram.AFProgram.determinizar" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.AFProgram.informacoes_gerais">
+<span class="sig-name descname"><span class="pre">informacoes_gerais</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/AFProgram.html#AFProgram.informacoes_gerais"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AFProgram.AFProgram.informacoes_gerais" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.AFProgram.minimizar">
+<span class="sig-name descname"><span class="pre">minimizar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/AFProgram.html#AFProgram.minimizar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AFProgram.AFProgram.minimizar" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.AFProgram.rodar_entrada">
+<span class="sig-name descname"><span class="pre">rodar_entrada</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/AFProgram.html#AFProgram.rodar_entrada"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AFProgram.AFProgram.rodar_entrada" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.AFProgram.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/AFProgram.html#AFProgram.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AFProgram.AFProgram.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.AFProgram.salvar_af">
+<span class="sig-name descname"><span class="pre">salvar_af</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/AFProgram.html#AFProgram.salvar_af"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AFProgram.AFProgram.salvar_af" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.AFProgram.tabela_transicao">
+<span class="sig-name descname"><span class="pre">tabela_transicao</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/AFProgram.html#AFProgram.tabela_transicao"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AFProgram.AFProgram.tabela_transicao" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.AFProgram.uniao_automatos">
+<span class="sig-name descname"><span class="pre">uniao_automatos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/AFProgram.html#AFProgram.uniao_automatos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AFProgram.AFProgram.uniao_automatos" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.Step">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.Program.modules.AFProgram.</span></span><span class="sig-name descname"><span class="pre">Step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/AFProgram.html#Step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AFProgram.Step" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.Step.CarregarArquivo">
+<span class="sig-name descname"><span class="pre">CarregarArquivo</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#src.Program.modules.AFProgram.Step.CarregarArquivo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.Step.Clear">
+<span class="sig-name descname"><span class="pre">Clear</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#src.Program.modules.AFProgram.Step.Clear" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.Step.Determinizar">
+<span class="sig-name descname"><span class="pre">Determinizar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#src.Program.modules.AFProgram.Step.Determinizar" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.Step.InformacoesGeraisAF">
+<span class="sig-name descname"><span class="pre">InformacoesGeraisAF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#src.Program.modules.AFProgram.Step.InformacoesGeraisAF" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.Step.Minimizar">
+<span class="sig-name descname"><span class="pre">Minimizar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#src.Program.modules.AFProgram.Step.Minimizar" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.Step.RodarEntrada">
+<span class="sig-name descname"><span class="pre">RodarEntrada</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#src.Program.modules.AFProgram.Step.RodarEntrada" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.Step.SalvarAF">
+<span class="sig-name descname"><span class="pre">SalvarAF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#src.Program.modules.AFProgram.Step.SalvarAF" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.Step.TabelaTransicao">
+<span class="sig-name descname"><span class="pre">TabelaTransicao</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#src.Program.modules.AFProgram.Step.TabelaTransicao" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.AFProgram.Step.UniaoAutomatos">
+<span class="sig-name descname"><span class="pre">UniaoAutomatos</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#src.Program.modules.AFProgram.Step.UniaoAutomatos" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.Program.modules.AbstractProgram">
+<span id="src-program-modules-abstractprogram-module"></span><h2>src.Program.modules.AbstractProgram module<a class="headerlink" href="#module-src.Program.modules.AbstractProgram" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.Program.modules.AbstractProgram.AbstractProgram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.Program.modules.AbstractProgram.</span></span><span class="sig-name descname"><span class="pre">AbstractProgram</span></span><a class="reference internal" href="_modules/src/Program/modules/AbstractProgram.html#AbstractProgram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AbstractProgram.AbstractProgram" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.AbstractProgram.AbstractProgram.run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/AbstractProgram.html#AbstractProgram.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.AbstractProgram.AbstractProgram.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.Program.modules.ERProgram">
+<span id="src-program-modules-erprogram-module"></span><h2>src.Program.modules.ERProgram module<a class="headerlink" href="#module-src.Program.modules.ERProgram" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.ERProgram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.Program.modules.ERProgram.</span></span><span class="sig-name descname"><span class="pre">ERProgram</span></span><a class="reference internal" href="_modules/src/Program/modules/ERProgram.html#ERProgram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.ERProgram.ERProgram" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.Program.modules.AbstractProgram.AbstractProgram" title="src.Program.modules.AbstractProgram.AbstractProgram"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractProgram</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.ERProgram.carregar_arquivo">
+<span class="sig-name descname"><span class="pre">carregar_arquivo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/ERProgram.html#ERProgram.carregar_arquivo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.ERProgram.ERProgram.carregar_arquivo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.ERProgram.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/ERProgram.html#ERProgram.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.ERProgram.ERProgram.clear" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.ERProgram.make_afd_er">
+<span class="sig-name descname"><span class="pre">make_afd_er</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/ERProgram.html#ERProgram.make_afd_er"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.ERProgram.ERProgram.make_afd_er" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.ERProgram.make_tree_er">
+<span class="sig-name descname"><span class="pre">make_tree_er</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/ERProgram.html#ERProgram.make_tree_er"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.ERProgram.ERProgram.make_tree_er" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.ERProgram.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/ERProgram.html#ERProgram.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.ERProgram.ERProgram.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.ERProgram.save_afd_er">
+<span class="sig-name descname"><span class="pre">save_afd_er</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/ERProgram.html#ERProgram.save_afd_er"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.ERProgram.ERProgram.save_afd_er" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.ERProgram.show_afd_unido">
+<span class="sig-name descname"><span class="pre">show_afd_unido</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/ERProgram.html#ERProgram.show_afd_unido"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.ERProgram.ERProgram.show_afd_unido" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.ERProgram.show_tree">
+<span class="sig-name descname"><span class="pre">show_tree</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/ERProgram.html#ERProgram.show_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.ERProgram.ERProgram.show_tree" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.ERProgram.uniao_afd">
+<span class="sig-name descname"><span class="pre">uniao_afd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/ERProgram.html#ERProgram.uniao_afd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.ERProgram.ERProgram.uniao_afd" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.Step">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.Program.modules.ERProgram.</span></span><span class="sig-name descname"><span class="pre">Step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/ERProgram.html#Step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.ERProgram.Step" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.Step.CarregarArquivo">
+<span class="sig-name descname"><span class="pre">CarregarArquivo</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#src.Program.modules.ERProgram.Step.CarregarArquivo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.Step.Clear">
+<span class="sig-name descname"><span class="pre">Clear</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#src.Program.modules.ERProgram.Step.Clear" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.Step.FazerAFD_ER">
+<span class="sig-name descname"><span class="pre">FazerAFD_ER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#src.Program.modules.ERProgram.Step.FazerAFD_ER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.Step.FazerArvoreER">
+<span class="sig-name descname"><span class="pre">FazerArvoreER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#src.Program.modules.ERProgram.Step.FazerArvoreER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.Step.MostrarAFD_Unido">
+<span class="sig-name descname"><span class="pre">MostrarAFD_Unido</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#src.Program.modules.ERProgram.Step.MostrarAFD_Unido" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.Step.MostrarArvore">
+<span class="sig-name descname"><span class="pre">MostrarArvore</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#src.Program.modules.ERProgram.Step.MostrarArvore" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.Step.SalvarAFD_ER">
+<span class="sig-name descname"><span class="pre">SalvarAFD_ER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#src.Program.modules.ERProgram.Step.SalvarAFD_ER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.ERProgram.Step.Uniao_AFD">
+<span class="sig-name descname"><span class="pre">Uniao_AFD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#src.Program.modules.ERProgram.Step.Uniao_AFD" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.Program.modules.GrammarProgram">
+<span id="src-program-modules-grammarprogram-module"></span><h2>src.Program.modules.GrammarProgram module<a class="headerlink" href="#module-src.Program.modules.GrammarProgram" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.GrammarProgram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.Program.modules.GrammarProgram.</span></span><span class="sig-name descname"><span class="pre">GrammarProgram</span></span><a class="reference internal" href="_modules/src/Program/modules/GrammarProgram.html#GrammarProgram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.GrammarProgram.GrammarProgram" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.Program.modules.AbstractProgram.AbstractProgram" title="src.Program.modules.AbstractProgram.AbstractProgram"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractProgram</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.GrammarProgram.carregar_arquivo">
+<span class="sig-name descname"><span class="pre">carregar_arquivo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/GrammarProgram.html#GrammarProgram.carregar_arquivo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.GrammarProgram.GrammarProgram.carregar_arquivo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.GrammarProgram.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/GrammarProgram.html#GrammarProgram.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.GrammarProgram.GrammarProgram.clear" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.GrammarProgram.informacoes_gerais">
+<span class="sig-name descname"><span class="pre">informacoes_gerais</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/GrammarProgram.html#GrammarProgram.informacoes_gerais"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.GrammarProgram.GrammarProgram.informacoes_gerais" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.GrammarProgram.make_firsts_follows">
+<span class="sig-name descname"><span class="pre">make_firsts_follows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/GrammarProgram.html#GrammarProgram.make_firsts_follows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.GrammarProgram.GrammarProgram.make_firsts_follows" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.GrammarProgram.remover_nao_determinismo">
+<span class="sig-name descname"><span class="pre">remover_nao_determinismo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/GrammarProgram.html#GrammarProgram.remover_nao_determinismo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.GrammarProgram.GrammarProgram.remover_nao_determinismo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.GrammarProgram.remover_rec_esquerda">
+<span class="sig-name descname"><span class="pre">remover_rec_esquerda</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/GrammarProgram.html#GrammarProgram.remover_rec_esquerda"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.GrammarProgram.GrammarProgram.remover_rec_esquerda" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.GrammarProgram.retornar_se_rec_esquerda">
+<span class="sig-name descname"><span class="pre">retornar_se_rec_esquerda</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/GrammarProgram.html#GrammarProgram.retornar_se_rec_esquerda"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.GrammarProgram.GrammarProgram.retornar_se_rec_esquerda" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.GrammarProgram.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/GrammarProgram.html#GrammarProgram.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.GrammarProgram.GrammarProgram.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.GrammarProgram.ver_firsts_follows">
+<span class="sig-name descname"><span class="pre">ver_firsts_follows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/GrammarProgram.html#GrammarProgram.ver_firsts_follows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.GrammarProgram.GrammarProgram.ver_firsts_follows" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.GrammarProgram.verify_is_ll1">
+<span class="sig-name descname"><span class="pre">verify_is_ll1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/GrammarProgram.html#GrammarProgram.verify_is_ll1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.GrammarProgram.GrammarProgram.verify_is_ll1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.Step">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.Program.modules.GrammarProgram.</span></span><span class="sig-name descname"><span class="pre">Step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/GrammarProgram.html#Step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.GrammarProgram.Step" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.Step.CarregarArquivo">
+<span class="sig-name descname"><span class="pre">CarregarArquivo</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#src.Program.modules.GrammarProgram.Step.CarregarArquivo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.Step.Clear">
+<span class="sig-name descname"><span class="pre">Clear</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#src.Program.modules.GrammarProgram.Step.Clear" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.Step.FazerFirstsFollows">
+<span class="sig-name descname"><span class="pre">FazerFirstsFollows</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#src.Program.modules.GrammarProgram.Step.FazerFirstsFollows" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.Step.InformacoesGeraisGramatica">
+<span class="sig-name descname"><span class="pre">InformacoesGeraisGramatica</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#src.Program.modules.GrammarProgram.Step.InformacoesGeraisGramatica" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.Step.RemoverNaoDeterminismo">
+<span class="sig-name descname"><span class="pre">RemoverNaoDeterminismo</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#src.Program.modules.GrammarProgram.Step.RemoverNaoDeterminismo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.Step.RemoverRecursaoEsquerda">
+<span class="sig-name descname"><span class="pre">RemoverRecursaoEsquerda</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#src.Program.modules.GrammarProgram.Step.RemoverRecursaoEsquerda" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.Step.RetornarSeTemRecursaoEsquerda">
+<span class="sig-name descname"><span class="pre">RetornarSeTemRecursaoEsquerda</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#src.Program.modules.GrammarProgram.Step.RetornarSeTemRecursaoEsquerda" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.Step.VerFirstsFollows">
+<span class="sig-name descname"><span class="pre">VerFirstsFollows</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#src.Program.modules.GrammarProgram.Step.VerFirstsFollows" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.GrammarProgram.Step.VerificarLL1">
+<span class="sig-name descname"><span class="pre">VerificarLL1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#src.Program.modules.GrammarProgram.Step.VerificarLL1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.Program.modules.LexicoProgram">
+<span id="src-program-modules-lexicoprogram-module"></span><h2>src.Program.modules.LexicoProgram module<a class="headerlink" href="#module-src.Program.modules.LexicoProgram" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.LexicoProgram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.Program.modules.LexicoProgram.</span></span><span class="sig-name descname"><span class="pre">LexicoProgram</span></span><a class="reference internal" href="_modules/src/Program/modules/LexicoProgram.html#LexicoProgram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoProgram.LexicoProgram" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.Program.modules.AbstractProgram.AbstractProgram" title="src.Program.modules.AbstractProgram.AbstractProgram"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractProgram</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.LexicoProgram.carregar_arquivo_er">
+<span class="sig-name descname"><span class="pre">carregar_arquivo_er</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoProgram.html#LexicoProgram.carregar_arquivo_er"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoProgram.LexicoProgram.carregar_arquivo_er" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.LexicoProgram.carregar_texto_fonte">
+<span class="sig-name descname"><span class="pre">carregar_texto_fonte</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoProgram.html#LexicoProgram.carregar_texto_fonte"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoProgram.LexicoProgram.carregar_texto_fonte" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.LexicoProgram.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoProgram.html#LexicoProgram.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoProgram.LexicoProgram.clear" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.LexicoProgram.definir_tokens_iniciais">
+<span class="sig-name descname"><span class="pre">definir_tokens_iniciais</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoProgram.html#LexicoProgram.definir_tokens_iniciais"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoProgram.LexicoProgram.definir_tokens_iniciais" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.LexicoProgram.mostrar_lista_tokens">
+<span class="sig-name descname"><span class="pre">mostrar_lista_tokens</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoProgram.html#LexicoProgram.mostrar_lista_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoProgram.LexicoProgram.mostrar_lista_tokens" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.LexicoProgram.mostrar_tabela_lexica">
+<span class="sig-name descname"><span class="pre">mostrar_tabela_lexica</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoProgram.html#LexicoProgram.mostrar_tabela_lexica"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoProgram.LexicoProgram.mostrar_tabela_lexica" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.LexicoProgram.mostrar_ts">
+<span class="sig-name descname"><span class="pre">mostrar_ts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoProgram.html#LexicoProgram.mostrar_ts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoProgram.LexicoProgram.mostrar_ts" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.LexicoProgram.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoProgram.html#LexicoProgram.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoProgram.LexicoProgram.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.Step">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.Program.modules.LexicoProgram.</span></span><span class="sig-name descname"><span class="pre">Step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoProgram.html#Step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoProgram.Step" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.Step.CarregarArquivoER">
+<span class="sig-name descname"><span class="pre">CarregarArquivoER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#src.Program.modules.LexicoProgram.Step.CarregarArquivoER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.Step.CarregarTextoFonte">
+<span class="sig-name descname"><span class="pre">CarregarTextoFonte</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#src.Program.modules.LexicoProgram.Step.CarregarTextoFonte" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.Step.Clear">
+<span class="sig-name descname"><span class="pre">Clear</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#src.Program.modules.LexicoProgram.Step.Clear" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.Step.DefinirTokensIniciais">
+<span class="sig-name descname"><span class="pre">DefinirTokensIniciais</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#src.Program.modules.LexicoProgram.Step.DefinirTokensIniciais" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.Step.MostrarListaTokens">
+<span class="sig-name descname"><span class="pre">MostrarListaTokens</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#src.Program.modules.LexicoProgram.Step.MostrarListaTokens" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.Step.MostrarTS">
+<span class="sig-name descname"><span class="pre">MostrarTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#src.Program.modules.LexicoProgram.Step.MostrarTS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoProgram.Step.MostrarTabelaLexicaAFDunido">
+<span class="sig-name descname"><span class="pre">MostrarTabelaLexicaAFDunido</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#src.Program.modules.LexicoProgram.Step.MostrarTabelaLexicaAFDunido" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.Program.modules.LexicoSintaticoProgram">
+<span id="src-program-modules-lexicosintaticoprogram-module"></span><h2>src.Program.modules.LexicoSintaticoProgram module<a class="headerlink" href="#module-src.Program.modules.LexicoSintaticoProgram" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.Program.modules.LexicoSintaticoProgram.</span></span><span class="sig-name descname"><span class="pre">LexicoSintaticoProgram</span></span><a class="reference internal" href="_modules/src/Program/modules/LexicoSintaticoProgram.html#LexicoSintaticoProgram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#src.Program.modules.AbstractProgram.AbstractProgram" title="src.Program.modules.AbstractProgram.AbstractProgram"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractProgram</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.carregar_gramatica">
+<span class="sig-name descname"><span class="pre">carregar_gramatica</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoSintaticoProgram.html#LexicoSintaticoProgram.carregar_gramatica"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.carregar_gramatica" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoSintaticoProgram.html#LexicoSintaticoProgram.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.clear" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.inicializar_analisador_lexico_sintatico">
+<span class="sig-name descname"><span class="pre">inicializar_analisador_lexico_sintatico</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoSintaticoProgram.html#LexicoSintaticoProgram.inicializar_analisador_lexico_sintatico"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.inicializar_analisador_lexico_sintatico" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.mostrar_lista_tokens">
+<span class="sig-name descname"><span class="pre">mostrar_lista_tokens</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoSintaticoProgram.html#LexicoSintaticoProgram.mostrar_lista_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.mostrar_lista_tokens" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.mostrar_tabela_analise_sintatica">
+<span class="sig-name descname"><span class="pre">mostrar_tabela_analise_sintatica</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoSintaticoProgram.html#LexicoSintaticoProgram.mostrar_tabela_analise_sintatica"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.mostrar_tabela_analise_sintatica" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.mostrar_ts">
+<span class="sig-name descname"><span class="pre">mostrar_ts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoSintaticoProgram.html#LexicoSintaticoProgram.mostrar_ts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.mostrar_ts" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.rodar_arquivo">
+<span class="sig-name descname"><span class="pre">rodar_arquivo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoSintaticoProgram.html#LexicoSintaticoProgram.rodar_arquivo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.rodar_arquivo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoSintaticoProgram.html#LexicoSintaticoProgram.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.LexicoSintaticoProgram.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.Step">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.Program.modules.LexicoSintaticoProgram.</span></span><span class="sig-name descname"><span class="pre">Step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Program/modules/LexicoSintaticoProgram.html#Step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.Step" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.Step.CarregarGramaticaSintatico">
+<span class="sig-name descname"><span class="pre">CarregarGramaticaSintatico</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.Step.CarregarGramaticaSintatico" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.Step.Clear">
+<span class="sig-name descname"><span class="pre">Clear</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.Step.Clear" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.Step.IniciarAnalisadorLexicoSintatico">
+<span class="sig-name descname"><span class="pre">IniciarAnalisadorLexicoSintatico</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.Step.IniciarAnalisadorLexicoSintatico" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.Step.MostrarListaTokens">
+<span class="sig-name descname"><span class="pre">MostrarListaTokens</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.Step.MostrarListaTokens" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.Step.MostrarTS">
+<span class="sig-name descname"><span class="pre">MostrarTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.Step.MostrarTS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.Step.MostrarTabelaAnaliseSintatica">
+<span class="sig-name descname"><span class="pre">MostrarTabelaAnaliseSintatica</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.Step.MostrarTabelaAnaliseSintatica" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.Program.modules.LexicoSintaticoProgram.Step.RodarArquivo">
+<span class="sig-name descname"><span class="pre">RodarArquivo</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#src.Program.modules.LexicoSintaticoProgram.Step.RodarArquivo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.Program.modules">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.Program.modules" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="src.Program.html" class="btn btn-neutral float-left" title="src.Program package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="src.TS.html" class="btn btn-neutral float-right" title="src.TS package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, tony &amp; tony.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

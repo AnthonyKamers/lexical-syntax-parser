@@ -1,0 +1,21 @@
+src.TS package
+==============
+
+Submodules
+----------
+
+src.TS.TS module
+----------------
+
+.. automodule:: src.TS.TS
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.TS
+   :members:
+   :undoc-members:
+   :show-inheritance:

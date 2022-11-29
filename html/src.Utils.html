@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.Utils package &mdash; formais 1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="src.TabelaSintatica package" href="src.TabelaSintatica.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> formais
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">formais</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="src.html">src package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="src.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="src.AF.html">src.AF package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.Analisadores.html">src.Analisadores package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.ER.html">src.ER package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.Exceptions.html">src.Exceptions package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.Grammar.html">src.Grammar package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.PilhaSintatica.html">src.PilhaSintatica package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.Program.html">src.Program package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.TS.html">src.TS package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.TabelaSintatica.html">src.TabelaSintatica package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">src.Utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="src.html#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">formais</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">formais</a></li>
+          <li class="breadcrumb-item"><a href="src.html">src package</a></li>
+      <li class="breadcrumb-item active">src.Utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/src.Utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="src-utils-package">
+<h1>src.Utils package<a class="headerlink" href="#src-utils-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-src.Utils.utils">
+<span id="src-utils-utils-module"></span><h2>src.Utils.utils module<a class="headerlink" href="#module-src.Utils.utils" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.Utils.utils.pretty_print_matrix">
+<span class="sig-prename descclassname"><span class="pre">src.Utils.utils.</span></span><span class="sig-name descname"><span class="pre">pretty_print_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/src/Utils/utils.html#pretty_print_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Utils.utils.pretty_print_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Printa uma tabela 2x2 de maneira agradável
+contribuição por:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://stackoverflow.com/questions/13214809/pretty-print-2d-list">https://stackoverflow.com/questions/13214809/pretty-print-2d-list</a></p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>matrix</strong> – Tabela 2x2</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.Utils.utils.remove_duplicates_lista">
+<span class="sig-prename descclassname"><span class="pre">src.Utils.utils.</span></span><span class="sig-name descname"><span class="pre">remove_duplicates_lista</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lista</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/Utils/utils.html#remove_duplicates_lista"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Utils.utils.remove_duplicates_lista" title="Permalink to this definition"></a></dt>
+<dd><p>Remove duplicadas de uma lista (mesmo procedimento de um Set())
+:param lista: Lista que deseja remover duplicatas
+:return: Lista sem duplicatas</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.Utils.utils.subtract_listas">
+<span class="sig-prename descclassname"><span class="pre">src.Utils.utils.</span></span><span class="sig-name descname"><span class="pre">subtract_listas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lista1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lista2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/Utils/utils.html#subtract_listas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Utils.utils.subtract_listas" title="Permalink to this definition"></a></dt>
+<dd><p>Método genérico para fazer a subtração de duas listas (o que tem em lista1 que não tem em lista2)
+:param lista1: Lista primária da subtração
+:param lista2: Lista secundária da subtração
+:return: A diferença entre lista1 e lista2</p>
+</dd></dl>
+
+</section>
+<section id="module-src.Utils.utilsAF">
+<span id="src-utils-utilsaf-module"></span><h2>src.Utils.utilsAF module<a class="headerlink" href="#module-src.Utils.utilsAF" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.Utils.utilsAF.uniao_automatos">
+<span class="sig-prename descclassname"><span class="pre">src.Utils.utilsAF.</span></span><span class="sig-name descname"><span class="pre">uniao_automatos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">af1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="src.AF.html#src.AF.AF.AF" title="src.AF.AF.AF"><span class="pre">AF</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">af2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="src.AF.html#src.AF.AF.AF" title="src.AF.AF.AF"><span class="pre">AF</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="src.AF.html#src.AF.AF.AF" title="src.AF.AF.AF"><span class="pre">AF</span></a></span></span><a class="reference internal" href="_modules/src/Utils/utilsAF.html#uniao_automatos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Utils.utilsAF.uniao_automatos" title="Permalink to this definition"></a></dt>
+<dd><p>Faz a união de dois autômatos por &amp;-transiçõa
+:param af1: AF1 a ser unido
+:param af2: AF2 a ser unido
+:return: AF resultante a união dos autômatos af1 e af2</p>
+</dd></dl>
+
+</section>
+<section id="module-src.Utils.utilsER">
+<span id="src-utils-utilser-module"></span><h2>src.Utils.utilsER module<a class="headerlink" href="#module-src.Utils.utilsER" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.Utils.utilsER.add_or_operation">
+<span class="sig-prename descclassname"><span class="pre">src.Utils.utilsER.</span></span><span class="sig-name descname"><span class="pre">add_or_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lista</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/Utils/utilsER.html#add_or_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Utils.utilsER.add_or_operation" title="Permalink to this definition"></a></dt>
+<dd><p>Função genérica para adicionar operando OR entre duas entradas de uma lista
+:param lista: Lista que deseja adicionar o operando OR
+:return: Lista de elementos separados por operando OR</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.Utils.utilsER.get_all_letters">
+<span class="sig-prename descclassname"><span class="pre">src.Utils.utilsER.</span></span><span class="sig-name descname"><span class="pre">get_all_letters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/Utils/utilsER.html#get_all_letters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Utils.utilsER.get_all_letters" title="Permalink to this definition"></a></dt>
+<dd><p>Retorna lista com operação OR entre alfabeto em minúsculo e maiúsculo (para Regex)
+:return: Entradas do alfabeto separadas por operando OR</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.Utils.utilsER.get_lowercase_letters">
+<span class="sig-prename descclassname"><span class="pre">src.Utils.utilsER.</span></span><span class="sig-name descname"><span class="pre">get_lowercase_letters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/Utils/utilsER.html#get_lowercase_letters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Utils.utilsER.get_lowercase_letters" title="Permalink to this definition"></a></dt>
+<dd><p>Retorna lista com operação OR entre alfabeto em minúsculo (para Regex)
+:return: Entradas do alfabeto separadas por operando OR</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.Utils.utilsER.get_numbers">
+<span class="sig-prename descclassname"><span class="pre">src.Utils.utilsER.</span></span><span class="sig-name descname"><span class="pre">get_numbers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/Utils/utilsER.html#get_numbers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Utils.utilsER.get_numbers" title="Permalink to this definition"></a></dt>
+<dd><p>Retorna lista com operação OR entre números naturais (para Regex)
+:return: Entradas de números separados por operando OR</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.Utils.utilsER.get_uppercase_letters">
+<span class="sig-prename descclassname"><span class="pre">src.Utils.utilsER.</span></span><span class="sig-name descname"><span class="pre">get_uppercase_letters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/Utils/utilsER.html#get_uppercase_letters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Utils.utilsER.get_uppercase_letters" title="Permalink to this definition"></a></dt>
+<dd><p>Retorna lista com operação OR entre alfabeto em maiúsculo (para Regex)
+:return: Entradas do alfabeto separadas por operando OR</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.Utils.utilsER.print_tree">
+<span class="sig-prename descclassname"><span class="pre">src.Utils.utilsER.</span></span><span class="sig-name descname"><span class="pre">print_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="src.ER.html#src.ER.Node.Node" title="src.ER.Node.Node"><span class="pre">Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Utils/utilsER.html#print_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Utils.utilsER.print_tree" title="Permalink to this definition"></a></dt>
+<dd><p>Printta uma árvore lateralmente: inorder.
+Retirado de: <a class="reference external" href="https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/">https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/</a>
+:param root: Nodo sendo visto no momento
+:param space: Quantidade de itens a deslocar à direita no terminal</p>
+</dd></dl>
+
+</section>
+<section id="module-src.Utils.utilsProgram">
+<span id="src-utils-utilsprogram-module"></span><h2>src.Utils.utilsProgram module<a class="headerlink" href="#module-src.Utils.utilsProgram" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.Utils.utilsProgram.print_steps">
+<span class="sig-prename descclassname"><span class="pre">src.Utils.utilsProgram.</span></span><span class="sig-name descname"><span class="pre">print_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Utils/utilsProgram.html#print_steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Utils.utilsProgram.print_steps" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.Utils.utilsProgram.salvar_af">
+<span class="sig-prename descclassname"><span class="pre">src.Utils.utilsProgram.</span></span><span class="sig-name descname"><span class="pre">salvar_af</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">af</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="src.AF.html#src.AF.AF.AF" title="src.AF.AF.AF"><span class="pre">AF</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/Utils/utilsProgram.html#salvar_af"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.Utils.utilsProgram.salvar_af" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-src.Utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.Utils" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="src.TabelaSintatica.html" class="btn btn-neutral float-left" title="src.TabelaSintatica package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, tony &amp; tony.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

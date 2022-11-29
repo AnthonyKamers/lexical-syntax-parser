@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.Grammar.Symbol &mdash; formais 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> formais
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">formais</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">formais</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.Grammar.Symbol</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.Grammar.Symbol</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span>
+
+<span class="kn">from</span> <span class="nn">src.Utils.utils</span> <span class="kn">import</span> <span class="n">subtract_listas</span>
+
+
+<div class="viewcode-block" id="Symbol"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol">[docs]</a><span class="k">class</span> <span class="nc">Symbol</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simbolo</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">grammar</span><span class="p">:</span> <span class="nb">any</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span> <span class="o">=</span> <span class="n">grammar</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simbolo</span> <span class="o">=</span> <span class="n">simbolo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Symbol</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">firsts</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Symbol</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">follows</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Symbol</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Terminal&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;Não terminal&#39;</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">simbolo</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="Symbol.is_terminal"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.is_terminal">[docs]</a>    <span class="k">def</span> <span class="nf">is_terminal</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="Symbol.add_producoes"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.add_producoes">[docs]</a>    <span class="k">def</span> <span class="nf">add_producoes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producoes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adiciona uma lista de produções de um símbolo (quando está fazendo parse de um arquivo de entrada de ER)</span>
+<span class="sd">        :param producoes: Lista de string de produções</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">producao</span> <span class="ow">in</span> <span class="n">producoes</span><span class="p">:</span>
+            <span class="n">lista</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">producao</span><span class="p">:</span>
+                <span class="n">symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="n">char</span><span class="p">)</span>
+                <span class="n">lista</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lista</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Symbol.is_nullable"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.is_nullable">[docs]</a>    <span class="k">def</span> <span class="nf">is_nullable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checa se alguma produção leva para nulo (diretamente)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">producao</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="p">:</span>
+            <span class="n">has_epsilon</span> <span class="o">=</span> <span class="s2">&quot;&amp;&quot;</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">simbolo</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">producao</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">has_epsilon</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Symbol.is_left_recursive"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.is_left_recursive">[docs]</a>    <span class="k">def</span> <span class="nf">is_left_recursive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checa se o próprio símbolo é recursivo à esquerda</span>
+<span class="sd">        :return: Se o símbolo é recursivo à esquerda</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_left_recursive_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Symbol.is_left_recursive_check"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.is_left_recursive_check">[docs]</a>    <span class="k">def</span> <span class="nf">is_left_recursive_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol_check</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># checar produções diretas</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find_producoes_start</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># checar produções indiretas</span>
+        <span class="k">for</span> <span class="n">producao</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="p">:</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="n">producao</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">first</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">():</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">first</span><span class="o">.</span><span class="n">is_left_recursive_check</span><span class="p">(</span><span class="n">symbol_check</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Symbol.is_recursive"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.is_recursive">[docs]</a>    <span class="k">def</span> <span class="nf">is_recursive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_recursive_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Symbol.is_recursive_check"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.is_recursive_check">[docs]</a>    <span class="k">def</span> <span class="nf">is_recursive_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol_check</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># checar produções diretas</span>
+        <span class="k">for</span> <span class="n">producao</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">producao</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">symbol</span> <span class="o">==</span> <span class="n">symbol_check</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># checar produções indiretas</span>
+        <span class="k">for</span> <span class="n">producao</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">producao</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">symbol</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">():</span>
+                    <span class="c1"># se for não terminal, seguir</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">is_recursive_check</span><span class="p">(</span><span class="n">symbol_check</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Symbol.remove_nao_determinismo_direto"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.remove_nao_determinismo_direto">[docs]</a>    <span class="k">def</span> <span class="nf">remove_nao_determinismo_direto</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove o não determinismo direto (um dos passos do procedimento de deixar na forma fatorada)</span>
+<span class="sd">        :return: Se houve mudança ao realizar o procedimento</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">k1</span><span class="p">,</span> <span class="n">prod1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">prod2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">prod1</span> <span class="o">==</span> <span class="n">prod2</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">prod1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">prod2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># tem determinismo direto</span>
+                <span class="k">if</span> <span class="n">prod1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">prod2</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">first_prod</span> <span class="o">=</span> <span class="n">prod1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                    <span class="c1"># gerar novo símbolo com base nesse</span>
+                    <span class="n">new_symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simbolo</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+
+                    <span class="c1"># trocar produção antiga por novo símbolo</span>
+                    <span class="n">resto_1</span> <span class="o">=</span> <span class="n">prod1</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">resto_2</span> <span class="o">=</span> <span class="n">prod2</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+                    <span class="n">new_symbol</span><span class="o">.</span><span class="n">producoes</span> <span class="o">=</span> <span class="p">[</span><span class="n">resto_1</span><span class="p">,</span> <span class="n">resto_2</span><span class="p">]</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="p">[</span><span class="n">k1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">first_prod</span><span class="p">,</span> <span class="n">new_symbol</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k2</span><span class="p">)</span>
+                    <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">changed</span></div>
+
+<div class="viewcode-block" id="Symbol.transforma_nao_determinismo_indireto"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.transforma_nao_determinismo_indireto">[docs]</a>    <span class="k">def</span> <span class="nf">transforma_nao_determinismo_indireto</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transforma os casos de não determinismo indireto (para que na próxima passagem,</span>
+<span class="sd">         sejam pegos os determinismos diretos)</span>
+<span class="sd">        :return: Se houve alguma mudança de determinismo indireto</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">check_terminais_nao_terminal</span><span class="p">(</span><span class="n">nao_terminal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">any</span><span class="p">]:</span>
+            <span class="n">producoes_nao_terminal</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">any</span><span class="p">]</span> <span class="o">=</span> <span class="n">nao_terminal</span><span class="o">.</span><span class="n">producoes</span>
+            <span class="n">terminais_now</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">prod</span> <span class="ow">in</span> <span class="n">producoes_nao_terminal</span><span class="p">:</span>
+                <span class="n">first_prod</span> <span class="o">=</span> <span class="n">prod</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">first_prod</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">():</span>
+                    <span class="n">terminais_now</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">first_prod</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">terminais_now</span> <span class="o">=</span> <span class="n">terminais_now</span> <span class="o">+</span> <span class="n">check_terminais_nao_terminal</span><span class="p">(</span><span class="n">first_prod</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">terminais_now</span>
+
+        <span class="k">def</span> <span class="nf">transform_nao_terminal_in_terminal</span><span class="p">(</span><span class="n">nao_terminal_now</span><span class="p">):</span>
+            <span class="n">producoes_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_producoes_start</span><span class="p">(</span><span class="n">nao_terminal_now</span><span class="p">)</span>
+
+            <span class="c1"># para cada produção, substituir o primeiro elemento</span>
+            <span class="c1"># com as produções deste símbolo</span>
+            <span class="k">for</span> <span class="n">producao</span> <span class="ow">in</span> <span class="n">producoes_start</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">producao</span><span class="p">)</span>
+
+                <span class="n">resto</span> <span class="o">=</span> <span class="n">producao</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="k">for</span> <span class="n">producao_simbolo</span> <span class="ow">in</span> <span class="n">nao_terminal_now</span><span class="o">.</span><span class="n">producoes</span><span class="p">:</span>
+                    <span class="n">new_producao</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">producao_simbolo</span><span class="p">]</span>
+                    <span class="n">new_producao</span> <span class="o">=</span> <span class="n">new_producao</span> <span class="o">+</span> <span class="n">resto</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_producao</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">check_other_terminais</span><span class="p">(</span><span class="n">terminal_now</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="c1"># é terminal, apenas ver se outros não terminais levam para ele</span>
+            <span class="n">flag</span><span class="p">,</span> <span class="n">search_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_other_symbol</span><span class="p">(</span><span class="n">terminal_now</span><span class="p">,</span> <span class="n">prod1</span><span class="p">,</span> <span class="p">[])</span>
+
+            <span class="c1"># encontrou resultado</span>
+            <span class="k">if</span> <span class="n">flag</span><span class="p">:</span>
+                <span class="n">symbol_find</span> <span class="o">=</span> <span class="n">search_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">transform_nao_terminal_in_terminal</span><span class="p">(</span><span class="n">symbol_find</span><span class="p">)</span>
+
+                <span class="c1"># retorna que houve mudança</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">k1</span><span class="p">,</span> <span class="n">prod1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="p">):</span>
+            <span class="n">first_search</span> <span class="o">=</span> <span class="n">prod1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">first_search</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">():</span>
+                <span class="n">flag_check</span> <span class="o">=</span> <span class="n">check_other_terminais</span><span class="p">(</span><span class="n">first_search</span><span class="p">)</span>
+
+                <span class="c1"># retornar a cada mudança na lista, para não</span>
+                <span class="c1"># quebrar a integridade da gramática</span>
+                <span class="k">if</span> <span class="n">flag_check</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># não terminal, é necessário ver para quais terminais ele leva e</span>
+                <span class="c1"># checar se há outros não terminais que também levam para tais terminais</span>
+                <span class="c1"># OBS: não precisa se preocupar com recursão à esquerda,</span>
+                <span class="c1"># porque foi removida anteriormente</span>
+
+                <span class="c1"># checar quais são seus terminais</span>
+                <span class="n">flag_check</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">terminais</span> <span class="o">=</span> <span class="n">check_terminais_nao_terminal</span><span class="p">(</span><span class="n">first_search</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">terminal</span> <span class="ow">in</span> <span class="n">terminais</span><span class="p">:</span>
+                    <span class="n">flag_check</span> <span class="o">=</span> <span class="n">flag_check</span> <span class="ow">or</span> <span class="n">check_other_terminais</span><span class="p">(</span><span class="n">terminal</span><span class="p">)</span>
+
+                <span class="c1"># se houve mudança, mudar as suas próprias produções</span>
+                <span class="k">if</span> <span class="n">flag_check</span><span class="p">:</span>
+                    <span class="n">transform_nao_terminal_in_terminal</span><span class="p">(</span><span class="n">first_search</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Symbol.find_producoes_start"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.find_producoes_start">[docs]</a>    <span class="k">def</span> <span class="nf">find_producoes_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retorna lista de produções que começam com determinado símbolo</span>
+<span class="sd">        :param symbol: Símbolo que deve ser o primeiro da produção</span>
+<span class="sd">        :return: Lista de produções que começam com symbol</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">symbol</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Symbol.search_other_symbol"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.search_other_symbol">[docs]</a>    <span class="k">def</span> <span class="nf">search_other_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span> <span class="n">prod_start</span><span class="p">,</span> <span class="n">search_list</span><span class="p">):</span>
+        <span class="n">producoes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">prod_start</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">prod</span> <span class="ow">in</span> <span class="n">producoes</span><span class="p">:</span>
+            <span class="n">first_prod</span> <span class="o">=</span> <span class="n">prod</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">first_prod</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">()</span> <span class="ow">and</span> <span class="n">first_prod</span> <span class="o">==</span> <span class="n">search</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">search_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">search_list</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">search_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">first_prod</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">first_prod</span><span class="o">.</span><span class="n">search_other_symbol</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">prod</span><span class="p">,</span> <span class="n">search_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">search_list</span></div>
+
+<div class="viewcode-block" id="Symbol.remove_recursao_esquerda_direta"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.remove_recursao_esquerda_direta">[docs]</a>    <span class="k">def</span> <span class="nf">remove_recursao_esquerda_direta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Como um dos passos do algoritmo de remoção de recursão à esquerda, é removido a recursão diretamente</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_left_recursive</span><span class="p">():</span>
+            <span class="n">producoes_symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_producoes_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">producoes_not_symbol</span> <span class="o">=</span> <span class="n">subtract_listas</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="p">,</span> <span class="n">producoes_symbol</span><span class="p">)</span>
+            <span class="n">new_symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="o">.</span><span class="n">generate_random_symbol</span><span class="p">()</span>
+
+            <span class="c1"># adicionar símbolo novo nas produções</span>
+            <span class="c1"># que não contém o símbolo à esquerda</span>
+            <span class="k">for</span> <span class="n">producao</span> <span class="ow">in</span> <span class="n">producoes_not_symbol</span><span class="p">:</span>
+                <span class="n">producao</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_symbol</span><span class="p">)</span>
+
+            <span class="c1"># preencher o new_symbol e remover das produções deste símbolo</span>
+            <span class="k">for</span> <span class="n">producao</span> <span class="ow">in</span> <span class="n">producoes_symbol</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">producao</span><span class="p">)</span>
+                <span class="n">producao_sem_primeiro</span> <span class="o">=</span> <span class="n">producao</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="n">producao_sem_primeiro</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_symbol</span><span class="p">)</span>
+                <span class="n">new_symbol</span><span class="o">.</span><span class="n">producoes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">producao_sem_primeiro</span><span class="p">)</span>
+
+            <span class="c1"># adicionar &amp;</span>
+            <span class="n">new_symbol</span><span class="o">.</span><span class="n">producoes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="o">.</span><span class="n">find_symbol</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="Symbol.remove_recursao_esquerda_indireta"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.remove_recursao_esquerda_indireta">[docs]</a>    <span class="k">def</span> <span class="nf">remove_recursao_esquerda_indireta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol_remove</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove recursão indireta à esquerda</span>
+<span class="sd">        :param symbol_remove: Símbolo que deseja remover a recursão à esquerda (fazer troca de posições)</span>
+<span class="sd">        :return: Se houve mudança na recursão indireta</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">producoes_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_producoes_start</span><span class="p">(</span><span class="n">symbol_remove</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">producoes_start</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">producao</span> <span class="ow">in</span> <span class="n">producoes_start</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">producao</span><span class="p">)</span>
+            <span class="n">resto</span> <span class="o">=</span> <span class="n">producao</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+            <span class="k">for</span> <span class="n">producao_symbol</span> <span class="ow">in</span> <span class="n">symbol_remove</span><span class="o">.</span><span class="n">producoes</span><span class="p">:</span>
+                <span class="n">producao_new</span> <span class="o">=</span> <span class="n">producao_symbol</span> <span class="o">+</span> <span class="n">resto</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">producao_new</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Symbol.get_terminais"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.get_terminais">[docs]</a>    <span class="k">def</span> <span class="nf">get_terminais</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retorna lista de terminais que este símbolo possui em suas produções</span>
+<span class="sd">        :return: Lista de terminais que este símbolo possui em suas produções</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_specific_simbolos</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Symbol.get_nao_terminais"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.get_nao_terminais">[docs]</a>    <span class="k">def</span> <span class="nf">get_nao_terminais</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retorna lista de não terminais que este símbolo possui em suas produções</span>
+<span class="sd">        :return: Lista de não terminais que este símbolo possui em suas produções</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_specific_simbolos</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Symbol.get_specific_simbolos"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.get_specific_simbolos">[docs]</a>    <span class="k">def</span> <span class="nf">get_specific_simbolos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_terminal</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pega os símbolos em suas produções que são ou terminais ou não terminais</span>
+<span class="sd">        :param type_terminal: Tipo do terminal que deseja procurar (terminal ou não terminal)</span>
+<span class="sd">        :return: Lista de símbolos com tipo type_terminal</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">producoes</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">is_terminal</span><span class="p">()</span> <span class="o">==</span> <span class="n">type_terminal</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Symbol.get_all_terminais"><a class="viewcode-back" href="../../../src.Grammar.html#src.Grammar.Symbol.Symbol.get_all_terminais">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_terminais</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pegar os terminais recursivamente de todos os não terminais presentes</span>
+<span class="sd">        :return: Todos os não terminais atingíveis por este símbolo</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lista_terminais</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_terminais</span><span class="p">()}</span>
+        <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nao_terminais</span><span class="p">():</span>
+            <span class="n">lista_terminais</span> <span class="o">=</span> <span class="n">lista_terminais</span> <span class="o">+</span> <span class="n">symbol</span><span class="o">.</span><span class="n">get_all_terminais</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">lista_terminais</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, tony &amp; tony.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+src package
+===========
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   src.AF
+   src.Analisadores
+   src.ER
+   src.Exceptions
+   src.Grammar
+   src.PilhaSintatica
+   src.Program
+   src.TS
+   src.TabelaSintatica
+   src.Utils
+
+Module contents
+---------------
+
+.. automodule:: src
+   :members:
+   :undoc-members:
+   :show-inheritance:

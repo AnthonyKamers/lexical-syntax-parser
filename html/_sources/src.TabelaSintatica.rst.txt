@@ -1,0 +1,21 @@
+src.TabelaSintatica package
+===========================
+
+Submodules
+----------
+
+src.TabelaSintatica.TabelaSintatica module
+------------------------------------------
+
+.. automodule:: src.TabelaSintatica.TabelaSintatica
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: src.TabelaSintatica
+   :members:
+   :undoc-members:
+   :show-inheritance:

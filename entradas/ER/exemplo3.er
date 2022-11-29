@@ -1,10 +1,1 @@
-digit: [0-9]
-letter: [a-zA-Z]
-num: (digito)+ (digito)*
-integer: num+
-string: letter*
-END: ;
-SE: + | .
-LE: <=
-OA: + | - | * | /
-PR: program | if | else | elseif | begin | end | var | ,
+er: a?(a|b)+
