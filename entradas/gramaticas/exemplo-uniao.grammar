@@ -1,0 +1,5 @@
+E -> T R
+R -> UNIAO T R | &
+T -> F Y
+Y -> INTERSECAO F Y | &
+F -> NOT F | id
